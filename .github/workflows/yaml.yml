@@ -1,0 +1,30 @@
+---
+name: YAML
+
+"on": [push]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run yamllint
+        uses: actionshub/yamllint@1.0.0
+
+  style:
+    name: Style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: prettier
+        uses: creyD/prettier_action@v4.2
+        with:
+          dry: true
+          prettier_options: "--check **/*.{yml,yaml}"
