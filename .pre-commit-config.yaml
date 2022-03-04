@@ -28,3 +28,11 @@ repos:
     rev: v2.5.1
     hooks:
       - id: prettier
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: cargo-check
+      - id: clippy
+        args: [--all-features, --all-targets, --, -D, warnings]
+      - id: fmt
+        args: [--all, --]
