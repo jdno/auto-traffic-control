@@ -1,12 +1,15 @@
 use bevy::prelude::*;
 
-mod map;
+use crate::systems::*;
 
-/// The width of the game's window
-const SCREEN_WIDTH: f32 = 1024.0;
+mod map;
+mod systems;
 
 /// The height of the game's window
 const SCREEN_HEIGHT: f32 = 768.0;
+
+/// The width of the game's window
+const SCREEN_WIDTH: f32 = 1024.0;
 
 /// The dimension of a tile
 ///
@@ -26,5 +29,7 @@ fn main() {
         })
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(DefaultPlugins)
+        .add_startup_system(setup_camera)
+        .add_startup_system(setup_grid)
         .run();
 }
