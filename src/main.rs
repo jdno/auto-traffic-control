@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+mod map;
+
 fn main() {
     App::new()
         // Must be added before the DefaultPlugins
