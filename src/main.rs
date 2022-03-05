@@ -30,6 +30,7 @@ fn main() {
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup_camera)
+        .add_startup_system(setup_airport)
         .add_startup_system(setup_grid)
         .run();
 }
