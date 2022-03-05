@@ -8,6 +8,12 @@ const SCREEN_WIDTH: f32 = 1024.0;
 /// The height of the game's window
 const SCREEN_HEIGHT: f32 = 768.0;
 
+/// The dimension of a tile
+///
+/// Tiles must have the same size as the textures that are used to render them. This game uses
+/// textures with a size of 32 by 32 pixels, and thus tiles must be 32 pixels high and wide as well.
+const TILE_SIZE: i32 = 32;
+
 fn main() {
     App::new()
         // Must be added before the DefaultPlugins

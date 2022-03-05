@@ -1,12 +1,8 @@
 use std::fmt::{Display, Formatter};
 
-use super::Coordinate;
+use crate::TILE_SIZE;
 
-/// The dimension of a tile
-///
-/// Tiles must have the same size as the textures that are used to render them. This game uses
-/// textures with a size of 32 by 32 pixels, and thus tiles must be 32 pixels high and wide as well.
-pub(super) const TILE_SIZE: i32 = 32;
+use super::Coordinate;
 
 /// A tile in the game
 ///

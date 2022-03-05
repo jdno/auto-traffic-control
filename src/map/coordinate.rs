@@ -1,6 +1,8 @@
 use std::fmt::{Display, Formatter};
 
-use super::{Tile, TILE_SIZE};
+use crate::TILE_SIZE;
+
+use super::Tile;
 
 /// An arbitrary coordinate on the game's two-dimensional plane
 ///
