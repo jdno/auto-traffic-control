@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::systems::*;
 
+mod components;
 mod map;
 mod systems;
 
@@ -32,5 +33,7 @@ fn main() {
         .add_startup_system(setup_camera)
         .add_startup_system(setup_airport)
         .add_startup_system(setup_grid)
+        .add_startup_system(spawn_airplane)
+        .add_system(follow_flight_plan)
         .run();
 }
