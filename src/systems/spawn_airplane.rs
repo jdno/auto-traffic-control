@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use crate::components::{Airplane, Position};
-use crate::map::{Coordinate, MAP_WIDTH_RANGE};
+use crate::components::{Airplane, Movement, Position};
+use crate::map::{Coordinate, Direction, MAP_WIDTH_RANGE};
 use crate::TILE_SIZE;
 
 pub fn spawn_airplane(mut commands: Commands) {
@@ -21,5 +21,6 @@ pub fn spawn_airplane(mut commands: Commands) {
             ..Default::default()
         })
         .insert(Airplane)
+        .insert(Movement::new(640, Direction::East))
         .insert(Position::new(coordinate));
 }
