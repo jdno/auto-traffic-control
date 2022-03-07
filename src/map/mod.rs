@@ -2,11 +2,9 @@ use std::ops::RangeInclusive;
 
 use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
 
-pub use self::coordinate::*;
 pub use self::direction::*;
 pub use self::tile::*;
 
-mod coordinate;
 mod direction;
 mod tile;
 

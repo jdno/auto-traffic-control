@@ -1,8 +1,8 @@
 use std::fmt::{Display, Formatter};
 
-use crate::TILE_SIZE;
+use geo::{point, Point};
 
-use super::Coordinate;
+use crate::TILE_SIZE;
 
 /// A tile in the game
 ///
@@ -26,6 +26,10 @@ impl Tile {
     pub fn y(&self) -> i32 {
         self.y
     }
+
+    pub fn to_point(self) -> Point<i32> {
+        point!(x: self.x * TILE_SIZE, y: self.y * TILE_SIZE)
+    }
 }
 
 impl Display for Tile {
@@ -34,10 +38,10 @@ impl Display for Tile {
     }
 }
 
-impl From<&Coordinate> for Tile {
-    fn from(coordinate: &Coordinate) -> Self {
-        let x = coordinate.x() / TILE_SIZE;
-        let y = coordinate.y() / TILE_SIZE;
+impl From<&Point<i32>> for Tile {
+    fn from(point: &Point<i32>) -> Self {
+        let x = point.x() / TILE_SIZE;
+        let y = point.y() / TILE_SIZE;
 
         Self { x, y }
     }
@@ -45,7 +49,9 @@ impl From<&Coordinate> for Tile {
 
 #[cfg(test)]
 mod tests {
-    use super::{Coordinate, Tile, TILE_SIZE};
+    use geo::{point, Point};
+
+    use super::{Tile, TILE_SIZE};
 
     #[test]
     fn x() {
@@ -69,40 +75,40 @@ mod tests {
     }
 
     #[test]
-    fn trait_from_0_coordinate() {
-        let coordinate = Coordinate::new(0, 0);
+    fn trait_from_0_point() {
+        let point = point!(x: 0, y: 0);
 
-        let tile = Tile::from(&coordinate);
-
-        assert_eq!(0, tile.x);
-        assert_eq!(0, tile.y);
-    }
-
-    #[test]
-    fn trait_from_coordinate_smaller_than_tile_size() {
-        let coordinate = Coordinate::new(TILE_SIZE / 2, TILE_SIZE / 2);
-
-        let tile = Tile::from(&coordinate);
+        let tile = Tile::from(&point);
 
         assert_eq!(0, tile.x);
         assert_eq!(0, tile.y);
     }
 
     #[test]
-    fn trait_from_coordinate_greater_than_tile_size() {
-        let coordinate = Coordinate::new(TILE_SIZE * 2, TILE_SIZE * 3);
+    fn trait_from_point_smaller_than_tile_size() {
+        let point = point!(x: TILE_SIZE / 2, y: TILE_SIZE / 2);
 
-        let tile = Tile::from(&coordinate);
+        let tile = Tile::from(&point);
+
+        assert_eq!(0, tile.x);
+        assert_eq!(0, tile.y);
+    }
+
+    #[test]
+    fn trait_from_point_greater_than_tile_size() {
+        let point = point!(x: TILE_SIZE * 2, y: TILE_SIZE * 3);
+
+        let tile = Tile::from(&point);
 
         assert_eq!(2, tile.x);
         assert_eq!(3, tile.y);
     }
 
     #[test]
-    fn trait_from_negative_coordinate() {
-        let coordinate = Coordinate::new(TILE_SIZE * -2, TILE_SIZE * -3);
+    fn trait_from_negative_point() {
+        let point = point!(x: TILE_SIZE * -2, y: TILE_SIZE * -3);
 
-        let tile = Tile::from(&coordinate);
+        let tile = Tile::from(&point);
 
         assert_eq!(-2, tile.x);
         assert_eq!(-3, tile.y);
