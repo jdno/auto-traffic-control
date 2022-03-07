@@ -1,22 +1,6 @@
-use std::ops::RangeInclusive;
-
 use bevy::prelude::*;
 
-use crate::map::{Coordinate, Tile};
-use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
-
-/// The number of tiles that are left empty around the border of the window
-const BORDER_SIZE: usize = 1;
-
-/// The height of the map in tiles
-const MAP_HEIGHT: usize = (SCREEN_HEIGHT as i32 / TILE_SIZE) as usize - (BORDER_SIZE * 2) - 1;
-
-const MAP_HEIGHT_RANGE: RangeInclusive<i32> = -(MAP_HEIGHT as i32 / 2)..=(MAP_HEIGHT as i32 / 2);
-
-/// The width of the map in tiles
-const MAP_WIDTH: usize = (SCREEN_WIDTH as i32 / TILE_SIZE) as usize - (BORDER_SIZE * 2) - 1;
-
-const MAP_WIDTH_RANGE: RangeInclusive<i32> = -(MAP_WIDTH as i32 / 2)..=(MAP_WIDTH as i32 / 2);
+use crate::map::{Coordinate, Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
 pub fn setup_grid(mut commands: Commands) {
     for y in MAP_HEIGHT_RANGE {
