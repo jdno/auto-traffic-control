@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 
+use bevy::prelude::*;
 use geo::{point, Point};
 
 use crate::TILE_SIZE;
@@ -19,16 +20,15 @@ impl Tile {
         Self { x, y }
     }
 
-    pub fn x(&self) -> i32 {
-        self.x
+    pub fn as_point(&self) -> Point<f32> {
+        let x = (self.x * TILE_SIZE) as f32;
+        let y = (self.y * TILE_SIZE) as f32;
+
+        point!(x: x, y: y)
     }
 
-    pub fn y(&self) -> i32 {
-        self.y
-    }
-
-    pub fn to_point(self) -> Point<i32> {
-        point!(x: self.x * TILE_SIZE, y: self.y * TILE_SIZE)
+    pub fn as_vec3(&self, z: f32) -> Vec3 {
+        Vec3::new((self.x * TILE_SIZE) as f32, (self.y * TILE_SIZE) as f32, z)
     }
 }
 
@@ -49,23 +49,9 @@ impl From<&Point<i32>> for Tile {
 
 #[cfg(test)]
 mod tests {
-    use geo::{point, Point};
+    use geo::point;
 
     use super::{Tile, TILE_SIZE};
-
-    #[test]
-    fn x() {
-        let tile = Tile::new(1, 2);
-
-        assert_eq!(1, tile.x());
-    }
-
-    #[test]
-    fn y() {
-        let tile = Tile::new(1, 2);
-
-        assert_eq!(2, tile.y());
-    }
 
     #[test]
     fn trait_display() {

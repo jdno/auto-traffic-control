@@ -9,6 +9,14 @@ impl FlightPlan {
     pub fn new(flight_plan: Vec<Tile>) -> Self {
         Self(flight_plan)
     }
+
+    pub fn get(&self) -> &Vec<Tile> {
+        &self.0
+    }
+
+    pub fn get_mut(&mut self) -> &mut Vec<Tile> {
+        &mut self.0
+    }
 }
 
 #[cfg(test)]

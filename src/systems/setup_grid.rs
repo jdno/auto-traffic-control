@@ -6,7 +6,7 @@ pub fn setup_grid(mut commands: Commands) {
     for y in MAP_HEIGHT_RANGE {
         for x in MAP_WIDTH_RANGE {
             let tile = Tile::new(x, y);
-            let point = tile.to_point();
+            let point = tile.as_point();
 
             commands.spawn_bundle(SpriteBundle {
                 transform: Transform {

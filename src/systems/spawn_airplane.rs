@@ -1,13 +1,14 @@
 use bevy::prelude::*;
 use geo::point;
 
-use crate::components::{Airplane, FlightPlan, Movement};
-use crate::map::{Direction, Tile, MAP_WIDTH_RANGE};
+use crate::components::{Airplane, FlightPlan, Speed};
+use crate::map::{Tile, MAP_WIDTH_RANGE};
 use crate::TILE_SIZE;
 
 pub fn spawn_airplane(mut commands: Commands) {
     let spawn = point!(x: TILE_SIZE * MAP_WIDTH_RANGE.start(), y: 0);
-    let flight_plan = (*MAP_WIDTH_RANGE.start()..=0)
+    let flight_plan = ((*MAP_WIDTH_RANGE.start() + 1)..=0)
+        .rev()
         .map(|x| Tile::new(x, 0))
         .collect();
 
@@ -26,5 +27,5 @@ pub fn spawn_airplane(mut commands: Commands) {
         })
         .insert(Airplane)
         .insert(FlightPlan::new(flight_plan))
-        .insert(Movement::new(32.0, Direction::East));
+        .insert(Speed::new(32.0));
 }
