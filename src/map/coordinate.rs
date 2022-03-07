@@ -1,5 +1,7 @@
 use std::fmt::{Display, Formatter};
 
+use bevy::prelude::*;
+
 use crate::TILE_SIZE;
 
 use super::Tile;
@@ -46,6 +48,15 @@ impl From<&Tile> for Coordinate {
         let y = tile.y() * TILE_SIZE;
 
         Self { x, y }
+    }
+}
+
+impl From<&Vec3> for Coordinate {
+    fn from(vec3: &Vec3) -> Self {
+        Self {
+            x: vec3.x as i32,
+            y: vec3.y as i32,
+        }
     }
 }
 

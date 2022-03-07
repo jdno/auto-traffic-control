@@ -21,6 +21,6 @@ pub fn spawn_airplane(mut commands: Commands) {
             ..Default::default()
         })
         .insert(Airplane)
-        .insert(Movement::new(640, Direction::East))
+        .insert(Movement::new(32.0, Direction::East))
         .insert(Position::new(coordinate));
 }

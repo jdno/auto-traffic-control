@@ -2,18 +2,18 @@ use bevy::prelude::*;
 
 use crate::map::Direction;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Component)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Component)]
 pub struct Movement {
-    speed: usize,
+    speed: f32,
     direction: Direction,
 }
 
 impl Movement {
-    pub fn new(speed: usize, direction: Direction) -> Self {
+    pub fn new(speed: f32, direction: Direction) -> Self {
         Self { speed, direction }
     }
 
-    pub fn speed(&self) -> usize {
+    pub fn speed(&self) -> f32 {
         self.speed
     }
 
