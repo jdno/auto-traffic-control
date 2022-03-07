@@ -1,14 +1,16 @@
-use crate::components::Airplane;
-use crate::map::MAP_WIDTH_RANGE;
 use bevy::prelude::*;
 
+use crate::components::{Airplane, Position};
+use crate::map::{Coordinate, MAP_WIDTH_RANGE};
 use crate::TILE_SIZE;
 
 pub fn spawn_airplane(mut commands: Commands) {
+    let coordinate = Coordinate::new(TILE_SIZE * MAP_WIDTH_RANGE.start(), 0);
+
     commands
         .spawn_bundle(SpriteBundle {
             transform: Transform {
-                translation: Vec3::new((TILE_SIZE * MAP_WIDTH_RANGE.start()) as f32, 0.0, 2.0),
+                translation: Vec3::new(coordinate.x() as f32, coordinate.y() as f32, 2.0),
                 scale: Vec3::new(8.0, 8.0, 0.0),
                 ..Default::default()
             },
@@ -18,5 +20,6 @@ pub fn spawn_airplane(mut commands: Commands) {
             },
             ..Default::default()
         })
-        .insert(Airplane);
+        .insert(Airplane)
+        .insert(Position::new(coordinate));
 }
