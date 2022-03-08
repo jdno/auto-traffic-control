@@ -181,6 +181,7 @@ version = "0.0.0"
 dependencies = [
  "bevy",
  "geo",
+ "rand",
 ]
 
 [[package]]

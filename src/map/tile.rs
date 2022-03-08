@@ -20,6 +20,14 @@ impl Tile {
         Self { x, y }
     }
 
+    pub fn x(&self) -> i32 {
+        self.x
+    }
+
+    pub fn y(&self) -> i32 {
+        self.y
+    }
+
     pub fn as_point(&self) -> Point<f32> {
         let x = (self.x * TILE_SIZE) as f32;
         let y = (self.y * TILE_SIZE) as f32;
