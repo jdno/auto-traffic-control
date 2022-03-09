@@ -10,3 +10,21 @@ message Airplane {
   Point point = 2;
   repeated Node flight_plan = 3;
 }
+
+message AirplaneDetected {
+  Airplane airplane = 1;
+}
+
+message AirplaneLanded {
+  string id = 1;
+}
+
+message AirplaneMoved {
+  string id = 1;
+  Point point = 2;
+}
+
+message AirplaneFlightPlanUpdated {
+  string id = 1;
+  repeated Node flight_plan = 2;
+}
