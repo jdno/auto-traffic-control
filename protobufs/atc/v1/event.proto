@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package atc.v1;
+
+import "atc/v1/airplane.proto";
+
+message StreamRequest {}
+
+message StreamResponse {
+  oneof event {
+    AirplaneDetected airplane_detected = 1;
+    AirplaneFlightPlanUpdated airplane_flight_plan_updated = 2;
+    AirplaneLanded airplane_landed = 3;
+    AirplaneMoved airplane_moved = 4;
+  }
+}
+
+service EventService {
+  rpc Stream(StreamRequest) returns (stream StreamResponse) {}
+}

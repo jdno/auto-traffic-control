@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package atc.v1;
+
+import "atc/v1/node.proto";
+import "atc/v1/point.proto";
+
+message Airplane {
+  string id = 1;
+  Point point = 2;
+  repeated Node flight_plan = 3;
+}
+
+message AirplaneDetected {
+  Airplane airplane = 1;
+}
+
+message AirplaneLanded {
+  string id = 1;
+}
+
+message AirplaneMoved {
+  string id = 1;
+  Point point = 2;
+}
+
+message AirplaneFlightPlanUpdated {
+  string id = 1;
+  repeated Node flight_plan = 2;
+}
