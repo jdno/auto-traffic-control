@@ -3,5 +3,6 @@
 resolver = "2"
 
 members = [
+    "src/atc",
     "src/atc-game",
 ]
