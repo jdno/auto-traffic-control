@@ -1,0 +1,23 @@
+[package]
+name = "print-client"
+version = "0.0.0"
+edition = "2021"
+
+rust-version = "1.56"
+
+description = "Connect to the game and print events to the terminal"
+repository = "https://github.com/jdno/atc"
+categories = [
+    "games"
+]
+
+publish = false
+
+# See more keys and their definitions at
+# https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+atc = { path = "../atc", version = "0.0.0" }
+
+tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
+tokio-stream = { version = "0.1.8" }

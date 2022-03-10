@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::components::{Airplane, FlightPlan, Speed};
+use crate::components::{Airplane, AirplaneIdGenerator, FlightPlan, Location, Speed};
 use crate::map::{route_between, Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::{Event, EventBus};
 
 pub struct SpawnTimer(Timer);
 
@@ -12,13 +13,20 @@ impl SpawnTimer {
     }
 }
 
-pub fn spawn_airplane(mut commands: Commands, time: Res<Time>, mut timer: ResMut<SpawnTimer>) {
+pub fn spawn_airplane(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut timer: ResMut<SpawnTimer>,
+    mut airplane_id_generator: Local<AirplaneIdGenerator>,
+    event_bus: Local<EventBus>,
+) {
     if timer.0.tick(time.delta()).just_finished() {
         let spawn = random_spawn();
         let spawn_point = spawn.as_point();
 
         let airport = Tile::new(0, 0);
-        let flight_plan = route_between(&spawn, &airport);
+        let airplane_id = airplane_id_generator.generate();
+        let flight_plan = FlightPlan::new(route_between(&spawn, &airport));
 
         commands
             .spawn_bundle(SpriteBundle {
@@ -34,8 +42,18 @@ pub fn spawn_airplane(mut commands: Commands, time: Res<Time>, mut timer: ResMut
                 ..Default::default()
             })
             .insert(Airplane)
-            .insert(FlightPlan::new(flight_plan))
+            .insert(airplane_id.clone())
+            .insert(flight_plan.clone())
             .insert(Speed::new(32.0));
+
+        event_bus
+            .sender()
+            .send(Event::AirplaneDetected(
+                airplane_id,
+                Location::from(&spawn),
+                flight_plan,
+            ))
+            .expect("failed to send event"); // TODO: Handle error
     }
 }
 

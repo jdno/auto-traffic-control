@@ -1,5 +1,8 @@
 use bevy::prelude::*;
 
+use atc::v1::Node as ApiNode;
+
+use crate::api::IntoApi;
 use crate::map::Tile;
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
@@ -16,6 +19,14 @@ impl FlightPlan {
 
     pub fn get_mut(&mut self) -> &mut Vec<Tile> {
         &mut self.0
+    }
+}
+
+impl IntoApi for FlightPlan {
+    type ApiType = Vec<ApiNode>;
+
+    fn into_api(self) -> Self::ApiType {
+        self.0.iter().rev().map(|node| node.into_api()).collect()
     }
 }
 

@@ -1,8 +1,13 @@
 use bevy::prelude::*;
+use tokio::sync::broadcast::channel;
 
+use crate::api::Api;
+use crate::event::{Event, EventBus};
 use crate::systems::*;
 
+mod api;
 mod components;
+mod event;
 mod map;
 mod systems;
 
@@ -18,7 +23,12 @@ const SCREEN_WIDTH: f32 = 1024.0;
 /// textures with a size of 32 by 32 pixels, and thus tiles must be 32 pixels high and wide as well.
 const TILE_SIZE: i32 = 32;
 
-fn main() {
+#[tokio::main]
+async fn main() {
+    let (event_sender, _event_receiver) = channel::<Event>(1024);
+
+    let _api_join_handle = tokio::spawn(Api::serve(event_sender.clone()));
+
     App::new()
         // Must be added before the DefaultPlugins
         .insert_resource(WindowDescriptor {
@@ -30,6 +40,7 @@ fn main() {
         })
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(DefaultPlugins)
+        .insert_resource(event_sender)
         .insert_resource(SpawnTimer::new(Timer::from_seconds(1.0, true)))
         .add_startup_system(setup_camera)
         .add_startup_system(setup_airport)

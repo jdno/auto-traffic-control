@@ -2,21 +2,41 @@ use bevy::prelude::*;
 use geo::algorithm::euclidean_distance::EuclideanDistance;
 use geo::point;
 
-use crate::components::{FlightPlan, Speed};
+use crate::components::{AirplaneId, FlightPlan, Location, Speed};
 use crate::map::Direction;
+use crate::{Event, EventBus};
 
 pub fn follow_flight_plan(
     time: Res<Time>,
-    mut query: Query<(&mut FlightPlan, &Speed, &mut Transform)>,
+    mut query: Query<(&AirplaneId, &mut FlightPlan, &Speed, &mut Transform)>,
+    event_bus: Local<EventBus>,
 ) {
-    for (mut flight_plan, speed, mut transform) in query.iter_mut() {
+    for (airplane_id, mut flight_plan, speed, mut transform) in query.iter_mut() {
         let distance = speed.get() * time.delta().as_secs_f32();
 
-        fly(&mut transform.translation, &mut flight_plan, distance);
+        let did_update_flight_plan = fly(&mut transform.translation, &mut flight_plan, distance);
+
+        if did_update_flight_plan {
+            event_bus
+                .sender()
+                .send(Event::FlightPlanUpdated(
+                    airplane_id.clone(),
+                    flight_plan.clone(),
+                ))
+                .expect("failed to send event"); // TODO: Handle error
+        }
+
+        event_bus
+            .sender()
+            .send(Event::AirplaneMoved(
+                airplane_id.clone(),
+                Location::from(transform),
+            ))
+            .expect("failed to send event"); // TODO: Handle error
     }
 }
 
-fn fly(current_position: &mut Vec3, flight_plan: &mut FlightPlan, travelled_distance: f32) {
+fn fly(current_position: &mut Vec3, flight_plan: &mut FlightPlan, travelled_distance: f32) -> bool {
     if let Some(next_tile) = flight_plan.get().iter().last() {
         let current_point = point!(x: current_position.x, y: current_position.y);
         let next_point = next_tile.as_point();
@@ -32,11 +52,15 @@ fn fly(current_position: &mut Vec3, flight_plan: &mut FlightPlan, travelled_dist
                 flight_plan,
                 travelled_distance - distance_between_points,
             );
+
+            return true;
         } else {
             let direction = Direction::between(&next_point, &current_point);
             *current_position += direction.to_vec3() * travelled_distance;
         }
     }
+
+    false
 }
 
 #[cfg(test)]

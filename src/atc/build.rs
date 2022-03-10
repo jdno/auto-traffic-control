@@ -3,6 +3,8 @@ use std::path::PathBuf;
 use glob::glob;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("cargo:rerun-if-changed=../../protobufs");
+
     let proto_path = PathBuf::from("../../protobufs");
 
     let protocol_buffers: Vec<PathBuf> = glob("../../protobufs/**/*.proto")
