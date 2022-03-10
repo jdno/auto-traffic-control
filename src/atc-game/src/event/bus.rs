@@ -1,3 +1,4 @@
+use bevy::prelude::*;
 use tokio::sync::broadcast::Sender;
 
 use crate::event::Event;
@@ -10,12 +11,18 @@ pub struct EventBus {
 }
 
 impl EventBus {
-    pub fn new(sender: EventSender) -> Self {
-        Self { sender }
-    }
-
     pub fn sender(&self) -> &EventSender {
         &self.sender
+    }
+}
+
+impl FromWorld for EventBus {
+    fn from_world(world: &mut World) -> Self {
+        let sender = world.get_resource::<EventSender>().unwrap();
+
+        Self {
+            sender: sender.clone(),
+        }
     }
 }
 

@@ -40,6 +40,7 @@ async fn main() {
         })
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(DefaultPlugins)
+        .insert_resource(event_sender)
         .insert_resource(SpawnTimer::new(Timer::from_seconds(1.0, true)))
         .add_startup_system(setup_camera)
         .add_startup_system(setup_airport)
