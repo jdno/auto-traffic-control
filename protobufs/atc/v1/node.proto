@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package atc.v1;
 
-import "atc/v1/point.proto";
+import "atc/v1/location.proto";
 
 message Node {
   int32 x = 1;
   int32 y = 2;
-  Point point = 3;
+  Location location = 3;
 }
