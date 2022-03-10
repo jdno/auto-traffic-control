@@ -26,7 +26,7 @@ impl IntoApi for FlightPlan {
     type ApiType = Vec<ApiNode>;
 
     fn into_api(self) -> Self::ApiType {
-        self.0.iter().map(|node| node.into_api()).collect()
+        self.0.iter().rev().map(|node| node.into_api()).collect()
     }
 }
 
