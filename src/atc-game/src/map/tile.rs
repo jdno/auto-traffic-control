@@ -3,6 +3,9 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::{point, Point};
 
+use atc::v1::{Node as ApiNode, Point as ApiPoint};
+
+use crate::api::IntoApi;
 use crate::TILE_SIZE;
 
 /// A tile in the game
@@ -52,6 +55,23 @@ impl From<&Point<i32>> for Tile {
         let y = point.y() / TILE_SIZE;
 
         Self { x, y }
+    }
+}
+
+impl IntoApi for Tile {
+    type ApiType = ApiNode;
+
+    fn into_api(self) -> Self::ApiType {
+        let point = self.as_point();
+
+        ApiNode {
+            x: self.x(),
+            y: self.y(),
+            point: Some(ApiPoint {
+                x: point.x() as i32,
+                y: point.y() as i32,
+            }),
+        }
     }
 }
 

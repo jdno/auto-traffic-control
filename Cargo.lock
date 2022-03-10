@@ -224,8 +224,11 @@ dependencies = [
  "atc",
  "bevy",
  "geo",
+ "prost",
  "rand",
  "tokio",
+ "tokio-stream",
+ "tonic",
 ]
 
 [[package]]
@@ -3251,6 +3254,7 @@ dependencies = [
  "futures-core",
  "pin-project-lite",
  "tokio",
+ "tokio-util 0.6.9",
 ]
 
 [[package]]

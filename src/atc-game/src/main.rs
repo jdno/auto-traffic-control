@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::systems::*;
 
+mod api;
 mod components;
 mod event;
 mod map;
