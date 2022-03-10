@@ -1,3 +1,7 @@
+pub use self::bus::{EventBus, EventSender};
+
+mod bus;
+
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Event {
     AirplaneDetected,

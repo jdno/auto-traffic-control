@@ -221,9 +221,11 @@ dependencies = [
 name = "atc-game"
 version = "0.0.0"
 dependencies = [
+ "atc",
  "bevy",
  "geo",
  "rand",
+ "tokio",
 ]
 
 [[package]]
@@ -3212,6 +3214,7 @@ dependencies = [
  "libc",
  "memchr",
  "mio 0.8.0",
+ "num_cpus",
  "pin-project-lite",
  "socket2",
  "tokio-macros",
