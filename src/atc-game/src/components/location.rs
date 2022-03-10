@@ -9,21 +9,19 @@ use crate::api::IntoApi;
 use crate::map::Tile;
 use crate::TILE_SIZE;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
 pub struct Location {
     x: i32,
     y: i32,
 }
 
 impl Location {
-    pub fn new(x: i32, y: i32) -> Self {
-        Self { x, y }
-    }
-
+    #[allow(dead_code)] // TODO: Remove when the value is read
     pub fn x(&self) -> i32 {
         self.x
     }
 
+    #[allow(dead_code)] // TODO: Remove when the value is read
     pub fn y(&self) -> i32 {
         self.y
     }
@@ -79,7 +77,7 @@ mod tests {
 
     #[test]
     fn trait_display() {
-        let location = Location::new(1, 2);
+        let location = Location { x: 1, y: 2 };
 
         assert_eq!("Location { x: 1, y: 2 }", &location.to_string());
     }

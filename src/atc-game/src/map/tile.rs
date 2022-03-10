@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::{point, Point};
 
-use atc::v1::{Location as ApiLocation, Location, Node as ApiNode};
+use atc::v1::{Location as ApiLocation, Node as ApiNode};
 
 use crate::api::IntoApi;
 use crate::TILE_SIZE;
@@ -67,7 +67,7 @@ impl IntoApi for Tile {
         ApiNode {
             x: self.x(),
             y: self.y(),
-            location: Some(Location {
+            location: Some(ApiLocation {
                 x: point.x() as i32,
                 y: point.y() as i32,
             }),

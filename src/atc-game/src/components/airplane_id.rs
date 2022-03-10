@@ -6,6 +6,7 @@ use crate::api::IntoApi;
 pub struct AirplaneId(String);
 
 impl AirplaneId {
+    #[allow(dead_code)] // TODO: Remove when the id is read
     pub fn get(&self) -> &str {
         &self.0
     }
@@ -25,10 +26,6 @@ pub struct AirplaneIdGenerator {
 }
 
 impl AirplaneIdGenerator {
-    pub fn new() -> Self {
-        Self { last_id: 0 }
-    }
-
     pub fn generate(&mut self) -> AirplaneId {
         self.last_id += 1;
 
@@ -52,7 +49,7 @@ mod tests {
 
     #[test]
     fn generate() {
-        let mut generator = AirplaneIdGenerator::new();
+        let mut generator = AirplaneIdGenerator::default();
 
         assert_eq!("AT-0001", generator.generate().get());
         assert_eq!("AT-0002", generator.generate().get());

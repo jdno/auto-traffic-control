@@ -2,7 +2,6 @@ use bevy::prelude::*;
 use geo::algorithm::euclidean_distance::EuclideanDistance;
 use geo::point;
 
-use crate::api::IntoApi;
 use crate::components::{AirplaneId, FlightPlan, Location, Speed};
 use crate::map::Direction;
 use crate::{Event, EventBus};
