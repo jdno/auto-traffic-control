@@ -2,7 +2,8 @@ use bevy::prelude::*;
 use geo::algorithm::euclidean_distance::EuclideanDistance;
 use geo::point;
 
-use crate::components::{AirplaneId, FlightPlan, Speed};
+use crate::api::IntoApi;
+use crate::components::{AirplaneId, FlightPlan, Location, Speed};
 use crate::map::Direction;
 use crate::{Event, EventBus};
 
@@ -25,6 +26,14 @@ pub fn follow_flight_plan(
                 ))
                 .expect("failed to send event"); // TODO: Handle error
         }
+
+        event_bus
+            .sender()
+            .send(Event::AirplaneMoved(
+                airplane_id.clone(),
+                Location::from(transform),
+            ))
+            .expect("failed to send event"); // TODO: Handle error
     }
 }
 

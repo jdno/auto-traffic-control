@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 
+use bevy::prelude::*;
 use geo::Point;
 
 use atc::v1::Location as ApiLocation;
@@ -42,6 +43,15 @@ impl From<&Tile> for Location {
         Self {
             x: tile.x() * TILE_SIZE,
             y: tile.y() * TILE_SIZE,
+        }
+    }
+}
+
+impl From<Mut<'_, bevy::prelude::Transform>> for Location {
+    fn from(transform: Mut<'_, bevy::prelude::Transform>) -> Self {
+        Self {
+            x: transform.translation.x as i32,
+            y: transform.translation.y as i32,
         }
     }
 }
