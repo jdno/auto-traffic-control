@@ -1,5 +1,8 @@
 use bevy::prelude::*;
+use tokio::sync::broadcast::channel;
 
+use crate::api::Api;
+use crate::event::{Event, EventBus};
 use crate::systems::*;
 
 mod api;
@@ -20,7 +23,12 @@ const SCREEN_WIDTH: f32 = 1024.0;
 /// textures with a size of 32 by 32 pixels, and thus tiles must be 32 pixels high and wide as well.
 const TILE_SIZE: i32 = 32;
 
-fn main() {
+#[tokio::main]
+async fn main() {
+    let (event_sender, _event_receiver) = channel::<Event>(1024);
+
+    let _api_join_handle = tokio::spawn(Api::serve(event_sender.clone()));
+
     App::new()
         // Must be added before the DefaultPlugins
         .insert_resource(WindowDescriptor {
