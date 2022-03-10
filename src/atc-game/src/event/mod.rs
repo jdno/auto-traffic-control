@@ -1,7 +1,5 @@
 use atc::v1::stream_response::Event as ApiEvent;
-use atc::v1::{
-    Airplane, AirplaneDetected, AirplaneFlightPlanUpdated, AirplaneLanded, AirplaneMoved,
-};
+use atc::v1::{Airplane, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightPlanUpdated};
 
 use crate::api::IntoApi;
 use crate::components::{AirplaneId, FlightPlan, Location};
@@ -40,7 +38,7 @@ impl IntoApi for Event {
                 location: Some(location.into_api()),
             }),
             Event::FlightPlanUpdated(id, flight_plan) => {
-                ApiEvent::AirplaneFlightPlanUpdated(AirplaneFlightPlanUpdated {
+                ApiEvent::FlightPlanUpdated(FlightPlanUpdated {
                     id: id.into_api(),
                     flight_plan: flight_plan.into_api(),
                 })

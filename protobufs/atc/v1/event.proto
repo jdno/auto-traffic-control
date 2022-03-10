@@ -9,9 +9,9 @@ message StreamRequest {}
 message StreamResponse {
   oneof event {
     AirplaneDetected airplane_detected = 1;
-    AirplaneFlightPlanUpdated airplane_flight_plan_updated = 2;
     AirplaneLanded airplane_landed = 3;
     AirplaneMoved airplane_moved = 4;
+    FlightPlanUpdated flight_plan_updated = 2;
   }
 }
 
