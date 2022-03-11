@@ -42,7 +42,15 @@ message UpdateFlightPlanRequest {
   repeated Node flight_plan = 2;
 }
 
-message UpdateFlightPlanResponse {}
+message UpdateFlightPlanResponse {
+  enum Error {
+    ERROR_UNKNOWN = 0;
+    ERROR_NODE_OUT_OF_BOUNDS = 1;
+    ERROR_NOT_IN_LOGICAL_ORDER = 2;
+    ERROR_HAS_SHARP_TURNS = 3;
+  }
+  repeated Error validation_errors = 1;
+}
 
 service AirplaneService {
   rpc GetAirplane(GetAirplaneRequest) returns (GetAirplaneResponse);
