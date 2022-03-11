@@ -37,6 +37,14 @@ message GetAirplaneResponse {
   Airplane airplane = 1;
 }
 
+message UpdateFlightPlanRequest {
+  string id = 1;
+  repeated Node flight_plan = 2;
+}
+
+message UpdateFlightPlanResponse {}
+
 service AirplaneService {
   rpc GetAirplane(GetAirplaneRequest) returns (GetAirplaneResponse);
+  rpc UpdateFlightPlan(UpdateFlightPlanRequest) returns (UpdateFlightPlanResponse);
 }
