@@ -3,12 +3,14 @@ use tokio::sync::broadcast::channel;
 
 use crate::api::Api;
 use crate::event::{Event, EventBus};
+use crate::store::{Store, StoreManager};
 use crate::systems::*;
 
 mod api;
 mod components;
 mod event;
 mod map;
+mod store;
 mod systems;
 
 /// The height of the game's window
