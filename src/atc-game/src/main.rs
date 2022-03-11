@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use bevy::prelude::*;
 use tokio::sync::broadcast::channel;
 
@@ -27,9 +29,13 @@ const TILE_SIZE: i32 = 32;
 
 #[tokio::main]
 async fn main() {
-    let (event_sender, _event_receiver) = channel::<Event>(1024);
+    let (event_sender, event_receiver) = channel::<Event>(1024);
 
-    let _api_join_handle = tokio::spawn(Api::serve(event_sender.clone()));
+    let store = Arc::new(Store::new());
+    let mut store_manager = StoreManager::new(event_receiver, store.clone());
+
+    let _api_join_handle = tokio::spawn(Api::serve(event_sender.clone(), store));
+    let _store_join_handle = tokio::spawn(async move { store_manager.connect().await });
 
     App::new()
         // Must be added before the DefaultPlugins

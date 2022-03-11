@@ -4,7 +4,7 @@ use atc::v1::{Airplane, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightP
 use crate::api::IntoApi;
 use crate::components::{AirplaneId, FlightPlan, Location};
 
-pub use self::bus::{EventBus, EventSender};
+pub use self::bus::{EventBus, EventReceiver, EventSender};
 
 mod bus;
 
