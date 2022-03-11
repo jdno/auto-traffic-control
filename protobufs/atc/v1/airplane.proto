@@ -28,3 +28,15 @@ message FlightPlanUpdated {
   string id = 1;
   repeated Node flight_plan = 2;
 }
+
+message GetAirplaneRequest {
+  string id = 1;
+}
+
+message GetAirplaneResponse {
+  Airplane airplane = 1;
+}
+
+service AirplaneService {
+  rpc GetAirplane(GetAirplaneRequest) returns (GetAirplaneResponse);
+}

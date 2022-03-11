@@ -1,8 +1,9 @@
 use bevy::prelude::*;
-use tokio::sync::broadcast::Sender;
+use tokio::sync::broadcast::{Receiver, Sender};
 
 use crate::event::Event;
 
+pub type EventReceiver = Receiver<Event>;
 pub type EventSender = Sender<Event>;
 
 #[derive(Clone, Debug)]
