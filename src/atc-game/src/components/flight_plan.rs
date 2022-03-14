@@ -6,7 +6,6 @@ use crate::api::IntoApi;
 use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[allow(dead_code)] // Remove when flight plans get validated
 pub enum ValidationError {
     InvalidFirstNode, // TODO: Find a more descriptive name
     HasSharpTurns,
@@ -30,7 +29,6 @@ impl FlightPlan {
         &mut self.0
     }
 
-    #[allow(dead_code)] // Remove when flight plans get validated
     pub fn validate(&self, previous_flight_plan: &FlightPlan) -> Result<(), Vec<ValidationError>> {
         let errors: Vec<ValidationError> = vec![
             self.is_within_map_bounds(),
@@ -97,6 +95,17 @@ impl FlightPlan {
         }
 
         Ok(())
+    }
+}
+
+impl From<&Vec<atc::v1::Node>> for FlightPlan {
+    fn from(api_flight_plan: &Vec<atc::v1::Node>) -> Self {
+        let tiles = api_flight_plan
+            .iter()
+            .map(|node| Tile::new(node.x, node.y))
+            .collect();
+
+        FlightPlan(tiles)
     }
 }
 

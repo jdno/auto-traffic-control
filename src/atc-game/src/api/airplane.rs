@@ -8,7 +8,6 @@ use atc::v1::{
 
 use crate::command::CommandSender;
 use crate::components::{AirplaneId, FlightPlan, ValidationError};
-use crate::map::Tile;
 use crate::store::Store;
 use crate::Command;
 
@@ -50,47 +49,56 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         let request = request.into_inner();
         let id = request.id;
 
-        if let Some(_airplane) = self.store.get(&id) {
-            let new_flight_plan = request.flight_plan;
-            let tiles = new_flight_plan
+        let airplane = match self.store.get(&id) {
+            Some(airplane) => airplane,
+            None => {
+                return Err(Status::not_found(&format!(
+                    "No airplane with id {id} was found"
+                )));
+            }
+        };
+
+        let previous_flight_plan = (&airplane.flight_plan).into();
+        let new_flight_plan: FlightPlan = (&request.flight_plan).into();
+
+        if let Err(errors) = new_flight_plan.validate(&previous_flight_plan) {
+            let errors = errors
                 .iter()
-                .map(|node| Tile::new(node.x, node.y))
+                .map(|error| match error {
+                    ValidationError::InvalidFirstNode => {
+                        atc::v1::update_flight_plan_response::Error::InvalidFirstNode.into()
+                    }
+                    ValidationError::HasSharpTurns => {
+                        atc::v1::update_flight_plan_response::Error::HasSharpTurns.into()
+                    }
+                    ValidationError::NodeOutOfBounds => {
+                        atc::v1::update_flight_plan_response::Error::NodeOutOfBounds.into()
+                    }
+                    ValidationError::NotInLogicalOrder => {
+                        atc::v1::update_flight_plan_response::Error::NotInLogicalOrder.into()
+                    }
+                })
                 .collect();
 
-            let errors = match FlightPlan::new(tiles) {
-                Ok(flight_plan) => {
-                    match self
-                        .command_bus
-                        .send(Command::UpdateFlightPlan(AirplaneId::new(id), flight_plan))
-                    {
-                        Ok(_) => Vec::new(),
-                        Err(_) => return Err(Status::internal("failed to queue command")),
-                    }
-                }
-                Err(errors) => errors
-                    .iter()
-                    .map(|error| match error {
-                        ValidationError::HasSharpTurns => {
-                            atc::v1::update_flight_plan_response::Error::HasSharpTurns.into()
-                        }
-                        ValidationError::NodeOutOfBounds => {
-                            atc::v1::update_flight_plan_response::Error::NodeOutOfBounds.into()
-                        }
-                        ValidationError::NotInLogicalOrder => {
-                            atc::v1::update_flight_plan_response::Error::NotInLogicalOrder.into()
-                        }
-                    })
-                    .collect(),
-            };
-
             // TODO: Create different responses for successful and failed updates
-            Ok(Response::new(UpdateFlightPlanResponse {
+            return Ok(Response::new(UpdateFlightPlanResponse {
                 validation_errors: errors,
-            }))
-        } else {
-            Err(Status::not_found(&format!(
-                "No airplane with id {id} was found"
-            )))
+            }));
+        };
+
+        if self
+            .command_bus
+            .send(Command::UpdateFlightPlan(
+                AirplaneId::new(id),
+                new_flight_plan,
+            ))
+            .is_err()
+        {
+            return Err(Status::internal("failed to queue command"));
         }
+
+        Ok(Response::new(UpdateFlightPlanResponse {
+            validation_errors: Vec::new(),
+        }))
     }
 }
