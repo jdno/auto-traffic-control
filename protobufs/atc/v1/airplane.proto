@@ -51,6 +51,8 @@ message UpdateFlightPlanResponse {
 
 message UpdateFlightPlanSuccess {}
 message UpdateFlightPlanError {
+  // buf:lint:ignore ENUM_VALUE_PREFIX
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX
   enum ValidationError {
     UNSPECIFIED = 0;
     NODE_OUT_OF_BOUNDS = 1;
