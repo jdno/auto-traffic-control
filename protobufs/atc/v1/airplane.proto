@@ -43,14 +43,14 @@ message UpdateFlightPlanRequest {
 }
 
 message UpdateFlightPlanResponse {
-  enum Error {
-    ERROR_UNSPECIFIED = 0;
-    ERROR_NODE_OUT_OF_BOUNDS = 1;
-    ERROR_NOT_IN_LOGICAL_ORDER = 2;
-    ERROR_HAS_SHARP_TURNS = 3;
-    ERROR_INVALID_FIRST_NODE = 4;
+  enum ValidationError {
+    UNSPECIFIED = 0;
+    NODE_OUT_OF_BOUNDS = 1;
+    NOT_IN_LOGICAL_ORDER = 2;
+    HAS_SHARP_TURNS = 3;
+    INVALID_FIRST_NODE = 4;
   }
-  repeated Error validation_errors = 1;
+  repeated ValidationError errors = 1;
 }
 
 service AirplaneService {

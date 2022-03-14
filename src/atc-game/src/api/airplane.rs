@@ -7,7 +7,7 @@ use atc::v1::{
 };
 
 use crate::command::CommandSender;
-use crate::components::{AirplaneId, FlightPlan, ValidationError};
+use crate::components::{AirplaneId, FlightPlan};
 use crate::store::Store;
 use crate::Command;
 
@@ -62,28 +62,10 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         let new_flight_plan: FlightPlan = (&request.flight_plan).into();
 
         if let Err(errors) = new_flight_plan.validate(&previous_flight_plan) {
-            let errors = errors
-                .iter()
-                .map(|error| match error {
-                    ValidationError::InvalidFirstNode => {
-                        atc::v1::update_flight_plan_response::Error::InvalidFirstNode.into()
-                    }
-                    ValidationError::HasSharpTurns => {
-                        atc::v1::update_flight_plan_response::Error::HasSharpTurns.into()
-                    }
-                    ValidationError::NodeOutOfBounds => {
-                        atc::v1::update_flight_plan_response::Error::NodeOutOfBounds.into()
-                    }
-                    ValidationError::NotInLogicalOrder => {
-                        atc::v1::update_flight_plan_response::Error::NotInLogicalOrder.into()
-                    }
-                })
-                .collect();
+            let errors = errors.iter().map(|error| (*error).into()).collect();
 
             // TODO: Create different responses for successful and failed updates
-            return Ok(Response::new(UpdateFlightPlanResponse {
-                validation_errors: errors,
-            }));
+            return Ok(Response::new(UpdateFlightPlanResponse { errors }));
         };
 
         if self
@@ -98,7 +80,7 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         }
 
         Ok(Response::new(UpdateFlightPlanResponse {
-            validation_errors: Vec::new(),
+            errors: Vec::new(),
         }))
     }
 }

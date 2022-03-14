@@ -4,6 +4,8 @@ version: v1
 lint:
   use:
     - DEFAULT
+  except:
+    - ENUM_VALUE_PREFIX
 
 breaking:
   use:

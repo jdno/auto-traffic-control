@@ -1,17 +1,10 @@
 use bevy::prelude::*;
 
+use atc::v1::update_flight_plan_response::ValidationError;
 use atc::v1::Node as ApiNode;
 
 use crate::api::IntoApi;
 use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
-
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub enum ValidationError {
-    InvalidFirstNode, // TODO: Find a more descriptive name
-    HasSharpTurns,
-    NodeOutOfBounds,
-    NotInLogicalOrder,
-}
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
 pub struct FlightPlan(Vec<Tile>);
@@ -119,7 +112,8 @@ impl IntoApi for FlightPlan {
 
 #[cfg(test)]
 mod tests {
-    use crate::components::ValidationError;
+    use atc::v1::update_flight_plan_response::ValidationError;
+
     use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
     use super::FlightPlan;
