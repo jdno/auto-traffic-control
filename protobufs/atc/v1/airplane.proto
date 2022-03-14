@@ -43,6 +43,14 @@ message UpdateFlightPlanRequest {
 }
 
 message UpdateFlightPlanResponse {
+  oneof payload {
+    UpdateFlightPlanSuccess success = 1;
+    UpdateFlightPlanError error = 2;
+  }
+}
+
+message UpdateFlightPlanSuccess {}
+message UpdateFlightPlanError {
   enum ValidationError {
     UNSPECIFIED = 0;
     NODE_OUT_OF_BOUNDS = 1;

@@ -2,8 +2,10 @@ use std::sync::Arc;
 
 use tonic::{Request, Response, Status};
 
+use atc::v1::update_flight_plan_response::Payload;
 use atc::v1::{
-    GetAirplaneRequest, GetAirplaneResponse, UpdateFlightPlanRequest, UpdateFlightPlanResponse,
+    GetAirplaneRequest, GetAirplaneResponse, UpdateFlightPlanError, UpdateFlightPlanRequest,
+    UpdateFlightPlanResponse, UpdateFlightPlanSuccess,
 };
 
 use crate::command::CommandSender;
@@ -64,8 +66,9 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         if let Err(errors) = new_flight_plan.validate(&previous_flight_plan) {
             let errors = errors.iter().map(|error| (*error).into()).collect();
 
-            // TODO: Create different responses for successful and failed updates
-            return Ok(Response::new(UpdateFlightPlanResponse { errors }));
+            return Ok(Response::new(UpdateFlightPlanResponse {
+                payload: Some(Payload::Error(UpdateFlightPlanError { errors })),
+            }));
         };
 
         if self
@@ -80,7 +83,7 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         }
 
         Ok(Response::new(UpdateFlightPlanResponse {
-            errors: Vec::new(),
+            payload: Some(Payload::Success(UpdateFlightPlanSuccess {})),
         }))
     }
 }

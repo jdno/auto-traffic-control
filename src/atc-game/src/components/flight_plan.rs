@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use atc::v1::update_flight_plan_response::ValidationError;
+use atc::v1::update_flight_plan_error::ValidationError;
 use atc::v1::Node as ApiNode;
 
 use crate::api::IntoApi;
@@ -112,7 +112,7 @@ impl IntoApi for FlightPlan {
 
 #[cfg(test)]
 mod tests {
-    use atc::v1::update_flight_plan_response::ValidationError;
+    use atc::v1::update_flight_plan_error::ValidationError;
 
     use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
