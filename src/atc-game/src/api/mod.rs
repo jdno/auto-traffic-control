@@ -7,6 +7,7 @@ use tonic::transport::{Error, Server as GrpcServer};
 use atc::v1::airplane_service_server::AirplaneServiceServer;
 use atc::v1::event_service_server::EventServiceServer;
 
+use crate::command::CommandSender;
 use crate::event::EventSender;
 use crate::store::Store;
 
@@ -21,9 +22,16 @@ const INTERFACE_VARIABLE: &str = "AUTO_TRAFFIC_CONTROL_INTERFACE";
 pub struct Api;
 
 impl Api {
-    pub async fn serve(event_sender: EventSender, store: Arc<Store>) -> Result<(), Error> {
+    pub async fn serve(
+        command_sender: CommandSender,
+        event_sender: EventSender,
+        store: Arc<Store>,
+    ) -> Result<(), Error> {
         GrpcServer::builder()
-            .add_service(AirplaneServiceServer::new(AirplaneService::new(store)))
+            .add_service(AirplaneServiceServer::new(AirplaneService::new(
+                command_sender,
+                store,
+            )))
             .add_service(EventServiceServer::new(EventService::new(event_sender)))
             .serve(Self::address_or_default())
             .await

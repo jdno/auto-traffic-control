@@ -4,16 +4,19 @@ use tonic::{Request, Response, Status};
 
 use atc::v1::{GetAirplaneRequest, GetAirplaneResponse};
 
+use crate::command::CommandSender;
 use crate::store::Store;
 
 #[derive(Clone, Debug)]
 pub struct AirplaneService {
+    #[allow(dead_code)] // TODO: Remove when updating a flight plan
+    command_bus: CommandSender,
     store: Arc<Store>,
 }
 
 impl AirplaneService {
-    pub fn new(store: Arc<Store>) -> Self {
-        Self { store }
+    pub fn new(command_bus: CommandSender, store: Arc<Store>) -> Self {
+        Self { command_bus, store }
     }
 }
 
