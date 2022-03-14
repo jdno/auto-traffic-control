@@ -87,3 +87,68 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         }))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+
+    use tokio::sync::broadcast::channel;
+    use tonic::{Code, Request};
+
+    use atc::v1::airplane_service_server::AirplaneService as ServiceTrait;
+    use atc::v1::Airplane;
+    use atc::v1::GetAirplaneRequest;
+
+    use crate::api::airplane::AirplaneService;
+    use crate::api::IntoApi;
+    use crate::command::CommandReceiver;
+    use crate::components::{AirplaneId, FlightPlan, Location};
+    use crate::{Command, Store};
+
+    fn setup() -> (CommandReceiver, Arc<Store>, AirplaneService) {
+        let (command_sender, command_receiver) = channel::<Command>(1024);
+        let store = Arc::new(Store::new());
+        let service = AirplaneService::new(command_sender, store.clone());
+
+        (command_receiver, store, service)
+    }
+
+    #[tokio::test]
+    async fn get_airplane_for_existing_plane() {
+        let (_command_bus, store, service) = setup();
+
+        let id = AirplaneId::new("AT-4321".into());
+        let location = Location::new(0, 0);
+        let flight_plan = FlightPlan::new(Vec::new());
+
+        let airplane = Airplane {
+            id: id.into_api(),
+            location: Some(location.into_api()),
+            flight_plan: flight_plan.into_api(),
+        };
+
+        store.insert("AT-4321".into(), airplane);
+
+        let request = Request::new(GetAirplaneRequest {
+            id: "AT-4321".into(),
+        });
+        let response = service.get_airplane(request).await.unwrap();
+
+        let payload = response.into_inner();
+        let airplane = payload.airplane.unwrap();
+
+        assert_eq!("AT-4321", &airplane.id);
+    }
+
+    #[tokio::test]
+    async fn get_airplane_with_wrong_id() {
+        let (_command_bus, _store, service) = setup();
+
+        let request = Request::new(GetAirplaneRequest {
+            id: "AT-4321".into(),
+        });
+        let status = service.get_airplane(request).await.unwrap_err();
+
+        assert_eq!(status.code(), Code::NotFound);
+    }
+}
