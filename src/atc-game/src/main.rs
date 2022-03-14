@@ -65,6 +65,7 @@ async fn main() {
         .add_system(despawn_airplane)
         .add_system(follow_flight_plan)
         .add_system(spawn_airplane)
+        .add_system(update_flight_plan)
         .run();
 }
 

@@ -6,14 +6,14 @@ use crate::command::Command;
 pub type CommandReceiver = Receiver<Command>;
 pub type CommandSender = Sender<Command>;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct CommandBus {
-    sender: CommandSender,
+    receiver: CommandReceiver,
 }
 
 impl CommandBus {
-    pub fn sender(&self) -> &CommandSender {
-        &self.sender
+    pub fn receiver(&mut self) -> &mut CommandReceiver {
+        &mut self.receiver
     }
 }
 
@@ -22,7 +22,7 @@ impl FromWorld for CommandBus {
         let sender = world.get_resource::<CommandSender>().unwrap();
 
         Self {
-            sender: sender.clone(),
+            receiver: sender.subscribe(),
         }
     }
 }
