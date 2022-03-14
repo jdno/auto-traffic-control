@@ -44,7 +44,7 @@ message UpdateFlightPlanRequest {
 
 message UpdateFlightPlanResponse {
   enum Error {
-    ERROR_UNKNOWN = 0;
+    ERROR_UNSPECIFIED = 0;
     ERROR_NODE_OUT_OF_BOUNDS = 1;
     ERROR_NOT_IN_LOGICAL_ORDER = 2;
     ERROR_HAS_SHARP_TURNS = 3;
