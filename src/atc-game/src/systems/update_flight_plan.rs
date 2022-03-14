@@ -14,17 +14,21 @@ pub fn update_flight_plan(
 
         for (id, mut current_flight_plan) in query.iter_mut() {
             if *id == airplane_id {
-                *current_flight_plan = new_flight_plan.clone();
+                if new_flight_plan.validate(&current_flight_plan).is_ok() {
+                    *current_flight_plan = new_flight_plan.clone();
 
-                event_bus
-                    .sender()
-                    .send(Event::FlightPlanUpdated(
-                        airplane_id.clone(),
-                        new_flight_plan,
-                    ))
-                    .expect("failed to send event"); // TODO: Handle error
+                    event_bus
+                        .sender()
+                        .send(Event::FlightPlanUpdated(
+                            airplane_id.clone(),
+                            new_flight_plan,
+                        ))
+                        .expect("failed to send event"); // TODO: Handle error
 
-                break;
+                    break;
+                } else {
+                    // TODO: Handle error
+                }
             }
         }
     }
