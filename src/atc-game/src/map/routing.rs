@@ -8,8 +8,7 @@ pub fn route_between(start: &Tile, destination: &Tile) -> Vec<Tile> {
     let delta_x = destination.x() - start.x();
     let delta_y = destination.y() - start.y();
 
-    // Start and destination are direct neighbors
-    if delta_x.abs() <= 1 && delta_y.abs() <= 1 {
+    if start.is_neighbor(destination) {
         return vec![*destination];
     }
 

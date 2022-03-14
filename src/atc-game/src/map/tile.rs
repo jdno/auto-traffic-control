@@ -31,6 +31,13 @@ impl Tile {
         self.y
     }
 
+    pub fn is_neighbor(&self, potential_neighbor: &Tile) -> bool {
+        let delta_x = potential_neighbor.x() - self.x();
+        let delta_y = potential_neighbor.y() - self.y();
+
+        delta_x.abs() <= 1 && delta_y.abs() <= 1
+    }
+
     pub fn as_point(&self) -> Point<f32> {
         let x = (self.x * TILE_SIZE) as f32;
         let y = (self.y * TILE_SIZE) as f32;
@@ -80,6 +87,22 @@ mod tests {
     use geo::point;
 
     use super::{Tile, TILE_SIZE};
+
+    #[test]
+    fn is_neighbor_with_neighbor() {
+        let tile = Tile::new(0, 0);
+        let neighbor = Tile::new(1, 1);
+
+        assert!(neighbor.is_neighbor(&tile));
+    }
+
+    #[test]
+    fn is_neighbor_with_distant_tile() {
+        let tile = Tile::new(0, 0);
+        let neighbor = Tile::new(2, 0);
+
+        assert!(!neighbor.is_neighbor(&tile));
+    }
 
     #[test]
     fn trait_display() {
