@@ -95,6 +95,7 @@ impl From<&Vec<atc::v1::Node>> for FlightPlan {
     fn from(api_flight_plan: &Vec<atc::v1::Node>) -> Self {
         let tiles = api_flight_plan
             .iter()
+            .rev()
             .map(|node| Tile::new(node.x, node.y))
             .collect();
 
