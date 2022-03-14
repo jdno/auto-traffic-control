@@ -7,13 +7,13 @@ use atc::v1::{
 };
 
 use crate::command::CommandSender;
-use crate::components::{FlightPlan, ValidationError};
+use crate::components::{AirplaneId, FlightPlan, ValidationError};
 use crate::map::Tile;
 use crate::store::Store;
+use crate::Command;
 
 #[derive(Clone, Debug)]
 pub struct AirplaneService {
-    #[allow(dead_code)] // TODO: Remove when updating a flight plan
     command_bus: CommandSender,
     store: Arc<Store>,
 }
@@ -58,9 +58,14 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
                 .collect();
 
             let errors = match FlightPlan::new(tiles) {
-                Ok(_flight_plan) => {
-                    // TODO: Queue a command on the command bus
-                    Vec::new()
+                Ok(flight_plan) => {
+                    match self
+                        .command_bus
+                        .send(Command::UpdateFlightPlan(AirplaneId::new(id), flight_plan))
+                    {
+                        Ok(_) => Vec::new(),
+                        Err(_) => return Err(Status::internal("failed to queue command")),
+                    }
                 }
                 Err(errors) => errors
                     .iter()

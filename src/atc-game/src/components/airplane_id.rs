@@ -6,6 +6,10 @@ use crate::api::IntoApi;
 pub struct AirplaneId(String);
 
 impl AirplaneId {
+    pub fn new(id: String) -> Self {
+        Self(id)
+    }
+
     #[allow(dead_code)] // TODO: Remove when the id is read
     pub fn get(&self) -> &str {
         &self.0
