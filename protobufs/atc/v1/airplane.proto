@@ -37,6 +37,33 @@ message GetAirplaneResponse {
   Airplane airplane = 1;
 }
 
+message UpdateFlightPlanRequest {
+  string id = 1;
+  repeated Node flight_plan = 2;
+}
+
+message UpdateFlightPlanResponse {
+  oneof payload {
+    UpdateFlightPlanSuccess success = 1;
+    UpdateFlightPlanError error = 2;
+  }
+}
+
+message UpdateFlightPlanSuccess {}
+message UpdateFlightPlanError {
+  // buf:lint:ignore ENUM_VALUE_PREFIX
+  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX
+  enum ValidationError {
+    UNSPECIFIED = 0;
+    NODE_OUT_OF_BOUNDS = 1;
+    NOT_IN_LOGICAL_ORDER = 2;
+    HAS_SHARP_TURNS = 3;
+    INVALID_FIRST_NODE = 4;
+  }
+  repeated ValidationError errors = 1;
+}
+
 service AirplaneService {
   rpc GetAirplane(GetAirplaneRequest) returns (GetAirplaneResponse);
+  rpc UpdateFlightPlan(UpdateFlightPlanRequest) returns (UpdateFlightPlanResponse);
 }

@@ -1,18 +1,10 @@
 use bevy::prelude::*;
 
+use atc::v1::update_flight_plan_error::ValidationError;
 use atc::v1::Node as ApiNode;
 
 use crate::api::IntoApi;
 use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
-
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[allow(dead_code)] // Remove when flight plans get validated
-pub enum ValidationError {
-    InvalidFirstNode, // TODO: Find a more descriptive name
-    HasSharpTurns,
-    NodeOutOfBounds,
-    NotInLogicalOrder,
-}
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
 pub struct FlightPlan(Vec<Tile>);
@@ -30,7 +22,6 @@ impl FlightPlan {
         &mut self.0
     }
 
-    #[allow(dead_code)] // Remove when flight plans get validated
     pub fn validate(&self, previous_flight_plan: &FlightPlan) -> Result<(), Vec<ValidationError>> {
         let errors: Vec<ValidationError> = vec![
             self.is_within_map_bounds(),
@@ -100,6 +91,18 @@ impl FlightPlan {
     }
 }
 
+impl From<&Vec<atc::v1::Node>> for FlightPlan {
+    fn from(api_flight_plan: &Vec<atc::v1::Node>) -> Self {
+        let tiles = api_flight_plan
+            .iter()
+            .rev()
+            .map(|node| Tile::new(node.x, node.y))
+            .collect();
+
+        FlightPlan(tiles)
+    }
+}
+
 impl IntoApi for FlightPlan {
     type ApiType = Vec<ApiNode>;
 
@@ -110,7 +113,8 @@ impl IntoApi for FlightPlan {
 
 #[cfg(test)]
 mod tests {
-    use crate::components::ValidationError;
+    use atc::v1::update_flight_plan_error::ValidationError;
+
     use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
     use super::FlightPlan;

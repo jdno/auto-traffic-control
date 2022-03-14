@@ -16,6 +16,11 @@ pub struct Location {
 }
 
 impl Location {
+    #[cfg(test)]
+    pub fn new(x: i32, y: i32) -> Self {
+        Location { x, y }
+    }
+
     #[allow(dead_code)] // TODO: Remove when the value is read
     pub fn x(&self) -> i32 {
         self.x
