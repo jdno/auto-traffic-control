@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package atc.v1;
+
+message GetGameStateRequest {}
+
+message GetGameStateResponse {
+  enum GameState {
+    GAME_STATE_UNSPECIFIED = 0;
+    GAME_STATE_READY = 1;
+    GAME_STATE_RUNNING = 2;
+  }
+  GameState game_state = 1;
+}
+
+message StartGameRequest {}
+message StartGameResponse {}
+
+service GameService {
+  rpc GetGameState(GetGameStateRequest) returns (GetGameStateResponse);
+  rpc StartGame(StartGameRequest) returns (StartGameResponse);
+}

@@ -1,12 +1,16 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
+use parking_lot::Mutex;
 use tokio::sync::broadcast::{channel, Receiver};
+
+use atc::v1::get_game_state_response::GameState;
 
 use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
-use crate::store::{Store, StoreManager};
+use crate::state::{GameStateReadyPlugin, GameStateRunningPlugin, GameStateWatcher};
+use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
 
 mod api;
@@ -14,6 +18,7 @@ mod command;
 mod components;
 mod event;
 mod map;
+mod state;
 mod store;
 mod systems;
 
@@ -29,21 +34,29 @@ const SCREEN_WIDTH: f32 = 1024.0;
 /// textures with a size of 32 by 32 pixels, and thus tiles must be 32 pixels high and wide as well.
 const TILE_SIZE: i32 = 32;
 
+type SharedGameState = Arc<Mutex<GameState>>;
+
 #[tokio::main]
 async fn main() {
     let (command_sender, command_receiver) = channel::<Command>(1024);
     let (event_sender, event_receiver) = channel::<Event>(1024);
 
+    let game_state = Arc::new(Mutex::new(GameState::Ready));
+    let mut game_state_watcher =
+        GameStateWatcher::new(event_sender.subscribe(), game_state.clone());
+
     let store = Arc::new(Store::new());
-    let mut store_manager = StoreManager::new(event_receiver, store.clone());
+    let mut store_watcher = StoreWatcher::new(event_receiver, store.clone());
 
     let _api_join_handle = tokio::spawn(Api::serve(
         command_sender.clone(),
         event_sender.clone(),
+        game_state,
         store,
     ));
     let _drainer_join_handle = tokio::spawn(async move { drain_queue(command_receiver).await });
-    let _store_join_handle = tokio::spawn(async move { store_manager.connect().await });
+    let _game_state_join_handle = tokio::spawn(async move { game_state_watcher.connect().await });
+    let _store_join_handle = tokio::spawn(async move { store_watcher.connect().await });
 
     App::new()
         // Must be added before the DefaultPlugins
@@ -58,14 +71,11 @@ async fn main() {
         .add_plugins(DefaultPlugins)
         .insert_resource(command_sender)
         .insert_resource(event_sender)
-        .insert_resource(SpawnTimer::new(Timer::from_seconds(1.0, true)))
-        .add_startup_system(setup_camera)
-        .add_startup_system(setup_airport)
-        .add_startup_system(setup_grid)
-        .add_system(despawn_airplane)
-        .add_system(follow_flight_plan)
-        .add_system(spawn_airplane)
-        .add_system(update_flight_plan)
+        .add_state(GameState::Ready)
+        .add_plugin(GameStateReadyPlugin)
+        .add_plugin(GameStateRunningPlugin)
+        .add_startup_system(setup_cameras)
+        .add_system(change_app_state)
         .run();
 }
 

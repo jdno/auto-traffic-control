@@ -6,7 +6,7 @@ mod bus;
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Command {
-    #[allow(dead_code)] // TODO: Remove when implementing the API
+    StartGame,
     UpdateFlightPlan(AirplaneId, FlightPlan),
 }
 

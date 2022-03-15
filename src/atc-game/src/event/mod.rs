@@ -1,5 +1,8 @@
 use atc::v1::stream_response::Event as ApiEvent;
-use atc::v1::{Airplane, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightPlanUpdated};
+use atc::v1::{
+    Airplane, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightPlanUpdated, GameStarted,
+    GameStopped,
+};
 
 use crate::api::IntoApi;
 use crate::components::{AirplaneId, FlightPlan, Location};
@@ -14,6 +17,8 @@ pub enum Event {
     AirplaneLanded(AirplaneId),
     AirplaneMoved(AirplaneId, Location),
     FlightPlanUpdated(AirplaneId, FlightPlan),
+    GameStarted,
+    GameStopped,
 }
 
 impl IntoApi for Event {
@@ -43,6 +48,8 @@ impl IntoApi for Event {
                     flight_plan: flight_plan.into_api(),
                 })
             }
+            Event::GameStarted => ApiEvent::GameStarted(GameStarted {}),
+            Event::GameStopped => ApiEvent::GameStopped(GameStopped {}),
         }
     }
 }

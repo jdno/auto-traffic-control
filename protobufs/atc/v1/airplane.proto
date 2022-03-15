@@ -11,24 +11,6 @@ message Airplane {
   repeated Node flight_plan = 3;
 }
 
-message AirplaneDetected {
-  Airplane airplane = 1;
-}
-
-message AirplaneLanded {
-  string id = 1;
-}
-
-message AirplaneMoved {
-  string id = 1;
-  Location location = 2;
-}
-
-message FlightPlanUpdated {
-  string id = 1;
-  repeated Node flight_plan = 2;
-}
-
 message GetAirplaneRequest {
   string id = 1;
 }
