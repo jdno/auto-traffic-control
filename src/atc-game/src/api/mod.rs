@@ -34,11 +34,14 @@ impl Api {
     ) -> Result<(), Error> {
         GrpcServer::builder()
             .add_service(AirplaneServiceServer::new(AirplaneService::new(
-                command_sender,
+                command_sender.clone(),
                 store,
             )))
             .add_service(EventServiceServer::new(EventService::new(event_sender)))
-            .add_service(GameServiceServer::new(GameService::new(game_state)))
+            .add_service(GameServiceServer::new(GameService::new(
+                command_sender,
+                game_state,
+            )))
             .serve(Self::address_or_default())
             .await
     }

@@ -10,7 +10,10 @@ pub fn update_flight_plan(
     event_bus: Local<EventBus>,
 ) {
     while let Ok(command) = command_bus.receiver().try_recv() {
-        let Command::UpdateFlightPlan(airplane_id, new_flight_plan) = command;
+        let (airplane_id, new_flight_plan) = match command {
+            Command::UpdateFlightPlan(airplane_id, flight_plan) => (airplane_id, flight_plan),
+            _ => continue,
+        };
 
         for (id, mut current_flight_plan) in query.iter_mut() {
             if *id == airplane_id {

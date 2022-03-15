@@ -13,6 +13,10 @@ message GetGameStateResponse {
   GameState game_state = 1;
 }
 
+message StartGameRequest {}
+message StartGameResponse {}
+
 service GameService {
   rpc GetGameState(GetGameStateRequest) returns (GetGameStateResponse);
+  rpc StartGame(StartGameRequest) returns (StartGameResponse);
 }
