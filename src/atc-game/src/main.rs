@@ -3,6 +3,8 @@ use std::sync::Arc;
 use bevy::prelude::*;
 use tokio::sync::broadcast::{channel, Receiver};
 
+use atc::v1::game_state_response::GameState;
+
 use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
@@ -56,6 +58,7 @@ async fn main() {
         })
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(DefaultPlugins)
+        .add_state(GameState::Ready)
         .insert_resource(command_sender)
         .insert_resource(event_sender)
         .insert_resource(SpawnTimer::new(Timer::from_seconds(1.0, true)))
