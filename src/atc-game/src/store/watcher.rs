@@ -29,6 +29,7 @@ impl StoreWatcher {
                 Event::FlightPlanUpdated(id, flight_plan) => {
                     self.update_flight_plan(id, flight_plan);
                 }
+                _ => {}
             }
         }
     }

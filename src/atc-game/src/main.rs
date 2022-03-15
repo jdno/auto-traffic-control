@@ -9,7 +9,7 @@ use atc::v1::get_game_state_response::GameState;
 use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
-use crate::state::{GameStateReadyPlugin, GameStateRunningPlugin};
+use crate::state::{GameStateReadyPlugin, GameStateRunningPlugin, GameStateWatcher};
 use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
 
@@ -42,6 +42,8 @@ async fn main() {
     let (event_sender, event_receiver) = channel::<Event>(1024);
 
     let game_state = Arc::new(Mutex::new(GameState::Ready));
+    let mut game_state_watcher =
+        GameStateWatcher::new(event_sender.subscribe(), game_state.clone());
 
     let store = Arc::new(Store::new());
     let mut store_watcher = StoreWatcher::new(event_receiver, store.clone());
@@ -53,6 +55,7 @@ async fn main() {
         store,
     ));
     let _drainer_join_handle = tokio::spawn(async move { drain_queue(command_receiver).await });
+    let _game_state_join_handle = tokio::spawn(async move { game_state_watcher.connect().await });
     let _store_join_handle = tokio::spawn(async move { store_watcher.connect().await });
 
     App::new()

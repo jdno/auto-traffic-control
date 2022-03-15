@@ -10,6 +10,8 @@ fn should_print(event: &Event) -> bool {
         Event::AirplaneLanded(_) => true,
         Event::AirplaneMoved(_) => false,
         Event::FlightPlanUpdated(_) => false,
+        Event::GameStarted(_) => true,
+        Event::GameStopped(_) => true,
     }
 }
 
@@ -58,6 +60,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         airplane_id, next_hop.x, next_hop.y
                     );
                 }
+            }
+            Event::GameStarted(_) => {
+                println!("Game started")
+            }
+            Event::GameStopped(_) => {
+                println!("Game stopped")
             }
         }
     }
