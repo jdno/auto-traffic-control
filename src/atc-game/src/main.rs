@@ -8,6 +8,7 @@ use atc::v1::game_state_response::GameState;
 use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
+use crate::state::{GameStateReadyPlugin, GameStateRunningPlugin};
 use crate::store::{Store, StoreManager};
 use crate::systems::*;
 
@@ -16,6 +17,7 @@ mod command;
 mod components;
 mod event;
 mod map;
+mod state;
 mod store;
 mod systems;
 
@@ -58,17 +60,12 @@ async fn main() {
         })
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(DefaultPlugins)
-        .add_state(GameState::Ready)
         .insert_resource(command_sender)
         .insert_resource(event_sender)
-        .insert_resource(SpawnTimer::new(Timer::from_seconds(1.0, true)))
-        .add_startup_system(setup_camera)
-        .add_startup_system(setup_airport)
-        .add_startup_system(setup_grid)
-        .add_system(despawn_airplane)
-        .add_system(follow_flight_plan)
-        .add_system(spawn_airplane)
-        .add_system(update_flight_plan)
+        .add_state(GameState::Ready)
+        .add_plugin(GameStateReadyPlugin)
+        .add_plugin(GameStateRunningPlugin)
+        .add_startup_system(setup_cameras)
         .run();
 }
 
