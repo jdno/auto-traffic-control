@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package atc.v1;
 
-message GameStateRequest {}
+message GetGameStateRequest {}
 
-message GameStateResponse {
+message GetGameStateResponse {
   enum GameState {
     GAME_STATE_UNSPECIFIED = 0;
     GAME_STATE_READY = 1;
@@ -14,5 +14,5 @@ message GameStateResponse {
 }
 
 service GameService {
-  rpc GetGameState(GameStateRequest) returns (GameStateResponse);
+  rpc GetGameState(GetGameStateRequest) returns (GetGameStateResponse);
 }

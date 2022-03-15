@@ -6,16 +6,20 @@ use tonic::transport::{Error, Server as GrpcServer};
 
 use atc::v1::airplane_service_server::AirplaneServiceServer;
 use atc::v1::event_service_server::EventServiceServer;
+use atc::v1::game_service_server::GameServiceServer;
 
 use crate::command::CommandSender;
 use crate::event::EventSender;
 use crate::store::Store;
+use crate::SharedGameState;
 
 use self::airplane::AirplaneService;
 use self::event::EventService;
+use self::game::GameService;
 
 mod airplane;
 mod event;
+mod game;
 
 const INTERFACE_VARIABLE: &str = "AUTO_TRAFFIC_CONTROL_INTERFACE";
 
@@ -25,6 +29,7 @@ impl Api {
     pub async fn serve(
         command_sender: CommandSender,
         event_sender: EventSender,
+        game_state: SharedGameState,
         store: Arc<Store>,
     ) -> Result<(), Error> {
         GrpcServer::builder()
@@ -33,6 +38,7 @@ impl Api {
                 store,
             )))
             .add_service(EventServiceServer::new(EventService::new(event_sender)))
+            .add_service(GameServiceServer::new(GameService::new(game_state)))
             .serve(Self::address_or_default())
             .await
     }

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use atc::v1::game_state_response::GameState;
+use atc::v1::get_game_state_response::GameState;
 
 struct Menu(Entity);
 
