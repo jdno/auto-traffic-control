@@ -1,17 +1,19 @@
+use std::sync::Arc;
+
+use atc::v1::Airplane;
+
 use crate::api::IntoApi;
 use crate::components::{AirplaneId, FlightPlan, Location};
 use crate::event::EventReceiver;
 use crate::{Event, Store};
-use atc::v1::Airplane;
-use std::sync::Arc;
 
 #[derive(Debug)]
-pub struct StoreManager {
+pub struct StoreWatcher {
     event_bus: EventReceiver,
     store: Arc<Store>,
 }
 
-impl StoreManager {
+impl StoreWatcher {
     pub fn new(event_bus: EventReceiver, store: Arc<Store>) -> Self {
         Self { event_bus, store }
     }

@@ -10,7 +10,7 @@ use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
 use crate::state::{GameStateReadyPlugin, GameStateRunningPlugin};
-use crate::store::{Store, StoreManager};
+use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
 
 mod api;
@@ -44,7 +44,7 @@ async fn main() {
     let game_state = Arc::new(Mutex::new(GameState::Ready));
 
     let store = Arc::new(Store::new());
-    let mut store_manager = StoreManager::new(event_receiver, store.clone());
+    let mut store_watcher = StoreWatcher::new(event_receiver, store.clone());
 
     let _api_join_handle = tokio::spawn(Api::serve(
         command_sender.clone(),
@@ -53,7 +53,7 @@ async fn main() {
         store,
     ));
     let _drainer_join_handle = tokio::spawn(async move { drain_queue(command_receiver).await });
-    let _store_join_handle = tokio::spawn(async move { store_manager.connect().await });
+    let _store_join_handle = tokio::spawn(async move { store_watcher.connect().await });
 
     App::new()
         // Must be added before the DefaultPlugins
