@@ -75,6 +75,7 @@ async fn main() {
         .add_plugin(GameStateReadyPlugin)
         .add_plugin(GameStateRunningPlugin)
         .add_startup_system(setup_cameras)
+        .add_system(change_app_state)
         .run();
 }
 

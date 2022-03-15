@@ -258,9 +258,12 @@ mod tests {
         }
 
         let command = command_bus.try_recv().unwrap();
-        let Command::UpdateFlightPlan(airplane_id, flight_plan) = command;
-
-        assert_eq!("AT-4321", airplane_id.get());
-        assert_eq!(new_flight_plan, flight_plan);
+        match command {
+            Command::UpdateFlightPlan(airplane_id, flight_plan) => {
+                assert_eq!("AT-4321", airplane_id.get());
+                assert_eq!(new_flight_plan, flight_plan);
+            }
+            _ => panic!("unexpected command"),
+        }
     }
 }
