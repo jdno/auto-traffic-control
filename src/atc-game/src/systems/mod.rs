@@ -1,6 +1,7 @@
 pub use self::change_app_state::*;
 pub use self::detect_collisions::*;
 pub use self::follow_flight_plan::*;
+pub use self::generate_flight_plan::*;
 pub use self::setup_airport::*;
 pub use self::setup_cameras::*;
 pub use self::setup_grid::*;
@@ -10,6 +11,7 @@ pub use self::update_flight_plan::*;
 mod change_app_state;
 mod detect_collisions;
 mod follow_flight_plan;
+mod generate_flight_plan;
 mod setup_airport;
 mod setup_cameras;
 mod setup_grid;
