@@ -6,6 +6,7 @@ use atc::v1::StreamRequest;
 
 fn should_print(event: &Event) -> bool {
     match event {
+        Event::AirplaneCollided(_) => true,
         Event::AirplaneDetected(_) => true,
         Event::AirplaneLanded(_) => true,
         Event::AirplaneMoved(_) => false,
@@ -29,6 +30,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
 
         match event {
+            Event::AirplaneCollided(collision) => {
+                println!(
+                    "Airplane {} collided with airplane {}",
+                    collision.id1, collision.id2
+                );
+            }
             Event::AirplaneDetected(airplane_detected) => {
                 let airplane = airplane_detected.airplane.unwrap();
                 let location = airplane.location.unwrap();

@@ -1,7 +1,7 @@
 use atc::v1::stream_response::Event as ApiEvent;
 use atc::v1::{
-    Airplane, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightPlanUpdated, GameStarted,
-    GameStopped,
+    Airplane, AirplaneCollided, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightPlanUpdated,
+    GameStarted, GameStopped,
 };
 
 use crate::api::IntoApi;
@@ -13,6 +13,7 @@ mod bus;
 
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub enum Event {
+    AirplaneCollided(AirplaneId, AirplaneId),
     AirplaneDetected(AirplaneId, Location, FlightPlan),
     AirplaneLanded(AirplaneId),
     AirplaneMoved(AirplaneId, Location),
@@ -26,6 +27,12 @@ impl IntoApi for Event {
 
     fn into_api(self) -> Self::ApiType {
         match self {
+            Event::AirplaneCollided(airplane_id1, airplane_id2) => {
+                ApiEvent::AirplaneCollided(AirplaneCollided {
+                    id1: airplane_id1.into_api(),
+                    id2: airplane_id2.into_api(),
+                })
+            }
             Event::AirplaneDetected(id, location, flight_plan) => {
                 ApiEvent::AirplaneDetected(AirplaneDetected {
                     airplane: Some(Airplane {
