@@ -7,16 +7,38 @@ use crate::map::Direction;
 use crate::{Event, EventBus};
 
 pub fn follow_flight_plan(
+    mut commands: Commands,
     time: Res<Time>,
-    mut query: Query<(&AirplaneId, &mut FlightPlan, &Speed, &mut Transform)>,
+    mut query: Query<(Entity, &AirplaneId, &mut FlightPlan, &Speed, &mut Transform)>,
     event_bus: Local<EventBus>,
 ) {
-    for (airplane_id, mut flight_plan, speed, mut transform) in query.iter_mut() {
+    for (entity, airplane_id, mut flight_plan, speed, mut transform) in query.iter_mut() {
         let distance = speed.get() * time.delta().as_secs_f32();
 
         let did_update_flight_plan = fly(&mut transform.translation, &mut flight_plan, distance);
+        let mut airplane_landed = false;
 
-        if did_update_flight_plan {
+        event_bus
+            .sender()
+            .send(Event::AirplaneMoved(
+                airplane_id.clone(),
+                Location::from(&transform),
+            ))
+            .expect("failed to send event"); // TODO: Handle error
+
+        // Airplane reached the airport
+        if transform.translation == Vec3::new(0.0, 0.0, 2.0) {
+            airplane_landed = true;
+
+            commands.entity(entity).despawn();
+
+            event_bus
+                .sender()
+                .send(Event::AirplaneLanded(airplane_id.clone()))
+                .expect("failed to send event"); // TODO: Handle error
+        }
+
+        if did_update_flight_plan && !airplane_landed {
             event_bus
                 .sender()
                 .send(Event::FlightPlanUpdated(
@@ -25,14 +47,6 @@ pub fn follow_flight_plan(
                 ))
                 .expect("failed to send event"); // TODO: Handle error
         }
-
-        event_bus
-            .sender()
-            .send(Event::AirplaneMoved(
-                airplane_id.clone(),
-                Location::from(transform),
-            ))
-            .expect("failed to send event"); // TODO: Handle error
     }
 }
 
