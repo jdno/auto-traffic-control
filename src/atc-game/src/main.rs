@@ -23,10 +23,10 @@ mod store;
 mod systems;
 
 /// The height of the game's window
-const SCREEN_HEIGHT: f32 = 768.0;
+const SCREEN_HEIGHT: f32 = 640.0;
 
 /// The width of the game's window
-const SCREEN_WIDTH: f32 = 1024.0;
+const SCREEN_WIDTH: f32 = 800.0;
 
 /// The dimension of a tile
 ///
