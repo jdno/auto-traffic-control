@@ -29,6 +29,7 @@ impl StoreWatcher {
                 Event::FlightPlanUpdated(id, flight_plan) => {
                     self.update_flight_plan(id, flight_plan);
                 }
+                Event::GameStopped => self.reset(),
                 _ => {}
             }
         }
@@ -59,5 +60,9 @@ impl StoreWatcher {
         if let Some(mut airplane) = self.store.get_mut(id.get()) {
             airplane.flight_plan = flight_plan.into_api();
         }
+    }
+
+    fn reset(&self) {
+        self.store.clear();
     }
 }
