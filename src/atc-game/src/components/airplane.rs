@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+pub const AIRPLANE_SIZE: f32 = 24.0;
+
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
 pub struct Airplane;
 
