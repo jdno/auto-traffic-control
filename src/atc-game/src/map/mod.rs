@@ -3,11 +3,9 @@ use std::ops::RangeInclusive;
 use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
 
 pub use self::direction::*;
-pub use self::routing::*;
 pub use self::tile::*;
 
 mod direction;
-mod routing;
 mod tile;
 
 /// The number of tiles that are left empty around the border of the window
