@@ -61,12 +61,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let airplane_id = flight_plan_updated.id;
                 let flight_plan = flight_plan_updated.flight_plan;
 
-                if let Some(next_hop) = flight_plan.get(0) {
-                    println!(
-                        "Flight plan updated for {}: next hop is {}:{}",
-                        airplane_id, next_hop.x, next_hop.y
-                    );
-                }
+                println!(
+                    "Flight plan updated for {}: {}",
+                    airplane_id,
+                    flight_plan
+                        .iter()
+                        .map(|node| format!("{}:{}", node.x, node.y))
+                        .collect::<Vec<String>>()
+                        .join(", ")
+                );
             }
             Event::GameStarted(_) => {
                 println!("Game started")
