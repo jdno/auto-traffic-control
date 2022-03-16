@@ -27,7 +27,7 @@ impl Plugin for GameStateRunningPlugin {
                     .with_system(update_flight_plan)
                     .with_system(detect_collision.after("movement")),
             )
-            .add_system_set(SystemSet::on_exit(GameState::Running));
+            .add_system_set(SystemSet::on_exit(GameState::Running).with_system(despawn_entities));
     }
 }
 
@@ -36,4 +36,10 @@ fn send_event(event_bus: Local<EventBus>) {
         .sender()
         .send(Event::GameStarted)
         .expect("failed to send event"); // TODO: Handle error
+}
+
+fn despawn_entities(mut commands: Commands, query: Query<Entity, Without<Camera>>) {
+    for entity in query.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
 }
