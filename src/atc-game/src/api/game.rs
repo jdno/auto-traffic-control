@@ -44,3 +44,61 @@ impl atc::v1::game_service_server::GameService for GameService {
         Ok(Response::new(StartGameResponse {}))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+
+    use parking_lot::Mutex;
+    use tokio::sync::broadcast::channel;
+    use tonic::{Code, Request};
+
+    use atc::v1::game_service_server::GameService as ServiceTrait;
+    use atc::v1::get_game_state_response::GameState;
+    use atc::v1::{GetGameStateRequest, StartGameRequest};
+
+    use crate::command::{Command, CommandReceiver};
+
+    use super::GameService;
+
+    fn setup() -> (CommandReceiver, GameService) {
+        let (command_sender, command_receiver) = channel::<Command>(1024);
+        let game_state = Arc::new(Mutex::new(GameState::Ready));
+
+        let service = GameService::new(command_sender, game_state);
+
+        (command_receiver, service)
+    }
+
+    #[tokio::test]
+    async fn get_game_state() {
+        let (_command_bus, service) = setup();
+
+        let request = Request::new(GetGameStateRequest {});
+        let response = service.get_game_state(request).await.unwrap();
+
+        assert_eq!(GameState::Ready, response.into_inner().game_state());
+    }
+
+    #[tokio::test]
+    async fn start_game_fails_to_queue_command() {
+        let (command_bus, service) = setup();
+        std::mem::drop(command_bus);
+
+        let request = Request::new(StartGameRequest {});
+        let status = service.start_game(request).await.unwrap_err();
+
+        assert_eq!(status.code(), Code::Internal);
+    }
+
+    #[tokio::test]
+    async fn start_game_queues_command() {
+        let (mut command_bus, service) = setup();
+
+        let request = Request::new(StartGameRequest {});
+        assert!(service.start_game(request).await.is_ok());
+
+        let command = command_bus.try_recv().unwrap();
+        assert_eq!(Command::StartGame, command);
+    }
+}
