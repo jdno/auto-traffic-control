@@ -36,7 +36,7 @@ pub fn spawn_airplane(
                     ..Default::default()
                 },
                 sprite: Sprite {
-                    color: Color::BLUE,
+                    color: Color::RED,
                     ..Default::default()
                 },
                 ..Default::default()
