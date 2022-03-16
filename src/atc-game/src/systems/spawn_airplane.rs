@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::components::{Airplane, AirplaneIdGenerator, FlightPlan, Location, Speed};
+use crate::components::{
+    Airplane, AirplaneIdGenerator, Collider, FlightPlan, Location, Speed, AIRPLANE_SIZE,
+};
 use crate::map::{route_between, Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::{Event, EventBus};
 
@@ -32,7 +34,7 @@ pub fn spawn_airplane(
             .spawn_bundle(SpriteBundle {
                 transform: Transform {
                     translation: Vec3::new(spawn_point.x(), spawn_point.y(), 2.0),
-                    scale: Vec3::new(8.0, 8.0, 0.0),
+                    scale: Vec3::new(AIRPLANE_SIZE, AIRPLANE_SIZE, 0.0),
                     ..Default::default()
                 },
                 sprite: Sprite {
@@ -43,6 +45,7 @@ pub fn spawn_airplane(
             })
             .insert(Airplane)
             .insert(airplane_id.clone())
+            .insert(Collider)
             .insert(flight_plan.clone())
             .insert(Speed::new(32.0));
 

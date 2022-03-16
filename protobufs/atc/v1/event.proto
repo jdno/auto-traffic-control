@@ -6,6 +6,11 @@ import "atc/v1/airplane.proto";
 import "atc/v1/location.proto";
 import "atc/v1/node.proto";
 
+message AirplaneCollided {
+  string id1 = 1;
+  string id2 = 2;
+}
+
 message AirplaneDetected {
   Airplane airplane = 1;
 }
@@ -32,12 +37,13 @@ message StreamRequest {}
 
 message StreamResponse {
   oneof event {
-    AirplaneDetected airplane_detected = 1;
-    AirplaneLanded airplane_landed = 2;
-    AirplaneMoved airplane_moved = 3;
-    FlightPlanUpdated flight_plan_updated = 4;
-    GameStarted game_started = 5;
-    GameStopped game_stopped = 6;
+    AirplaneCollided airplane_collided = 1;
+    AirplaneDetected airplane_detected = 2;
+    AirplaneLanded airplane_landed = 3;
+    AirplaneMoved airplane_moved = 4;
+    FlightPlanUpdated flight_plan_updated = 5;
+    GameStarted game_started = 6;
+    GameStopped game_stopped = 7;
   }
 }
 
