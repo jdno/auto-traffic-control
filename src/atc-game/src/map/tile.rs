@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::{point, Point};
 
-use atc::v1::{Location as ApiLocation, Node as ApiNode};
+use atc::v1::Node as ApiNode;
 
 use crate::api::IntoApi;
 use crate::map::{MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
@@ -92,15 +92,9 @@ impl IntoApi for Tile {
     type ApiType = ApiNode;
 
     fn into_api(self) -> Self::ApiType {
-        let point = self.as_point();
-
         ApiNode {
             x: self.x(),
             y: self.y(),
-            location: Some(ApiLocation {
-                x: point.x() as i32,
-                y: point.y() as i32,
-            }),
         }
     }
 }
