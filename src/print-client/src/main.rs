@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 println!(
                     "Airplane detected: {} at {}:{}",
-                    airplane.id, location.x, location.y
+                    airplane.id, location.longitude, location.latitude
                 );
             }
             Event::AirplaneLanded(airplane_landed) => {
@@ -54,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 println!(
                     "Airplane moved: {} to {}:{}",
-                    airplane_id, location.x, location.y
+                    airplane_id, location.longitude, location.latitude
                 );
             }
             Event::FlightPlanUpdated(flight_plan_updated) => {

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package atc.v1;
+
+message Location {
+  int32 longitude = 1;
+  int32 latitude = 2;
+}
+
+message Node {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message NodeToLocationRequest {
+  Node node = 1;
+}
+
+message NodeToLocationResponse {
+  Location location = 1;
+}
+
+service MapService {
+  rpc NodeToLocation(NodeToLocationRequest) returns (NodeToLocationResponse);
+}

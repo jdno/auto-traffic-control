@@ -3,8 +3,7 @@ syntax = "proto3";
 package atc.v1;
 
 import "atc/v1/airplane.proto";
-import "atc/v1/location.proto";
-import "atc/v1/node.proto";
+import "atc/v1/map.proto";
 
 message AirplaneCollided {
   string id1 = 1;

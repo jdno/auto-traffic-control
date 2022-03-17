@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::{point, Point};
 
-use atc::v1::{Location as ApiLocation, Node as ApiNode};
+use atc::v1::Node as ApiNode;
 
 use crate::api::IntoApi;
 use crate::map::{MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
@@ -71,6 +71,10 @@ impl Tile {
     pub fn as_vec3(&self, z: f32) -> Vec3 {
         Vec3::new((self.x * TILE_SIZE) as f32, (self.y * TILE_SIZE) as f32, z)
     }
+
+    pub fn to_location(self) -> (i32, i32) {
+        (self.x * TILE_SIZE, self.y * TILE_SIZE)
+    }
 }
 
 impl Display for Tile {
@@ -92,15 +96,9 @@ impl IntoApi for Tile {
     type ApiType = ApiNode;
 
     fn into_api(self) -> Self::ApiType {
-        let point = self.as_point();
-
         ApiNode {
             x: self.x(),
             y: self.y(),
-            location: Some(ApiLocation {
-                x: point.x() as i32,
-                y: point.y() as i32,
-            }),
         }
     }
 }

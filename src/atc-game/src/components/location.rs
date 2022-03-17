@@ -70,8 +70,8 @@ impl IntoApi for Location {
 
     fn into_api(self) -> Self::ApiType {
         ApiLocation {
-            x: self.x,
-            y: self.y,
+            longitude: self.x,
+            latitude: self.y,
         }
     }
 }

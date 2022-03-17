@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package atc.v1;
-
-message Location {
-  int32 x = 1;
-  int32 y = 2;
-}
