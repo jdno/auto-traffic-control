@@ -1,3 +1,4 @@
+use std::cmp::{max, min};
 use std::fmt::{Display, Formatter};
 
 use bevy::prelude::*;
@@ -6,6 +7,7 @@ use geo::{point, Point};
 use atc::v1::{Location as ApiLocation, Node as ApiNode};
 
 use crate::api::IntoApi;
+use crate::map::{MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::TILE_SIZE;
 
 /// A tile in the game
@@ -29,6 +31,27 @@ impl Tile {
 
     pub fn y(&self) -> i32 {
         self.y
+    }
+
+    pub fn neighbors(&self) -> Vec<Tile> {
+        let width_range =
+            max(*MAP_WIDTH_RANGE.start(), self.x - 1)..=min(*MAP_WIDTH_RANGE.end(), self.x + 1);
+        let height_range =
+            max(*MAP_HEIGHT_RANGE.start(), self.y - 1)..=min(*MAP_HEIGHT_RANGE.end(), self.y + 1);
+
+        let mut neighbors = Vec::new();
+
+        for y in height_range {
+            for x in width_range.clone() {
+                // TODO: Refactor to avoid clone
+                if x == self.x && y == self.y {
+                    continue;
+                }
+                neighbors.push(Tile::new(x, y));
+            }
+        }
+
+        neighbors
     }
 
     pub fn is_neighbor(&self, potential_neighbor: &Tile) -> bool {
@@ -84,9 +107,69 @@ impl IntoApi for Tile {
 
 #[cfg(test)]
 mod tests {
+    use crate::map::{MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
     use geo::point;
 
     use super::{Tile, TILE_SIZE};
+
+    #[test]
+    fn neighbors_at_center() {
+        let tile = Tile::new(0, 0);
+
+        let neighbors = tile.neighbors();
+
+        assert_eq!(
+            vec![
+                Tile::new(-1, -1),
+                Tile::new(0, -1),
+                Tile::new(1, -1),
+                Tile::new(-1, 0),
+                Tile::new(1, 0),
+                Tile::new(-1, 1),
+                Tile::new(0, 1),
+                Tile::new(1, 1),
+            ],
+            neighbors
+        );
+    }
+
+    #[test]
+    fn neighbors_at_edge() {
+        let edge = *MAP_WIDTH_RANGE.start();
+        let tile = Tile::new(edge, 0);
+
+        let neighbors = tile.neighbors();
+
+        assert_eq!(
+            vec![
+                Tile::new(edge, -1),
+                Tile::new(edge + 1, -1),
+                Tile::new(edge + 1, 0),
+                Tile::new(edge, 1),
+                Tile::new(edge + 1, 1),
+            ],
+            neighbors
+        );
+    }
+
+    #[test]
+    fn neighbors_at_corner() {
+        let x = *MAP_WIDTH_RANGE.start();
+        let y = *MAP_HEIGHT_RANGE.start();
+
+        let tile = Tile::new(x, y);
+
+        let neighbors = tile.neighbors();
+
+        assert_eq!(
+            vec![
+                Tile::new(x + 1, y),
+                Tile::new(x, y + 1),
+                Tile::new(x + 1, y + 1),
+            ],
+            neighbors
+        );
+    }
 
     #[test]
     fn is_neighbor_with_neighbor() {

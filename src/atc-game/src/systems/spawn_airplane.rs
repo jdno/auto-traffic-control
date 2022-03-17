@@ -2,9 +2,10 @@ use bevy::prelude::*;
 use rand::Rng;
 
 use crate::components::{
-    Airplane, AirplaneIdGenerator, Collider, FlightPlan, Location, Speed, AIRPLANE_SIZE,
+    Airplane, AirplaneIdGenerator, Collider, FlightPlan, Location, Speed, TravelledRoute,
+    AIRPLANE_SIZE,
 };
-use crate::map::{route_between, Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::{Event, EventBus};
 
 pub struct SpawnTimer(Timer);
@@ -26,9 +27,8 @@ pub fn spawn_airplane(
         let spawn = random_spawn();
         let spawn_point = spawn.as_point();
 
-        let airport = Tile::new(0, 0);
         let airplane_id = airplane_id_generator.generate();
-        let flight_plan = FlightPlan::new(route_between(&spawn, &airport));
+        let flight_plan = FlightPlan::empty();
 
         commands
             .spawn_bundle(SpriteBundle {
@@ -47,7 +47,8 @@ pub fn spawn_airplane(
             .insert(airplane_id.clone())
             .insert(Collider)
             .insert(flight_plan.clone())
-            .insert(Speed::new(32.0));
+            .insert(Speed::new(32.0))
+            .insert(TravelledRoute::new(vec![spawn]));
 
         event_bus
             .sender()

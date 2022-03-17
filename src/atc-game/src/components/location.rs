@@ -50,8 +50,8 @@ impl From<&Tile> for Location {
     }
 }
 
-impl From<Mut<'_, bevy::prelude::Transform>> for Location {
-    fn from(transform: Mut<'_, bevy::prelude::Transform>) -> Self {
+impl From<&Mut<'_, bevy::prelude::Transform>> for Location {
+    fn from(transform: &Mut<'_, bevy::prelude::Transform>) -> Self {
         Self {
             x: transform.translation.x as i32,
             y: transform.translation.y as i32,
