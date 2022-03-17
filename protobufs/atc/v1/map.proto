@@ -11,3 +11,15 @@ message Node {
   int32 x = 1;
   int32 y = 2;
 }
+
+message NodeToLocationRequest {
+  Node node = 1;
+}
+
+message NodeToLocationResponse {
+  Location location = 1;
+}
+
+service MapService {
+  rpc NodeToLocation(NodeToLocationRequest) returns (NodeToLocationResponse);
+}

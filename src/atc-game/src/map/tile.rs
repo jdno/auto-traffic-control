@@ -71,6 +71,10 @@ impl Tile {
     pub fn as_vec3(&self, z: f32) -> Vec3 {
         Vec3::new((self.x * TILE_SIZE) as f32, (self.y * TILE_SIZE) as f32, z)
     }
+
+    pub fn to_location(self) -> (i32, i32) {
+        (self.x * TILE_SIZE, self.y * TILE_SIZE)
+    }
 }
 
 impl Display for Tile {

@@ -7,6 +7,7 @@ use tonic::transport::{Error, Server as GrpcServer};
 use atc::v1::airplane_service_server::AirplaneServiceServer;
 use atc::v1::event_service_server::EventServiceServer;
 use atc::v1::game_service_server::GameServiceServer;
+use atc::v1::map_service_server::MapServiceServer;
 
 use crate::command::CommandSender;
 use crate::event::EventSender;
@@ -16,10 +17,12 @@ use crate::SharedGameState;
 use self::airplane::AirplaneService;
 use self::event::EventService;
 use self::game::GameService;
+use self::map::MapService;
 
 mod airplane;
 mod event;
 mod game;
+mod map;
 
 const INTERFACE_VARIABLE: &str = "AUTO_TRAFFIC_CONTROL_INTERFACE";
 
@@ -42,6 +45,7 @@ impl Api {
                 command_sender,
                 game_state,
             )))
+            .add_service(MapServiceServer::new(MapService))
             .serve(Self::address_or_default())
             .await
     }
