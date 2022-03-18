@@ -3100,6 +3100,8 @@ name = "starter-rust"
 version = "0.0.0"
 dependencies = [
  "atc",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
