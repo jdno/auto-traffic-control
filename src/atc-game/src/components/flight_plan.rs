@@ -14,10 +14,6 @@ impl FlightPlan {
         Self(flight_plan)
     }
 
-    pub fn empty() -> Self {
-        Self(Vec::new())
-    }
-
     pub fn get(&self) -> &Vec<Tile> {
         &self.0
     }

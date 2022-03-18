@@ -6,4 +6,5 @@ members = [
     "src/atc",
     "src/atc-game",
     "src/print-client",
+    "src/starter-rust",
 ]
