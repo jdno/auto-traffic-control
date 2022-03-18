@@ -74,7 +74,7 @@ impl FlightPlan {
         &self,
         previous_flight_plan: &FlightPlan,
     ) -> Result<(), ValidationError> {
-        if self.0.get(0) == previous_flight_plan.get().get(0) {
+        if self.0.last() == previous_flight_plan.get().last() {
             Ok(())
         } else {
             Err(ValidationError::InvalidFirstNode)
@@ -126,8 +126,8 @@ mod tests {
     #[test]
     fn validate_with_valid_plan() {
         let previous_flight_plan =
-            FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0), Tile::new(2, 0)]);
-        let new_flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0), Tile::new(1, 1)]);
+            FlightPlan(vec![Tile::new(2, 0), Tile::new(1, 0), Tile::new(0, 0)]);
+        let new_flight_plan = FlightPlan(vec![Tile::new(1, 1), Tile::new(1, 0), Tile::new(0, 0)]);
 
         let result = new_flight_plan.validate(&previous_flight_plan);
 
@@ -139,7 +139,7 @@ mod tests {
         let x = *MAP_WIDTH_RANGE.start();
         let y = *MAP_HEIGHT_RANGE.start();
 
-        let previous_flight_plan = FlightPlan(vec![Tile::new(x, y), Tile::new(0, 0)]);
+        let previous_flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(x, y)]);
         let new_flight_plan = FlightPlan(vec![Tile::new(x - 1, y - 1), Tile::new(0, 0)]);
 
         let result = new_flight_plan.validate(&previous_flight_plan);
@@ -195,8 +195,8 @@ mod tests {
 
     #[test]
     fn has_invalid_first_node_with_valid_plan() {
-        let previous_flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0)]);
-        let new_flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(0, 1)]);
+        let previous_flight_plan = FlightPlan(vec![Tile::new(1, 0), Tile::new(0, 0)]);
+        let new_flight_plan = FlightPlan(vec![Tile::new(0, 1), Tile::new(0, 0)]);
 
         let result = new_flight_plan.has_invalid_first_node(&previous_flight_plan);
 
