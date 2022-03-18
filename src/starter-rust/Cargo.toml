@@ -19,3 +19,4 @@ atc = { path = "../atc", version = "0.0.0" }
 
 tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
 tokio-stream = { version = "0.1.8" }
+tonic = "0.6.2"

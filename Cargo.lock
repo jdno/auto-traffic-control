@@ -3102,6 +3102,7 @@ dependencies = [
  "atc",
  "tokio",
  "tokio-stream",
+ "tonic",
 ]
 
 [[package]]

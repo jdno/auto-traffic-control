@@ -1,7 +1,11 @@
 use atc::v1::Node;
 
-pub fn route_between(start: &Node, destination: &Node) -> Vec<Node> {
-    let mut route = Vec::new();
+pub fn route_between(start: &Node, destination: &Node, first_hop: bool) -> Vec<Node> {
+    let mut route = if first_hop {
+        vec![start.clone()]
+    } else {
+        Vec::new()
+    };
 
     if start == destination {
         return route;
@@ -35,7 +39,7 @@ pub fn route_between(start: &Node, destination: &Node) -> Vec<Node> {
         y: next_y,
     };
 
-    let mut remaining_route = route_between(&next_hop, destination);
+    let mut remaining_route = route_between(&next_hop, destination, false);
 
     route.push(next_hop);
     route.append(&mut remaining_route);
@@ -53,9 +57,9 @@ mod tests {
     fn route_between_same_point() {
         let start = Node { x: 0, y: 0 };
 
-        let route = route_between(&start, &start);
+        let route = route_between(&start, &start, true);
 
-        assert!(route.is_empty());
+        assert_eq!(vec![start], route);
     }
 
     #[test]
@@ -63,9 +67,9 @@ mod tests {
         let start = Node { x: 0, y: 0 };
         let destination = Node { x: 2, y: 0 };
 
-        let route = route_between(&start, &destination);
+        let route = route_between(&start, &destination, true);
 
-        assert_eq!(vec![Node { x: 1, y: 0 }, destination], route);
+        assert_eq!(vec![start, Node { x: 1, y: 0 }, destination], route);
     }
 
     #[test]
@@ -73,9 +77,9 @@ mod tests {
         let start = Node { x: 0, y: 0 };
         let destination = Node { x: 2, y: 2 };
 
-        let route = route_between(&start, &destination);
+        let route = route_between(&start, &destination, true);
 
-        assert_eq!(vec![Node { x: 1, y: 1 }, destination], route);
+        assert_eq!(vec![start, Node { x: 1, y: 1 }, destination], route);
     }
 
     #[test]
@@ -83,10 +87,10 @@ mod tests {
         let start = Node { x: 0, y: 0 };
         let destination = Node { x: 3, y: 1 };
 
-        let route = route_between(&start, &destination);
+        let route = route_between(&start, &destination, true);
 
         assert_eq!(
-            vec![Node { x: 1, y: 1 }, Node { x: 2, y: 1 }, destination],
+            vec![start, Node { x: 1, y: 1 }, Node { x: 2, y: 1 }, destination],
             route
         );
     }
