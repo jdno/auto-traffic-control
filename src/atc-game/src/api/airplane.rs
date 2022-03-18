@@ -245,7 +245,7 @@ mod tests {
 
         store.insert("AT-4321".into(), airplane);
 
-        let new_flight_plan = FlightPlan::new(vec![Tile::new(0, 0), Tile::new(1, 0)]);
+        let new_flight_plan = FlightPlan::new(vec![Tile::new(1, 0), Tile::new(0, 0)]);
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
