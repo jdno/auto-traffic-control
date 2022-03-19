@@ -4,10 +4,11 @@ use std::sync::Arc;
 
 use tonic::transport::{Error, Server as GrpcServer};
 
-use atc::v1::airplane_service_server::AirplaneServiceServer;
-use atc::v1::event_service_server::EventServiceServer;
-use atc::v1::game_service_server::GameServiceServer;
-use atc::v1::map_service_server::MapServiceServer;
+use ::atc::v1::airplane_service_server::AirplaneServiceServer;
+use ::atc::v1::atc_service_server::AtcServiceServer;
+use ::atc::v1::event_service_server::EventServiceServer;
+use ::atc::v1::game_service_server::GameServiceServer;
+use ::atc::v1::map_service_server::MapServiceServer;
 
 use crate::command::CommandSender;
 use crate::event::EventSender;
@@ -15,11 +16,13 @@ use crate::store::Store;
 use crate::SharedGameState;
 
 use self::airplane::AirplaneService;
+use self::atc::AtcService;
 use self::event::EventService;
 use self::game::GameService;
 use self::map::MapService;
 
 mod airplane;
+mod atc;
 mod event;
 mod game;
 mod map;
@@ -40,6 +43,7 @@ impl Api {
                 command_sender.clone(),
                 store,
             )))
+            .add_service(AtcServiceServer::new(AtcService))
             .add_service(EventServiceServer::new(EventService::new(event_sender)))
             .add_service(GameServiceServer::new(GameService::new(
                 command_sender,
