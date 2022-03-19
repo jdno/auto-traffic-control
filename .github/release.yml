@@ -1,0 +1,26 @@
+---
+changelog:
+  exclude:
+    labels:
+      - R-ignore
+    authors:
+      - dependabot
+  categories:
+    - title: Security Vulnerabilities
+      labels:
+        - R-security
+    - title: New Features
+      labels:
+        - R-added
+    - title: Fixed Issues
+      labels:
+        - R-fixed
+    - title: Changes
+      labels:
+        - R-changed
+    - title: Deprecated Features
+      labels:
+        - R-deprecated
+    - title: Removed Features
+      labels:
+        - R-removed
