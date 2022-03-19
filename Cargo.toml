@@ -3,8 +3,8 @@
 resolver = "2"
 
 members = [
-    "src/atc",
-    "src/atc-game",
-    "src/print-client",
-    "src/starter-rust",
+    "game",
+    "examples/starter-rust",
+    "sdk/rust",
+    "utilities/debug-client",
 ]

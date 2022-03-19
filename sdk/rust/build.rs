@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use glob::glob;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("cargo:rerun-if-changed=../../protobufs");
+    println!("cargo:rerun-if-changed=../../api");
 
-    let proto_path = PathBuf::from("../../protobufs");
+    let proto_path = PathBuf::from("../../api");
 
-    let protocol_buffers: Vec<PathBuf> = glob("../../protobufs/**/*.proto")
+    let protocol_buffers: Vec<PathBuf> = glob("../../api/**/*.proto")
         .unwrap()
         .map(|path| path.unwrap())
         .collect();

@@ -1,5 +1,5 @@
 [package]
-name = "atc-game"
+name = "auto-traffic-control"
 version = "0.0.0"
 edition = "2021"
 
@@ -11,7 +11,7 @@ categories = [
     "games"
 ]
 
-default-run = "atc-game"
+default-run = "auto-traffic-control"
 
 publish = false
 
@@ -19,7 +19,7 @@ publish = false
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-atc = { path = "../atc", version = "0.0.0", features = ["server"] }
+atc = { path = "../sdk/rust", version = "0.0.0", features = ["server"] }
 
 bevy = "0.6.1"
 dashmap = "5.2.0"
