@@ -1,4 +1,13 @@
 ---
+- name: C-bug
+  color: e74c3c
+  description: "Report a new bug"
+- name: C-dependency
+  color: e74c3c
+  description: "Update a dependency"
+- name: C-feature-request
+  color: e74c3c
+  description: "Request a new feature"
 - name: R-added
   color: 95a5a6
   description: "Add a new feature to the release notes"
