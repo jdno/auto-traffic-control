@@ -6,8 +6,14 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    labels:
+      - C-dependency
+      - R-ignore
 
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
       interval: "daily"
+    labels:
+      - C-dependency
+      - R-ignore
