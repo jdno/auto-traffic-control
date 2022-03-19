@@ -1,0 +1,22 @@
+---
+- name: R-added
+  color: 95a5a6
+  description: "Add a new feature to the release notes"
+- name: R-changed
+  color: 95a5a6
+  description: "Add a change in existing functionality to the release notes"
+- name: R-deprecated
+  color: 95a5a6
+  description: "Add a soon-to-be removed feature to the release notes"
+- name: R-fixed
+  color: 95a5a6
+  description: "Add a fixed bug to the release notes"
+- name: R-ignore
+  color: 95a5a6
+  description: "Do not add this pull request to the release notes"
+- name: R-removed
+  color: 95a5a6
+  description: "Add a now removed feature to the release notes"
+- name: R-security
+  color: 95a5a6
+  description: "Add a vulnerability warning to the release notes"
