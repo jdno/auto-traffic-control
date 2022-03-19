@@ -6,21 +6,21 @@ changelog:
     authors:
       - dependabot
   categories:
-    - title: Security Vulnerabilities
+    - title: Security
       labels:
         - R-security
-    - title: New Features
+    - title: Added
       labels:
         - R-added
-    - title: Fixed Issues
-      labels:
-        - R-fixed
-    - title: Changes
+    - title: Changed
       labels:
         - R-changed
-    - title: Deprecated Features
+    - title: Deprecated
       labels:
         - R-deprecated
-    - title: Removed Features
+    - title: Removed
       labels:
         - R-removed
+    - title: Fixed
+      labels:
+        - R-fixed
