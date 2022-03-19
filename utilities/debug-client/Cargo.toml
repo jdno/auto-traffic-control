@@ -1,6 +1,6 @@
 [package]
 name = "debug-client"
-version = "0.0.0"
+version = "0.1.0"
 edition = "2021"
 
 rust-version = "1.56"
@@ -17,7 +17,7 @@ publish = false
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-atc = { path = "../../sdk/rust", version = "0.0.0", features = ["server"] }
+atc = { path = "../../sdk/rust", version = "0.1.0", features = ["server"] }
 
 tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
 tokio-stream = { version = "0.1.8" }
