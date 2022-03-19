@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+# Enable strict mode for Bash
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+IFS=$'\n\t'
+
+if [ $# -ne 1 ]; then
+  echo "Usage: ./prepare-release <next_version>"
+  exit 1
+fi
+
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "${current_branch}" != "main" ]; then
+   echo "Releases can only be prepared from the main branch. Aborting"
+   exit 2
+fi
+
+next_version=$1
+current_git_tag="$(git tag -l "v*" | sort | tail -n 1)"
+current_version="$(echo "$current_git_tag" | cut -c 2-)"
+
+if [[ -z "$current_version" ]]; then
+  echo "Failed to get latest version. Aborting"
+  exit 3
+fi
+
+echo "Current version: ${current_version}"
+echo "Next version:    ${next_version}"
+read -p "Continue? [y/n] " -n 1 -r
+echo
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 4
+fi
+
+echo
+
+bin_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+root_directory="$(cd "${bin_directory}/.." || exit 5 && pwd)"
+
+# Update version
+echo "Bumping version..."
+
+files=(
+  "examples/starter-rust/Cargo.toml"
+  "game/Cargo.toml"
+  "sdk/rust/Cargo.toml"
+  "utilities/debug-client/Cargo.toml"
+)
+
+for file in "${files[@]}"; do
+  vim -c "%s/${current_version}/${next_version}/g" -c "wq" "${root_directory}/${file}"
+done
+
+# Updating changelog
+echo "Updating changelog..."
+
+vim -c "%s!https://github\.com/jdno/atc/pull/\(\d\+\)![#\1](https://github.com/jdno/atc/pull/\1)!g" -c "wq" "${root_directory}/CHANGELOG.md"
+vim -c "%s!@\(\w\+\)![@\1](https://github.com/\1)!g" -c "wq" "${root_directory}/CHANGELOG.md"
+
+# Commit changes
+echo "Committing changes..."
+git checkout -b "release-${next_version}" >/dev/null 2>&1
+git commit -am "Release ${next_version}" >/dev/null 2>&1
+
+echo
+echo "Release of version ${next_version} prepared. Push the branch, open a pull"
+echo "request, and wait for review. Once merged, create a new release on GitHub."
+echo
