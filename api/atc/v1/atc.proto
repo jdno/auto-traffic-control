@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package atc.v1;
+
+message Version {
+  uint64 major = 1;
+  uint64 minor = 2;
+  uint64 patch = 3;
+  string pre = 4;
+}
+
+message GetVersionRequest {}
+message GetVersionResponse {
+  Version version = 1;
+}
+
+service AtcService {
+  rpc GetVersion(GetVersionRequest) returns (GetVersionResponse);
+}
