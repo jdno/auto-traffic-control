@@ -6,15 +6,15 @@ set -euo pipefail
 IFS=$'\n\t'
 
 if [ $# -ne 1 ]; then
-  echo "Usage: ./prepare-release <next_version>"
-  exit 1
+	echo "Usage: ./prepare-release <next_version>"
+	exit 1
 fi
 
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 
 if [ "${current_branch}" != "main" ]; then
-   echo "Releases can only be prepared from the main branch. Aborting"
-   exit 2
+	echo "Releases can only be prepared from the main branch. Aborting"
+	exit 2
 fi
 
 next_version=$1
@@ -22,8 +22,8 @@ current_git_tag="$(git tag -l "v*" | sort | tail -n 1)"
 current_version="$(echo "$current_git_tag" | cut -c 2-)"
 
 if [[ -z "$current_version" ]]; then
-  echo "Failed to get latest version. Aborting"
-  exit 3
+	echo "Failed to get latest version. Aborting"
+	exit 3
 fi
 
 echo "Current version: ${current_version}"
@@ -32,7 +32,7 @@ read -p "Continue? [y/n] " -n 1 -r
 echo
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    exit 4
+	exit 4
 fi
 
 echo
@@ -44,14 +44,14 @@ root_directory="$(cd "${bin_directory}/.." || exit 5 && pwd)"
 echo "Bumping version..."
 
 files=(
-  "examples/starter-rust/Cargo.toml"
-  "game/Cargo.toml"
-  "sdk/rust/Cargo.toml"
-  "utilities/debug-client/Cargo.toml"
+	"examples/starter-rust/Cargo.toml"
+	"game/Cargo.toml"
+	"sdk/rust/Cargo.toml"
+	"utilities/debug-client/Cargo.toml"
 )
 
 for file in "${files[@]}"; do
-  vim -c "%s/${current_version}/${next_version}/g" -c "wq" "${root_directory}/${file}"
+	vim -c "%s/${current_version}/${next_version}/g" -c "wq" "${root_directory}/${file}"
 done
 
 # Updating changelog
