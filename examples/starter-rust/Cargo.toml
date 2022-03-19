@@ -1,11 +1,9 @@
 [package]
-name = "print-client"
+name = "starter-rust"
 version = "0.0.0"
 edition = "2021"
 
-rust-version = "1.56"
-
-description = "Connect to the game and print events to the terminal"
+description = "A starter bot for the video game Auto Traffic Control"
 repository = "https://github.com/jdno/atc"
 categories = [
     "games"
@@ -17,7 +15,8 @@ publish = false
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-atc = { path = "../atc", version = "0.0.0" }
+atc = { path = "../../sdk/rust", version = "0.0.0", features = ["server"] }
 
 tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
 tokio-stream = { version = "0.1.8" }
+tonic = "0.6.2"

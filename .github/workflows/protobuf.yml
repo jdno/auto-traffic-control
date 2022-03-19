@@ -18,4 +18,4 @@ jobs:
       - name: Run Buf
         uses: bufbuild/buf-lint-action@v1.0.0
         with:
-          input: protobufs
+          input: api
