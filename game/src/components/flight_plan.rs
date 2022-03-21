@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use atc::v1::update_flight_plan_error::ValidationError;
 use atc::v1::Node as ApiNode;
 
-use crate::api::IntoApi;
+use crate::api::AsApi;
 use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
@@ -103,11 +103,11 @@ impl From<&Vec<atc::v1::Node>> for FlightPlan {
     }
 }
 
-impl IntoApi for FlightPlan {
+impl AsApi for FlightPlan {
     type ApiType = Vec<ApiNode>;
 
-    fn into_api(self) -> Self::ApiType {
-        self.0.iter().rev().map(|node| node.into_api()).collect()
+    fn as_api(&self) -> Self::ApiType {
+        self.0.iter().rev().map(|node| node.as_api()).collect()
     }
 }
 

@@ -7,7 +7,7 @@ use tonic::{Request, Response, Status};
 
 use atc::v1::{StreamRequest, StreamResponse};
 
-use crate::api::IntoApi;
+use crate::api::AsApi;
 use crate::event::EventSender;
 
 #[derive(Clone, Debug)]
@@ -32,7 +32,7 @@ impl atc::v1::event_service_server::EventService for EventService {
     ) -> Result<Response<Self::StreamStream>, Status> {
         let stream = BroadcastStream::new(self.event_sender.subscribe()).filter_map(|event| {
             let event = match event {
-                Ok(event) => Some(event.into_api()),
+                Ok(event) => Some(event.as_api()),
                 Err(_) => None,
             };
 

@@ -65,8 +65,8 @@ impl Api {
     }
 }
 
-pub trait IntoApi {
+pub trait AsApi {
     type ApiType;
 
-    fn into_api(self) -> Self::ApiType;
+    fn as_api(&self) -> Self::ApiType;
 }

@@ -5,7 +5,7 @@ use geo::Point;
 
 use atc::v1::Point as ApiPoint;
 
-use crate::api::IntoApi;
+use crate::api::AsApi;
 use crate::map::Node;
 use crate::TILE_SIZE;
 
@@ -65,10 +65,10 @@ impl Display for Location {
     }
 }
 
-impl IntoApi for Location {
+impl AsApi for Location {
     type ApiType = ApiPoint;
 
-    fn into_api(self) -> Self::ApiType {
+    fn as_api(&self) -> Self::ApiType {
         ApiPoint {
             x: self.x,
             y: self.y,

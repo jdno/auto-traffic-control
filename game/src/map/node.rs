@@ -6,7 +6,7 @@ use geo::{point, Point};
 
 use atc::v1::Node as ApiNode;
 
-use crate::api::IntoApi;
+use crate::api::AsApi;
 use crate::map::{MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::TILE_SIZE;
 
@@ -98,10 +98,10 @@ impl From<&Point<i32>> for Node {
     }
 }
 
-impl IntoApi for Node {
+impl AsApi for Node {
     type ApiType = ApiNode;
 
-    fn into_api(self) -> Self::ApiType {
+    fn as_api(&self) -> Self::ApiType {
         ApiNode {
             longitude: self.longitude(),
             latitude: self.latitude(),
