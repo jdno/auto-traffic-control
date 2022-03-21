@@ -4,7 +4,7 @@ use rand::Rng;
 use crate::components::{
     Airplane, AirplaneIdGenerator, Collider, Location, Speed, TravelledRoute, AIRPLANE_SIZE,
 };
-use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::map::{Map, Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::{generate_random_plan, Event, EventBus};
 
 pub struct SpawnTimer(Timer);
@@ -16,6 +16,7 @@ impl SpawnTimer {
 }
 
 pub fn spawn_airplane(
+    map: Res<Map>,
     mut commands: Commands,
     time: Res<Time>,
     mut timer: ResMut<SpawnTimer>,
@@ -29,7 +30,7 @@ pub fn spawn_airplane(
         let airplane_id = airplane_id_generator.generate();
 
         let travelled_route = TravelledRoute::new(vec![spawn]);
-        let flight_plan = generate_random_plan(&travelled_route);
+        let flight_plan = generate_random_plan(&travelled_route, &map);
 
         commands
             .spawn_bundle(SpriteBundle {

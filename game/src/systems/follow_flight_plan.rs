@@ -3,10 +3,11 @@ use geo::algorithm::euclidean_distance::EuclideanDistance;
 use geo::point;
 
 use crate::components::{AirplaneId, FlightPlan, Location, Speed, TravelledRoute};
-use crate::map::Direction;
+use crate::map::{Direction, Map};
 use crate::{Event, EventBus};
 
 pub fn follow_flight_plan(
+    map: Res<Map>,
     mut commands: Commands,
     time: Res<Time>,
     mut query: Query<(
@@ -19,6 +20,8 @@ pub fn follow_flight_plan(
     )>,
     event_bus: Local<EventBus>,
 ) {
+    let airport_vec3 = map.airport().as_vec3(2.0);
+
     for (entity, airplane_id, mut flight_plan, speed, mut transform, mut travelled_route) in
         query.iter_mut()
     {
@@ -41,7 +44,7 @@ pub fn follow_flight_plan(
             .expect("failed to send event"); // TODO: Handle error
 
         // Airplane reached the airport
-        if transform.translation == Vec3::new(0.0, 0.0, 2.0) {
+        if transform.translation == airport_vec3 {
             airplane_landed = true;
 
             commands.entity(entity).despawn();

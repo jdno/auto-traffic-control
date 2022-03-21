@@ -1,9 +1,13 @@
 use bevy::prelude::*;
 
-pub fn setup_airport(mut commands: Commands) {
+use crate::map::Map;
+
+pub fn setup_airport(map: Res<Map>, mut commands: Commands) {
+    let airport_vec3 = map.airport().as_vec3(1.0);
+
     commands.spawn_bundle(SpriteBundle {
         transform: Transform {
-            translation: Vec3::new(0.0, 0.0, 1.0),
+            translation: airport_vec3,
             scale: Vec3::new(24.0, 24.0, 1.0),
             ..Default::default()
         },
