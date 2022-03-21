@@ -3,8 +3,10 @@ use bevy::prelude::*;
 use crate::command::{Command, CommandBus};
 use crate::components::{AirplaneId, FlightPlan};
 use crate::event::{Event, EventBus};
+use crate::map::Map;
 
 pub fn update_flight_plan(
+    map: Res<Map>,
     mut query: Query<(&AirplaneId, &mut FlightPlan)>,
     mut command_bus: Local<CommandBus>,
     event_bus: Local<EventBus>,
@@ -17,7 +19,10 @@ pub fn update_flight_plan(
 
         for (id, mut current_flight_plan) in query.iter_mut() {
             if *id == airplane_id {
-                if new_flight_plan.validate(&current_flight_plan).is_ok() {
+                if new_flight_plan
+                    .validate(&current_flight_plan, map.routing_grid())
+                    .is_ok()
+                {
                     *current_flight_plan = new_flight_plan.clone();
 
                     event_bus

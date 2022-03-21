@@ -40,6 +40,7 @@ message UpdateFlightPlanError {
     NOT_IN_LOGICAL_ORDER = 2;
     HAS_SHARP_TURNS = 3;
     INVALID_FIRST_NODE = 4;
+    HAS_RESTRICTED_NODES = 5;
   }
   repeated ValidationError errors = 1;
 }

@@ -10,18 +10,24 @@ use atc::v1::{
 
 use crate::command::CommandSender;
 use crate::components::{AirplaneId, FlightPlan};
+use crate::map::Map;
 use crate::store::Store;
 use crate::Command;
 
 #[derive(Clone, Debug)]
 pub struct AirplaneService {
     command_bus: CommandSender,
+    map: Map,
     store: Arc<Store>,
 }
 
 impl AirplaneService {
     pub fn new(command_bus: CommandSender, store: Arc<Store>) -> Self {
-        Self { command_bus, store }
+        Self {
+            command_bus,
+            map: Map::new(),
+            store,
+        }
     }
 }
 
@@ -63,7 +69,9 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         let previous_flight_plan = (&airplane.flight_plan).into();
         let new_flight_plan: FlightPlan = (&request.flight_plan).into();
 
-        if let Err(errors) = new_flight_plan.validate(&previous_flight_plan) {
+        if let Err(errors) =
+            new_flight_plan.validate(&previous_flight_plan, self.map.routing_grid())
+        {
             let errors = errors.iter().map(|error| (*error).into()).collect();
 
             return Ok(Response::new(UpdateFlightPlanResponse {
@@ -197,6 +205,7 @@ mod tests {
             ValidationError::NotInLogicalOrder.into(),
             ValidationError::InvalidFirstNode.into(),
             ValidationError::HasSharpTurns.into(),
+            ValidationError::HasRestrictedNodes.into(),
         ];
 
         assert_eq!(expected_errors, actual_errors);
@@ -245,7 +254,7 @@ mod tests {
 
         store.insert("AT-4321".into(), airplane);
 
-        let new_flight_plan = FlightPlan::new(vec![Node::new(1, 0), Node::new(0, 0)]);
+        let new_flight_plan = FlightPlan::new(vec![Node::new(-1, 0), Node::new(0, 0)]);
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
