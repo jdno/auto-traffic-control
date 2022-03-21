@@ -33,10 +33,12 @@ impl Plugin for GameStateRunningPlugin {
     }
 }
 
-fn send_event(event_bus: Local<EventBus>) {
+fn send_event(map: Res<Map>, event_bus: Local<EventBus>) {
+    let map = *map.into_inner();
+
     event_bus
         .sender()
-        .send(Event::GameStarted)
+        .send(Event::GameStarted(map))
         .expect("failed to send event"); // TODO: Handle error
 }
 

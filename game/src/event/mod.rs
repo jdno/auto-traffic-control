@@ -6,6 +6,7 @@ use atc::v1::{
 
 use crate::api::AsApi;
 use crate::components::{AirplaneId, FlightPlan, Location};
+use crate::map::Map;
 
 pub use self::bus::{EventBus, EventReceiver, EventSender};
 
@@ -18,7 +19,7 @@ pub enum Event {
     AirplaneLanded(AirplaneId),
     AirplaneMoved(AirplaneId, Location),
     FlightPlanUpdated(AirplaneId, FlightPlan),
-    GameStarted,
+    GameStarted(Map),
     GameStopped,
 }
 
@@ -55,7 +56,9 @@ impl AsApi for Event {
                     flight_plan: flight_plan.as_api(),
                 })
             }
-            Event::GameStarted => ApiEvent::GameStarted(GameStarted {}),
+            Event::GameStarted(map) => ApiEvent::GameStarted(GameStarted {
+                map: Some(map.as_api()),
+            }),
             Event::GameStopped => ApiEvent::GameStopped(GameStopped {}),
         }
     }

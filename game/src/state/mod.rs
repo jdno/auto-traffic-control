@@ -25,7 +25,7 @@ impl GameStateWatcher {
     pub async fn connect(&mut self) {
         while let Ok(event) = self.event_bus.recv().await {
             match event {
-                Event::GameStarted => {
+                Event::GameStarted(_) => {
                     let mut game_started = self.game_state.lock();
                     *game_started = GameState::Running;
                 }
