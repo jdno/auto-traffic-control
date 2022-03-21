@@ -3,10 +3,10 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::Point;
 
-use atc::v1::Location as ApiLocation;
+use atc::v1::Point as ApiPoint;
 
-use crate::api::IntoApi;
-use crate::map::Tile;
+use crate::api::AsApi;
+use crate::map::Node;
 use crate::TILE_SIZE;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
@@ -41,11 +41,11 @@ impl From<&Point<f32>> for Location {
     }
 }
 
-impl From<&Tile> for Location {
-    fn from(tile: &Tile) -> Self {
+impl From<&Node> for Location {
+    fn from(tile: &Node) -> Self {
         Self {
-            x: tile.x() * TILE_SIZE,
-            y: tile.y() * TILE_SIZE,
+            x: tile.longitude() * TILE_SIZE,
+            y: tile.latitude() * TILE_SIZE,
         }
     }
 }
@@ -65,13 +65,13 @@ impl Display for Location {
     }
 }
 
-impl IntoApi for Location {
-    type ApiType = ApiLocation;
+impl AsApi for Location {
+    type ApiType = ApiPoint;
 
-    fn into_api(self) -> Self::ApiType {
-        ApiLocation {
-            longitude: self.x,
-            latitude: self.y,
+    fn as_api(&self) -> Self::ApiType {
+        ApiPoint {
+            x: self.x,
+            y: self.y,
         }
     }
 }

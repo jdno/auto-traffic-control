@@ -3,11 +3,12 @@ use rand::prelude::*;
 
 use crate::components::{AirplaneId, FlightPlan, TravelledRoute};
 use crate::event::{Event, EventBus};
-use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::map::{Map, Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
 const FLIGHT_PLAN_LENGTH: usize = 4;
 
 pub fn generate_flight_plan(
+    map: Res<Map>,
     mut query: Query<(&AirplaneId, &mut FlightPlan, &TravelledRoute)>,
     event_bus: Local<EventBus>,
 ) {
@@ -16,7 +17,7 @@ pub fn generate_flight_plan(
             continue;
         }
 
-        let new_flight_plan = generate_random_plan(travelled_route);
+        let new_flight_plan = generate_random_plan(travelled_route, &map);
         *flight_plan = new_flight_plan.clone();
 
         event_bus
@@ -30,36 +31,40 @@ pub fn generate_flight_plan(
 }
 
 // TODO: Refactor into a shared module
-pub fn generate_random_plan(travelled_route: &TravelledRoute) -> FlightPlan {
+pub fn generate_random_plan(travelled_route: &TravelledRoute, map: &Res<Map>) -> FlightPlan {
     let mut flight_plan = Vec::new();
 
     let mut reversed_route = travelled_route.get().iter().rev();
 
-    let mut current_tile = *reversed_route
+    let mut current_node = *reversed_route
         .next()
         .expect("travelled route must include the starting location");
-    let mut previous_tile = reversed_route.next().cloned();
-    let mut next_tile;
+    let mut previous_node = reversed_route.next().cloned();
+    let mut next_node;
 
     for _ in 0..FLIGHT_PLAN_LENGTH {
-        next_tile = pick_next_tile(&current_tile, &previous_tile);
-        flight_plan.push(next_tile);
+        next_node = pick_next_tile(&current_node, &previous_node, map.routing_grid());
+        flight_plan.push(next_node);
 
-        if next_tile.x() == 0 && next_tile.y() == 0 {
+        if &next_node == map.airport() {
             break;
         }
 
-        previous_tile = Some(current_tile);
-        current_tile = next_tile;
+        previous_node = Some(current_node);
+        current_node = next_node;
     }
 
     FlightPlan::new(flight_plan.iter().rev().cloned().collect())
 }
 
-fn pick_next_tile(current_tile: &Tile, previous_tile: &Option<Tile>) -> Tile {
+fn pick_next_tile(
+    current_tile: &Node,
+    previous_tile: &Option<Node>,
+    routing_grid: &[Node],
+) -> Node {
     let mut potential_tiles = current_tile.neighbors();
 
-    // Mustn't the previous tile
+    // Mustn't be the previous tile
     if let Some(previous_tile) = previous_tile {
         if let Some(index) = potential_tiles
             .iter()
@@ -69,11 +74,19 @@ fn pick_next_tile(current_tile: &Tile, previous_tile: &Option<Tile>) -> Tile {
         }
     }
 
+    // Mustn't be a restricted node
+    let potential_tiles: Vec<Node> = potential_tiles
+        .iter()
+        .filter(|tile| routing_grid.contains(*tile))
+        .cloned()
+        .collect();
+
     // Shouldn't be too close to the edge of the map
-    let potential_tiles: Vec<Tile> = potential_tiles
+    let potential_tiles: Vec<Node> = potential_tiles
         .iter()
         .filter(|tile| {
-            tile.x().abs() != *MAP_WIDTH_RANGE.end() && tile.y().abs() != *MAP_HEIGHT_RANGE.end()
+            tile.longitude().abs() != *MAP_WIDTH_RANGE.end()
+                && tile.latitude().abs() != *MAP_HEIGHT_RANGE.end()
         })
         .cloned()
         .collect();

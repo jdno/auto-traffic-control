@@ -3,31 +3,36 @@ use bevy::prelude::*;
 use atc::v1::update_flight_plan_error::ValidationError;
 use atc::v1::Node as ApiNode;
 
-use crate::api::IntoApi;
-use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::api::AsApi;
+use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
-pub struct FlightPlan(Vec<Tile>);
+pub struct FlightPlan(Vec<Node>);
 
 impl FlightPlan {
-    pub fn new(flight_plan: Vec<Tile>) -> Self {
+    pub fn new(flight_plan: Vec<Node>) -> Self {
         Self(flight_plan)
     }
 
-    pub fn get(&self) -> &Vec<Tile> {
+    pub fn get(&self) -> &Vec<Node> {
         &self.0
     }
 
-    pub fn get_mut(&mut self) -> &mut Vec<Tile> {
+    pub fn get_mut(&mut self) -> &mut Vec<Node> {
         &mut self.0
     }
 
-    pub fn validate(&self, previous_flight_plan: &FlightPlan) -> Result<(), Vec<ValidationError>> {
+    pub fn validate(
+        &self,
+        previous_flight_plan: &FlightPlan,
+        routing_grid: &[Node],
+    ) -> Result<(), Vec<ValidationError>> {
         let errors: Vec<ValidationError> = vec![
             self.is_within_map_bounds(),
             self.is_in_logical_order(),
             self.has_invalid_first_node(previous_flight_plan),
             self.has_sharp_turns(),
+            self.has_restricted_nodes(routing_grid),
         ]
         .iter()
         .filter_map(|result| result.err())
@@ -42,10 +47,10 @@ impl FlightPlan {
 
     fn is_within_map_bounds(&self) -> Result<(), ValidationError> {
         for node in self.0.iter() {
-            if !MAP_WIDTH_RANGE.contains(&node.x()) {
+            if !MAP_WIDTH_RANGE.contains(&node.longitude()) {
                 return Err(ValidationError::NodeOutOfBounds);
             }
-            if !MAP_HEIGHT_RANGE.contains(&node.y()) {
+            if !MAP_HEIGHT_RANGE.contains(&node.latitude()) {
                 return Err(ValidationError::NodeOutOfBounds);
             }
         }
@@ -89,6 +94,16 @@ impl FlightPlan {
 
         Ok(())
     }
+
+    fn has_restricted_nodes(&self, routing_grid: &[Node]) -> Result<(), ValidationError> {
+        for node in self.0.iter() {
+            if !routing_grid.contains(node) {
+                return Err(ValidationError::HasRestrictedNodes);
+            }
+        }
+
+        Ok(())
+    }
 }
 
 impl From<&Vec<atc::v1::Node>> for FlightPlan {
@@ -96,18 +111,18 @@ impl From<&Vec<atc::v1::Node>> for FlightPlan {
         let tiles = api_flight_plan
             .iter()
             .rev()
-            .map(|node| Tile::new(node.x, node.y))
+            .map(|node| Node::new(node.longitude, node.latitude))
             .collect();
 
         FlightPlan(tiles)
     }
 }
 
-impl IntoApi for FlightPlan {
+impl AsApi for FlightPlan {
     type ApiType = Vec<ApiNode>;
 
-    fn into_api(self) -> Self::ApiType {
-        self.0.iter().rev().map(|node| node.into_api()).collect()
+    fn as_api(&self) -> Self::ApiType {
+        self.0.iter().rev().map(|node| node.as_api()).collect()
     }
 }
 
@@ -115,17 +130,29 @@ impl IntoApi for FlightPlan {
 mod tests {
     use atc::v1::update_flight_plan_error::ValidationError;
 
-    use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+    use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
     use super::FlightPlan;
+
+    fn routing_grid() -> Vec<Node> {
+        let mut nodes = Vec::new();
+
+        for y in -3..=3 {
+            for x in -3..=3 {
+                nodes.push(Node::new(x, y));
+            }
+        }
+
+        nodes
+    }
 
     #[test]
     fn validate_with_valid_plan() {
         let previous_flight_plan =
-            FlightPlan(vec![Tile::new(2, 0), Tile::new(1, 0), Tile::new(0, 0)]);
-        let new_flight_plan = FlightPlan(vec![Tile::new(1, 1), Tile::new(1, 0), Tile::new(0, 0)]);
+            FlightPlan(vec![Node::new(2, 0), Node::new(1, 0), Node::new(0, 0)]);
+        let new_flight_plan = FlightPlan(vec![Node::new(1, 1), Node::new(1, 0), Node::new(0, 0)]);
 
-        let result = new_flight_plan.validate(&previous_flight_plan);
+        let result = new_flight_plan.validate(&previous_flight_plan, &routing_grid());
 
         assert!(result.is_ok());
     }
@@ -135,16 +162,17 @@ mod tests {
         let x = *MAP_WIDTH_RANGE.start();
         let y = *MAP_HEIGHT_RANGE.start();
 
-        let previous_flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(x, y)]);
-        let new_flight_plan = FlightPlan(vec![Tile::new(x - 1, y - 1), Tile::new(0, 0)]);
+        let previous_flight_plan = FlightPlan(vec![Node::new(0, 0), Node::new(x, y)]);
+        let new_flight_plan = FlightPlan(vec![Node::new(x - 1, y - 1), Node::new(0, 0)]);
 
-        let result = new_flight_plan.validate(&previous_flight_plan);
+        let result = new_flight_plan.validate(&previous_flight_plan, &routing_grid());
 
         assert_eq!(
             vec![
                 ValidationError::NodeOutOfBounds,
                 ValidationError::NotInLogicalOrder,
-                ValidationError::InvalidFirstNode
+                ValidationError::InvalidFirstNode,
+                ValidationError::HasRestrictedNodes,
             ],
             result.err().unwrap()
         );
@@ -152,7 +180,7 @@ mod tests {
 
     #[test]
     fn is_within_map_bounds_with_valid_plan() {
-        let flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0), Tile::new(2, 0)]);
+        let flight_plan = FlightPlan(vec![Node::new(0, 0), Node::new(1, 0), Node::new(2, 0)]);
 
         let result = flight_plan.is_within_map_bounds();
 
@@ -164,7 +192,7 @@ mod tests {
         let x = MAP_WIDTH_RANGE.start() - 1;
         let y = MAP_HEIGHT_RANGE.start() - 1;
 
-        let flight_plan = FlightPlan(vec![Tile::new(x, y)]);
+        let flight_plan = FlightPlan(vec![Node::new(x, y)]);
 
         let result = flight_plan.is_within_map_bounds();
 
@@ -173,7 +201,7 @@ mod tests {
 
     #[test]
     fn is_in_logical_order_with_valid_plan() {
-        let flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0), Tile::new(2, 0)]);
+        let flight_plan = FlightPlan(vec![Node::new(0, 0), Node::new(1, 0), Node::new(2, 0)]);
 
         let result = flight_plan.is_in_logical_order();
 
@@ -182,7 +210,7 @@ mod tests {
 
     #[test]
     fn is_in_logical_order_with_invalid_plan() {
-        let flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(3, 3)]);
+        let flight_plan = FlightPlan(vec![Node::new(0, 0), Node::new(3, 3)]);
 
         let result = flight_plan.is_in_logical_order();
 
@@ -191,8 +219,8 @@ mod tests {
 
     #[test]
     fn has_invalid_first_node_with_valid_plan() {
-        let previous_flight_plan = FlightPlan(vec![Tile::new(1, 0), Tile::new(0, 0)]);
-        let new_flight_plan = FlightPlan(vec![Tile::new(0, 1), Tile::new(0, 0)]);
+        let previous_flight_plan = FlightPlan(vec![Node::new(1, 0), Node::new(0, 0)]);
+        let new_flight_plan = FlightPlan(vec![Node::new(0, 1), Node::new(0, 0)]);
 
         let result = new_flight_plan.has_invalid_first_node(&previous_flight_plan);
 
@@ -201,8 +229,8 @@ mod tests {
 
     #[test]
     fn has_invalid_first_node_with_invalid_plan() {
-        let previous_flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0)]);
-        let new_flight_plan = FlightPlan(vec![Tile::new(1, 0), Tile::new(0, 0)]);
+        let previous_flight_plan = FlightPlan(vec![Node::new(0, 0), Node::new(1, 0)]);
+        let new_flight_plan = FlightPlan(vec![Node::new(1, 0), Node::new(0, 0)]);
 
         let result = new_flight_plan.has_invalid_first_node(&previous_flight_plan);
 
@@ -211,7 +239,7 @@ mod tests {
 
     #[test]
     fn has_sharp_turns_without_turns() {
-        let flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0), Tile::new(1, 1)]);
+        let flight_plan = FlightPlan(vec![Node::new(0, 0), Node::new(1, 0), Node::new(1, 1)]);
 
         let result = flight_plan.has_sharp_turns();
 
@@ -220,9 +248,29 @@ mod tests {
 
     #[test]
     fn has_sharp_turns_with_turns() {
-        let flight_plan = FlightPlan(vec![Tile::new(0, 0), Tile::new(1, 0), Tile::new(0, 0)]);
+        let flight_plan = FlightPlan(vec![Node::new(0, 0), Node::new(1, 0), Node::new(0, 0)]);
 
         let result = flight_plan.has_sharp_turns();
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn has_restricted_nodes_without_restricted_nodes() {
+        let flight_plan = FlightPlan(vec![Node::new(0, 0)]);
+        let routing_grid = vec![Node::new(0, 0)];
+
+        let result = flight_plan.has_restricted_nodes(&routing_grid);
+
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn has_restricted_nodes_with_restricted_nodes() {
+        let flight_plan = FlightPlan(vec![Node::new(1, 1)]);
+        let routing_grid = vec![Node::new(0, 0)];
+
+        let result = flight_plan.has_restricted_nodes(&routing_grid);
 
         assert!(result.is_err());
     }

@@ -10,18 +10,24 @@ use atc::v1::{
 
 use crate::command::CommandSender;
 use crate::components::{AirplaneId, FlightPlan};
+use crate::map::Map;
 use crate::store::Store;
 use crate::Command;
 
 #[derive(Clone, Debug)]
 pub struct AirplaneService {
     command_bus: CommandSender,
+    map: Map,
     store: Arc<Store>,
 }
 
 impl AirplaneService {
     pub fn new(command_bus: CommandSender, store: Arc<Store>) -> Self {
-        Self { command_bus, store }
+        Self {
+            command_bus,
+            map: Map::new(),
+            store,
+        }
     }
 }
 
@@ -63,7 +69,9 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         let previous_flight_plan = (&airplane.flight_plan).into();
         let new_flight_plan: FlightPlan = (&request.flight_plan).into();
 
-        if let Err(errors) = new_flight_plan.validate(&previous_flight_plan) {
+        if let Err(errors) =
+            new_flight_plan.validate(&previous_flight_plan, self.map.routing_grid())
+        {
             let errors = errors.iter().map(|error| (*error).into()).collect();
 
             return Ok(Response::new(UpdateFlightPlanResponse {
@@ -101,10 +109,10 @@ mod tests {
     use atc::v1::{Airplane, GetAirplaneRequest, UpdateFlightPlanRequest};
 
     use crate::api::airplane::AirplaneService;
-    use crate::api::IntoApi;
+    use crate::api::AsApi;
     use crate::command::CommandReceiver;
     use crate::components::{AirplaneId, FlightPlan, Location};
-    use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+    use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
     use crate::{Command, Store};
 
     fn setup() -> (CommandReceiver, Arc<Store>, AirplaneService) {
@@ -118,12 +126,12 @@ mod tests {
     fn init_airplane(id: &str, store: &Arc<Store>) -> (AirplaneId, Location, FlightPlan) {
         let id = AirplaneId::new(id.into());
         let location = Location::new(0, 0);
-        let flight_plan = FlightPlan::new(vec![Tile::new(0, 0)]);
+        let flight_plan = FlightPlan::new(vec![Node::new(0, 0)]);
 
         let airplane = Airplane {
-            id: id.clone().into_api(),
-            location: Some(location.into_api()),
-            flight_plan: flight_plan.clone().into_api(),
+            id: id.as_api(),
+            point: Some(location.as_api()),
+            flight_plan: flight_plan.as_api(),
         };
 
         store.insert("AT-4321".into(), airplane);
@@ -165,7 +173,7 @@ mod tests {
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
-            flight_plan: vec![Tile::new(0, 0).into_api()],
+            flight_plan: vec![Node::new(0, 0).as_api()],
         });
         let status = service.update_flight_plan(request).await.unwrap_err();
 
@@ -180,10 +188,10 @@ mod tests {
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
             flight_plan: vec![
-                Tile::new(1, 0).into_api(),
-                Tile::new(3, 0).into_api(),
-                Tile::new(1, 0).into_api(),
-                Tile::new(MAP_WIDTH_RANGE.start() - 1, MAP_HEIGHT_RANGE.start() - 1).into_api(),
+                Node::new(1, 0).as_api(),
+                Node::new(3, 0).as_api(),
+                Node::new(1, 0).as_api(),
+                Node::new(MAP_WIDTH_RANGE.start() - 1, MAP_HEIGHT_RANGE.start() - 1).as_api(),
             ],
         });
         let response = service.update_flight_plan(request).await.unwrap();
@@ -197,6 +205,7 @@ mod tests {
             ValidationError::NotInLogicalOrder.into(),
             ValidationError::InvalidFirstNode.into(),
             ValidationError::HasSharpTurns.into(),
+            ValidationError::HasRestrictedNodes.into(),
         ];
 
         assert_eq!(expected_errors, actual_errors);
@@ -210,19 +219,19 @@ mod tests {
 
         let id = AirplaneId::new("AT-4321".into());
         let location = Location::new(0, 0);
-        let flight_plan = FlightPlan::new(vec![Tile::new(0, 0)]);
+        let flight_plan = FlightPlan::new(vec![Node::new(0, 0)]);
 
         let airplane = Airplane {
-            id: id.into_api(),
-            location: Some(location.into_api()),
-            flight_plan: flight_plan.into_api(),
+            id: id.as_api(),
+            point: Some(location.as_api()),
+            flight_plan: flight_plan.as_api(),
         };
 
         store.insert("AT-4321".into(), airplane);
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
-            flight_plan: vec![Tile::new(0, 0).into_api()],
+            flight_plan: vec![Node::new(0, 0).as_api()],
         });
         let status = service.update_flight_plan(request).await.unwrap_err();
 
@@ -235,21 +244,21 @@ mod tests {
 
         let id = AirplaneId::new("AT-4321".into());
         let location = Location::new(0, 0);
-        let flight_plan = FlightPlan::new(vec![Tile::new(0, 0)]);
+        let flight_plan = FlightPlan::new(vec![Node::new(0, 0)]);
 
         let airplane = Airplane {
-            id: id.into_api(),
-            location: Some(location.into_api()),
-            flight_plan: flight_plan.into_api(),
+            id: id.as_api(),
+            point: Some(location.as_api()),
+            flight_plan: flight_plan.as_api(),
         };
 
         store.insert("AT-4321".into(), airplane);
 
-        let new_flight_plan = FlightPlan::new(vec![Tile::new(1, 0), Tile::new(0, 0)]);
+        let new_flight_plan = FlightPlan::new(vec![Node::new(-1, 0), Node::new(0, 0)]);
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
-            flight_plan: new_flight_plan.clone().into_api(),
+            flight_plan: new_flight_plan.clone().as_api(),
         });
         let response = service.update_flight_plan(request).await.unwrap();
 

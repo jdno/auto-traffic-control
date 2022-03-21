@@ -38,11 +38,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             Event::AirplaneDetected(airplane_detected) => {
                 let airplane = airplane_detected.airplane.unwrap();
-                let location = airplane.location.unwrap();
+                let point = airplane.point.unwrap();
 
                 println!(
                     "Airplane detected: {} at {}:{}",
-                    airplane.id, location.longitude, location.latitude
+                    airplane.id, point.x, point.y
                 );
             }
             Event::AirplaneLanded(airplane_landed) => {
@@ -50,12 +50,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             Event::AirplaneMoved(airplane_moved) => {
                 let airplane_id = airplane_moved.id;
-                let location = airplane_moved.location.unwrap();
+                let point = airplane_moved.point.unwrap();
 
-                println!(
-                    "Airplane moved: {} to {}:{}",
-                    airplane_id, location.longitude, location.latitude
-                );
+                println!("Airplane moved: {} to {}:{}", airplane_id, point.x, point.y);
             }
             Event::FlightPlanUpdated(flight_plan_updated) => {
                 let airplane_id = flight_plan_updated.id;
@@ -66,7 +63,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     airplane_id,
                     flight_plan
                         .iter()
-                        .map(|node| format!("{}:{}", node.x, node.y))
+                        .map(|node| format!("{}:{}", node.longitude, node.latitude))
                         .collect::<Vec<String>>()
                         .join(", ")
                 );

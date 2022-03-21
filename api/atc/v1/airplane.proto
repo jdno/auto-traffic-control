@@ -6,7 +6,7 @@ import "atc/v1/map.proto";
 
 message Airplane {
   string id = 1;
-  Location location = 2;
+  Point point = 2;
   repeated Node flight_plan = 3;
 }
 
@@ -40,6 +40,7 @@ message UpdateFlightPlanError {
     NOT_IN_LOGICAL_ORDER = 2;
     HAS_SHARP_TURNS = 3;
     INVALID_FIRST_NODE = 4;
+    HAS_RESTRICTED_NODES = 5;
   }
   repeated ValidationError errors = 1;
 }

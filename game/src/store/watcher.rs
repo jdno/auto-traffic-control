@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use atc::v1::Airplane;
 
-use crate::api::IntoApi;
+use crate::api::AsApi;
 use crate::components::{AirplaneId, FlightPlan, Location};
 use crate::event::EventReceiver;
 use crate::{Event, Store};
@@ -39,9 +39,9 @@ impl StoreWatcher {
         self.store.insert(
             id.get().into(),
             Airplane {
-                id: id.into_api(),
-                location: Some(location.into_api()),
-                flight_plan: flight_plan.into_api(),
+                id: id.as_api(),
+                point: Some(location.as_api()),
+                flight_plan: flight_plan.as_api(),
             },
         );
     }
@@ -52,13 +52,13 @@ impl StoreWatcher {
 
     fn move_airplane(&self, id: AirplaneId, location: Location) {
         if let Some(mut airplane) = self.store.get_mut(id.get()) {
-            airplane.location = Some(location.into_api());
+            airplane.point = Some(location.as_api());
         }
     }
 
     fn update_flight_plan(&self, id: AirplaneId, flight_plan: FlightPlan) {
         if let Some(mut airplane) = self.store.get_mut(id.get()) {
-            airplane.flight_plan = flight_plan.into_api();
+            airplane.flight_plan = flight_plan.as_api();
         }
     }
 

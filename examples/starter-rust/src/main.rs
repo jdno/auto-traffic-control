@@ -74,7 +74,10 @@ async fn create_flight_plan(
         .get(0)
         .expect("expected flight plan to have at least one hop");
 
-    let destination = Node { x: 0, y: 0 };
+    let destination = Node {
+        longitude: 0,
+        latitude: 0,
+    };
     let route = route_between(first_hop, &destination, true);
 
     let request = UpdateFlightPlanRequest {

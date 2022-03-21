@@ -11,8 +11,8 @@ pub fn route_between(start: &Node, destination: &Node, first_hop: bool) -> Vec<N
         return route;
     }
 
-    let delta_x = destination.x - start.x;
-    let delta_y = destination.y - start.y;
+    let delta_x = destination.longitude - start.longitude;
+    let delta_y = destination.latitude - start.latitude;
 
     // Start and destination are direct neighbors
     if delta_x.abs() <= 1 && delta_y.abs() <= 1 {
@@ -22,21 +22,21 @@ pub fn route_between(start: &Node, destination: &Node, first_hop: bool) -> Vec<N
 
     let next_x = if delta_x != 0 {
         let direction = delta_x / delta_x.abs();
-        start.x + direction
+        start.longitude + direction
     } else {
-        start.x
+        start.longitude
     };
 
     let next_y = if delta_y != 0 {
         let direction = delta_y / delta_y.abs();
-        start.y + direction
+        start.latitude + direction
     } else {
-        start.y
+        start.latitude
     };
 
     let next_hop = Node {
-        x: next_x,
-        y: next_y,
+        longitude: next_x,
+        latitude: next_y,
     };
 
     let mut remaining_route = route_between(&next_hop, destination, false);
@@ -55,7 +55,10 @@ mod tests {
 
     #[test]
     fn route_between_same_point() {
-        let start = Node { x: 0, y: 0 };
+        let start = Node {
+            longitude: 0,
+            latitude: 0,
+        };
 
         let route = route_between(&start, &start, true);
 
@@ -64,33 +67,82 @@ mod tests {
 
     #[test]
     fn route_between_same_axis() {
-        let start = Node { x: 0, y: 0 };
-        let destination = Node { x: 2, y: 0 };
-
-        let route = route_between(&start, &destination, true);
-
-        assert_eq!(vec![start, Node { x: 1, y: 0 }, destination], route);
-    }
-
-    #[test]
-    fn route_between_diagonal_points() {
-        let start = Node { x: 0, y: 0 };
-        let destination = Node { x: 2, y: 2 };
-
-        let route = route_between(&start, &destination, true);
-
-        assert_eq!(vec![start, Node { x: 1, y: 1 }, destination], route);
-    }
-
-    #[test]
-    fn route_between_distant_points() {
-        let start = Node { x: 0, y: 0 };
-        let destination = Node { x: 3, y: 1 };
+        let start = Node {
+            longitude: 0,
+            latitude: 0,
+        };
+        let destination = Node {
+            longitude: 2,
+            latitude: 0,
+        };
 
         let route = route_between(&start, &destination, true);
 
         assert_eq!(
-            vec![start, Node { x: 1, y: 1 }, Node { x: 2, y: 1 }, destination],
+            vec![
+                start,
+                Node {
+                    longitude: 1,
+                    latitude: 0
+                },
+                destination
+            ],
+            route
+        );
+    }
+
+    #[test]
+    fn route_between_diagonal_points() {
+        let start = Node {
+            longitude: 0,
+            latitude: 0,
+        };
+        let destination = Node {
+            longitude: 2,
+            latitude: 2,
+        };
+
+        let route = route_between(&start, &destination, true);
+
+        assert_eq!(
+            vec![
+                start,
+                Node {
+                    longitude: 1,
+                    latitude: 1
+                },
+                destination
+            ],
+            route
+        );
+    }
+
+    #[test]
+    fn route_between_distant_points() {
+        let start = Node {
+            longitude: 0,
+            latitude: 0,
+        };
+        let destination = Node {
+            longitude: 3,
+            latitude: 1,
+        };
+
+        let route = route_between(&start, &destination, true);
+
+        assert_eq!(
+            vec![
+                start,
+                Node {
+                    longitude: 1,
+                    latitude: 1
+                },
+                Node {
+                    longitude: 2,
+                    latitude: 1
+                },
+                destination
+            ],
             route
         );
     }
