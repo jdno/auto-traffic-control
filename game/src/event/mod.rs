@@ -37,7 +37,7 @@ impl IntoApi for Event {
                 ApiEvent::AirplaneDetected(AirplaneDetected {
                     airplane: Some(Airplane {
                         id: id.into_api(),
-                        location: Some(location.into_api()),
+                        point: Some(location.into_api()),
                         flight_plan: flight_plan.into_api(),
                     }),
                 })
@@ -47,7 +47,7 @@ impl IntoApi for Event {
             }
             Event::AirplaneMoved(id, location) => ApiEvent::AirplaneMoved(AirplaneMoved {
                 id: id.into_api(),
-                location: Some(location.into_api()),
+                point: Some(location.into_api()),
             }),
             Event::FlightPlanUpdated(id, flight_plan) => {
                 ApiEvent::FlightPlanUpdated(FlightPlanUpdated {

@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::Point;
 
-use atc::v1::Location as ApiLocation;
+use atc::v1::Point as ApiPoint;
 
 use crate::api::IntoApi;
 use crate::map::Tile;
@@ -66,12 +66,12 @@ impl Display for Location {
 }
 
 impl IntoApi for Location {
-    type ApiType = ApiLocation;
+    type ApiType = ApiPoint;
 
     fn into_api(self) -> Self::ApiType {
-        ApiLocation {
-            longitude: self.x,
-            latitude: self.y,
+        ApiPoint {
+            x: self.x,
+            y: self.y,
         }
     }
 }

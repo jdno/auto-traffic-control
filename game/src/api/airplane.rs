@@ -122,7 +122,7 @@ mod tests {
 
         let airplane = Airplane {
             id: id.clone().into_api(),
-            location: Some(location.into_api()),
+            point: Some(location.into_api()),
             flight_plan: flight_plan.clone().into_api(),
         };
 
@@ -214,7 +214,7 @@ mod tests {
 
         let airplane = Airplane {
             id: id.into_api(),
-            location: Some(location.into_api()),
+            point: Some(location.into_api()),
             flight_plan: flight_plan.into_api(),
         };
 
@@ -239,7 +239,7 @@ mod tests {
 
         let airplane = Airplane {
             id: id.into_api(),
-            location: Some(location.into_api()),
+            point: Some(location.into_api()),
             flight_plan: flight_plan.into_api(),
         };
 

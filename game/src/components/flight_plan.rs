@@ -96,7 +96,7 @@ impl From<&Vec<atc::v1::Node>> for FlightPlan {
         let tiles = api_flight_plan
             .iter()
             .rev()
-            .map(|node| Tile::new(node.x, node.y))
+            .map(|node| Tile::new(node.longitude, node.latitude))
             .collect();
 
         FlightPlan(tiles)

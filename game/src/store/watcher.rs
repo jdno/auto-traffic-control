@@ -40,7 +40,7 @@ impl StoreWatcher {
             id.get().into(),
             Airplane {
                 id: id.into_api(),
-                location: Some(location.into_api()),
+                point: Some(location.into_api()),
                 flight_plan: flight_plan.into_api(),
             },
         );
@@ -52,7 +52,7 @@ impl StoreWatcher {
 
     fn move_airplane(&self, id: AirplaneId, location: Location) {
         if let Some(mut airplane) = self.store.get_mut(id.get()) {
-            airplane.location = Some(location.into_api());
+            airplane.point = Some(location.into_api());
         }
     }
 

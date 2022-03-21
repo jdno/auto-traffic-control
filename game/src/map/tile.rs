@@ -97,8 +97,8 @@ impl IntoApi for Tile {
 
     fn into_api(self) -> Self::ApiType {
         ApiNode {
-            x: self.x(),
-            y: self.y(),
+            longitude: self.x(),
+            latitude: self.y(),
         }
     }
 }

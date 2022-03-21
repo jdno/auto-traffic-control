@@ -6,7 +6,7 @@ import "atc/v1/map.proto";
 
 message Airplane {
   string id = 1;
-  Location location = 2;
+  Point point = 2;
   repeated Node flight_plan = 3;
 }
 

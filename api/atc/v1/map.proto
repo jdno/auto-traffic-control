@@ -2,24 +2,24 @@ syntax = "proto3";
 
 package atc.v1;
 
-message Location {
+message Node {
   int32 longitude = 1;
   int32 latitude = 2;
 }
 
-message Node {
+message Point {
   int32 x = 1;
   int32 y = 2;
 }
 
-message NodeToLocationRequest {
+message NodeToPointRequest {
   Node node = 1;
 }
 
-message NodeToLocationResponse {
-  Location location = 1;
+message NodeToPointResponse {
+  Point point = 1;
 }
 
 service MapService {
-  rpc NodeToLocation(NodeToLocationRequest) returns (NodeToLocationResponse);
+  rpc NodeToPoint(NodeToPointRequest) returns (NodeToPointResponse);
 }

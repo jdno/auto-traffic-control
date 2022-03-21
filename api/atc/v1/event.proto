@@ -20,7 +20,7 @@ message AirplaneLanded {
 
 message AirplaneMoved {
   string id = 1;
-  Location location = 2;
+  Point point = 2;
 }
 
 message FlightPlanUpdated {
