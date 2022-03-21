@@ -79,8 +79,8 @@ fn fly(
         if travelled_distance >= distance_between_points {
             *current_position = next_tile.as_vec3(current_position.z);
 
-            let tile = flight_plan.get_mut().pop().unwrap();
-            travelled_route.get_mut().push(tile);
+            let node = flight_plan.get_mut().pop().unwrap();
+            travelled_route.get_mut().push(node);
 
             fly(
                 current_position,
@@ -104,16 +104,16 @@ mod tests {
     use bevy::prelude::*;
 
     use crate::components::{FlightPlan, TravelledRoute};
-    use crate::map::Tile;
+    use crate::map::Node;
     use crate::TILE_SIZE;
 
     use super::fly;
 
     #[test]
     fn fly_and_reach_next_node() {
-        let mut current_position = Tile::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Tile::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Tile::new(0, 0)]);
+        let mut current_position = Node::new(0, 0).as_vec3(0.0);
+        let mut flight_plan = FlightPlan::new(vec![Node::new(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
 
         fly(
             &mut current_position,
@@ -129,9 +129,9 @@ mod tests {
 
     #[test]
     fn fly_towards_next_node() {
-        let mut current_position = Tile::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Tile::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Tile::new(0, 0)]);
+        let mut current_position = Node::new(0, 0).as_vec3(0.0);
+        let mut flight_plan = FlightPlan::new(vec![Node::new(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
 
         let movement_speed = (TILE_SIZE / 2) as f32;
 
@@ -148,9 +148,9 @@ mod tests {
 
     #[test]
     fn fly_past_node() {
-        let mut current_position = Tile::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Tile::new(2, 0), Tile::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Tile::new(0, 0)]);
+        let mut current_position = Node::new(0, 0).as_vec3(0.0);
+        let mut flight_plan = FlightPlan::new(vec![Node::new(2, 0), Node::new(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
 
         let movement_speed = (TILE_SIZE + (TILE_SIZE / 2)) as f32;
 
@@ -168,9 +168,9 @@ mod tests {
 
     #[test]
     fn fly_past_node_and_change_direction() {
-        let mut current_position = Tile::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Tile::new(1, 1), Tile::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Tile::new(0, 0)]);
+        let mut current_position = Node::new(0, 0).as_vec3(0.0);
+        let mut flight_plan = FlightPlan::new(vec![Node::new(1, 1), Node::new(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
 
         let movement_speed = (TILE_SIZE + (TILE_SIZE / 2)) as f32;
 

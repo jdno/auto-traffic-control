@@ -4,7 +4,7 @@ use rand::Rng;
 use crate::components::{
     Airplane, AirplaneIdGenerator, Collider, Location, Speed, TravelledRoute, AIRPLANE_SIZE,
 };
-use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::{generate_random_plan, Event, EventBus};
 
 pub struct SpawnTimer(Timer);
@@ -62,25 +62,25 @@ pub fn spawn_airplane(
     }
 }
 
-fn random_spawn() -> Tile {
+fn random_spawn() -> Node {
     let mut rng = rand::thread_rng();
 
     match rng.gen_range(0u32..4u32) {
         0 => {
             let x = rng.gen_range(MAP_WIDTH_RANGE);
-            Tile::new(x, *MAP_HEIGHT_RANGE.end())
+            Node::new(x, *MAP_HEIGHT_RANGE.end())
         }
         1 => {
             let y = rng.gen_range(MAP_HEIGHT_RANGE);
-            Tile::new(*MAP_WIDTH_RANGE.end(), y)
+            Node::new(*MAP_WIDTH_RANGE.end(), y)
         }
         2 => {
             let x = rng.gen_range(MAP_WIDTH_RANGE);
-            Tile::new(x, *MAP_HEIGHT_RANGE.start())
+            Node::new(x, *MAP_HEIGHT_RANGE.start())
         }
         _ => {
             let y = rng.gen_range(MAP_HEIGHT_RANGE);
-            Tile::new(*MAP_WIDTH_RANGE.start(), y)
+            Node::new(*MAP_WIDTH_RANGE.start(), y)
         }
     }
 }

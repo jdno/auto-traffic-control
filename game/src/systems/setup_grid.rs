@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
-use crate::map::{Tile, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
 pub fn setup_grid(mut commands: Commands) {
     for y in MAP_HEIGHT_RANGE {
         for x in MAP_WIDTH_RANGE {
-            let tile = Tile::new(x, y);
-            let point = tile.as_point();
+            let node = Node::new(x, y);
+            let point = node.as_point();
 
             commands.spawn_bundle(SpriteBundle {
                 transform: Transform {

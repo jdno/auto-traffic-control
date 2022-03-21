@@ -3,10 +3,10 @@ use std::ops::RangeInclusive;
 use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
 
 pub use self::direction::*;
-pub use self::tile::*;
+pub use self::node::Node;
 
 mod direction;
-mod tile;
+mod node;
 
 /// The number of tiles that are left empty around the border of the window
 const BORDER_SIZE: usize = 1;

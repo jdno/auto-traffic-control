@@ -6,7 +6,7 @@ use geo::Point;
 use atc::v1::Point as ApiPoint;
 
 use crate::api::IntoApi;
-use crate::map::Tile;
+use crate::map::Node;
 use crate::TILE_SIZE;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Component)]
@@ -41,11 +41,11 @@ impl From<&Point<f32>> for Location {
     }
 }
 
-impl From<&Tile> for Location {
-    fn from(tile: &Tile) -> Self {
+impl From<&Node> for Location {
+    fn from(tile: &Node) -> Self {
         Self {
-            x: tile.x() * TILE_SIZE,
-            y: tile.y() * TILE_SIZE,
+            x: tile.longitude() * TILE_SIZE,
+            y: tile.latitude() * TILE_SIZE,
         }
     }
 }

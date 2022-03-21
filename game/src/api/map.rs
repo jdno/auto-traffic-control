@@ -2,7 +2,7 @@ use tonic::{Request, Response, Status};
 
 use atc::v1::{NodeToPointRequest, NodeToPointResponse, Point};
 
-use crate::map::Tile;
+use crate::map::Node;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct MapService;
@@ -13,9 +13,9 @@ impl atc::v1::map_service_server::MapService for MapService {
         &self,
         request: Request<NodeToPointRequest>,
     ) -> Result<Response<NodeToPointResponse>, Status> {
-        if let Some(node) = request.into_inner().node {
-            let tile = Tile::new(node.longitude, node.latitude);
-            let point = tile.to_location();
+        if let Some(api_node) = request.into_inner().node {
+            let node = Node::new(api_node.longitude, api_node.latitude);
+            let point = node.to_location();
 
             Ok(Response::new(NodeToPointResponse {
                 point: Some(Point {
