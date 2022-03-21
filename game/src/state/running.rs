@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use atc::v1::get_game_state_response::GameState;
 
 use crate::event::{Event, EventBus};
-use crate::map::{Map, Node};
+use crate::map::Map;
 use crate::systems::{
     detect_collision, follow_flight_plan, generate_flight_plan, setup_airport, setup_grid,
     spawn_airplane, update_flight_plan, SpawnTimer,
@@ -14,7 +14,7 @@ pub struct GameStateRunningPlugin;
 impl Plugin for GameStateRunningPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(SpawnTimer::new(Timer::from_seconds(1.0, true)))
-            .insert_resource(Map::new(Node::new(0, 0)))
+            .insert_resource(Map::new())
             .add_system_set(
                 SystemSet::on_enter(GameState::Running)
                     .with_system(send_event)
@@ -34,7 +34,7 @@ impl Plugin for GameStateRunningPlugin {
 }
 
 fn send_event(map: Res<Map>, event_bus: Local<EventBus>) {
-    let map = *map.into_inner();
+    let map = map.into_inner().clone();
 
     event_bus
         .sender()
