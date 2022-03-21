@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache build artifacts
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/bin/
@@ -83,7 +83,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache build artifacts
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/bin/
