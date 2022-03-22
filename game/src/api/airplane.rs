@@ -39,7 +39,7 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
     ) -> Result<Response<GetAirplaneResponse>, Status> {
         let id = request.into_inner().id;
 
-        if let Some(airplane) = self.store.get(&id) {
+        if let Some(airplane) = self.store.airplanes().get(&id) {
             Ok(Response::new(GetAirplaneResponse {
                 airplane: Some(airplane.clone()),
             }))
@@ -57,7 +57,7 @@ impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
         let request = request.into_inner();
         let id = request.id;
 
-        let airplane = match self.store.get(&id) {
+        let airplane = match self.store.airplanes().get(&id) {
             Some(airplane) => airplane,
             None => {
                 return Err(Status::not_found(&format!(
@@ -134,7 +134,7 @@ mod tests {
             flight_plan: flight_plan.as_api(),
         };
 
-        store.insert("AT-4321".into(), airplane);
+        store.airplanes().insert("AT-4321".into(), airplane);
 
         (id, location, flight_plan)
     }
@@ -227,7 +227,7 @@ mod tests {
             flight_plan: flight_plan.as_api(),
         };
 
-        store.insert("AT-4321".into(), airplane);
+        store.airplanes().insert("AT-4321".into(), airplane);
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
@@ -252,7 +252,7 @@ mod tests {
             flight_plan: flight_plan.as_api(),
         };
 
-        store.insert("AT-4321".into(), airplane);
+        store.airplanes().insert("AT-4321".into(), airplane);
 
         let new_flight_plan = FlightPlan::new(vec![Node::new(-1, 0), Node::new(0, 0)]);
 
