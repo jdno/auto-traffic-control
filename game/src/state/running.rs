@@ -25,8 +25,8 @@ impl Plugin for GameStateRunningPlugin {
                 SystemSet::on_update(GameState::Running)
                     .with_system(follow_flight_plan.label("move"))
                     .with_system(despawn_airplane.label("despawn").after("move"))
-                    .with_system(generate_flight_plan.after("despawn"))
                     .with_system(detect_collision.after("despawn"))
+                    .with_system(generate_flight_plan.after("despawn"))
                     .with_system(spawn_airplane)
                     .with_system(update_flight_plan),
             )
