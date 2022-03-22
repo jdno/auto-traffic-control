@@ -1,10 +1,9 @@
 use bevy::prelude::*;
 use bevy::sprite::collide_aabb::collide;
 
-use atc::v1::get_game_state_response::GameState;
-
 use crate::components::{AirplaneId, Collider, AIRPLANE_SIZE};
 use crate::event::{Event, EventBus};
+use crate::AppState;
 
 pub struct Size {
     airplane: Vec2,
@@ -19,7 +18,7 @@ impl Default for Size {
 }
 
 pub fn detect_collision(
-    mut app_state: ResMut<State<GameState>>,
+    mut app_state: ResMut<State<AppState>>,
     query: Query<(Entity, &AirplaneId, &Collider, &Transform)>,
     event_bus: Local<EventBus>,
     size: Local<Size>,
@@ -46,7 +45,7 @@ pub fn detect_collision(
                     ))
                     .expect("failed to send event"); // TODO: Handle error
 
-                app_state.set(GameState::Ready).unwrap();
+                app_state.set(AppState::MainMenu).unwrap();
 
                 break 'outer;
             }

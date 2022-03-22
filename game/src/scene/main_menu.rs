@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use atc::v1::get_game_state_response::GameState;
+use crate::AppState;
 
 struct Menu(Entity);
 
@@ -8,9 +8,9 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(SystemSet::on_enter(GameState::Ready).with_system(spawn))
-            .add_system_set(SystemSet::on_update(GameState::Ready))
-            .add_system_set(SystemSet::on_exit(GameState::Ready).with_system(despawn));
+        app.add_system_set(SystemSet::on_enter(AppState::MainMenu).with_system(spawn))
+            .add_system_set(SystemSet::on_update(AppState::MainMenu))
+            .add_system_set(SystemSet::on_exit(AppState::MainMenu).with_system(despawn));
     }
 }
 

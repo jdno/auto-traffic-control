@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-use atc::v1::get_game_state_response::GameState;
-
 use crate::event::{Event, EventBus};
 use crate::map::Map;
 use crate::resources::Score;
@@ -9,6 +7,7 @@ use crate::systems::{
     despawn_airplane, detect_collision, follow_flight_plan, generate_flight_plan, land_airplane,
     setup_airport, setup_grid, spawn_airplane, update_flight_plan, SpawnTimer,
 };
+use crate::AppState;
 
 pub struct GamePlugin;
 
@@ -17,13 +16,13 @@ impl Plugin for GamePlugin {
         app.insert_resource(SpawnTimer::new(Timer::from_seconds(2.0, true)))
             .insert_resource(Map::new())
             .add_system_set(
-                SystemSet::on_enter(GameState::Running)
+                SystemSet::on_enter(AppState::Game)
                     .with_system(start_game)
                     .with_system(setup_airport)
                     .with_system(setup_grid),
             )
             .add_system_set(
-                SystemSet::on_update(GameState::Running)
+                SystemSet::on_update(AppState::Game)
                     .with_system(follow_flight_plan.label("move"))
                     .with_system(despawn_airplane)
                     .with_system(detect_collision)
@@ -33,7 +32,7 @@ impl Plugin for GamePlugin {
                     .with_system(update_flight_plan),
             )
             .add_system_set(
-                SystemSet::on_exit(GameState::Running)
+                SystemSet::on_exit(AppState::Game)
                     .with_system(despawn_entities)
                     .with_system(end_game),
             );
