@@ -45,9 +45,9 @@ impl Api {
             .add_service(EventServiceServer::new(EventService::new(event_sender)))
             .add_service(GameServiceServer::new(GameService::new(
                 command_sender,
-                store,
+                store.clone(),
             )))
-            .add_service(MapServiceServer::new(MapService))
+            .add_service(MapServiceServer::new(MapService::new(store)))
             .serve(Self::address_or_default())
             .await
     }

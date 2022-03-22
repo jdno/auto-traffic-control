@@ -1,14 +1,34 @@
+use std::sync::Arc;
+
 use tonic::{Request, Response, Status};
 
-use atc::v1::{NodeToPointRequest, NodeToPointResponse, Point};
+use atc::v1::{GetMapRequest, GetMapResponse, NodeToPointRequest, NodeToPointResponse, Point};
 
+use crate::api::AsApi;
 use crate::map::Node;
+use crate::store::Store;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct MapService;
+#[derive(Clone, Debug, Default)]
+pub struct MapService {
+    store: Arc<Store>,
+}
+
+impl MapService {
+    pub fn new(store: Arc<Store>) -> Self {
+        Self { store }
+    }
+}
 
 #[tonic::async_trait]
 impl atc::v1::map_service_server::MapService for MapService {
+    async fn get_map(
+        &self,
+        _request: Request<GetMapRequest>,
+    ) -> Result<Response<GetMapResponse>, Status> {
+        let map = Some(self.store.map().lock().as_api());
+        Ok(Response::new(GetMapResponse { map }))
+    }
+
     async fn node_to_point(
         &self,
         request: Request<NodeToPointRequest>,
@@ -31,15 +51,46 @@ impl atc::v1::map_service_server::MapService for MapService {
 
 #[cfg(test)]
 mod tests {
+    use std::sync::Arc;
+
     use tonic::Request;
 
     use atc::v1::map_service_server::MapService as ServiceTrait;
-    use atc::v1::{Node, NodeToPointRequest};
+    use atc::v1::{GetMapRequest, Node, NodeToPointRequest};
+
+    use crate::store::Store;
 
     use super::MapService;
 
+    fn setup() -> (Arc<Store>, MapService) {
+        let store = Arc::new(Store::new());
+        let service = MapService::new(store.clone());
+
+        (store, service)
+    }
+
+    #[tokio::test]
+    async fn get_map() {
+        let (_, service) = setup();
+
+        let request = Request::new(GetMapRequest {});
+        let response = service.get_map(request).await.unwrap();
+
+        let map = response.into_inner().map.unwrap();
+
+        assert_eq!(
+            Node {
+                longitude: 0,
+                latitude: 0
+            },
+            map.airport.unwrap()
+        );
+    }
+
     #[tokio::test]
     async fn node_to_location_with_center() {
+        let (_, service) = setup();
+
         let request = Request::new(NodeToPointRequest {
             node: Some(Node {
                 longitude: 0,
@@ -47,7 +98,7 @@ mod tests {
             }),
         });
 
-        let response = MapService.node_to_point(request).await.unwrap();
+        let response = service.node_to_point(request).await.unwrap();
         let location = response.into_inner().point.unwrap();
 
         assert_eq!(0, location.x);
@@ -56,6 +107,8 @@ mod tests {
 
     #[tokio::test]
     async fn node_to_location() {
+        let (_, service) = setup();
+
         let request = Request::new(NodeToPointRequest {
             node: Some(Node {
                 longitude: 1,
@@ -63,7 +116,7 @@ mod tests {
             }),
         });
 
-        let response = MapService.node_to_point(request).await.unwrap();
+        let response = service.node_to_point(request).await.unwrap();
         let location = response.into_inner().point.unwrap();
 
         assert_eq!(32, location.x);
