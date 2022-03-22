@@ -6,7 +6,7 @@ use tokio::sync::broadcast::{channel, Receiver};
 use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
-use crate::scene::{GamePlugin, MainMenuPlugin};
+use crate::scene::{GameOverPlugin, GamePlugin, MainMenuPlugin};
 use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
 
@@ -36,6 +36,7 @@ const TILE_SIZE: i32 = 32;
 pub enum AppState {
     MainMenu,
     Game,
+    GameOver,
 }
 
 #[tokio::main]
@@ -69,6 +70,7 @@ async fn main() {
         .insert_resource(event_sender)
         .add_state(AppState::MainMenu)
         .add_plugin(GamePlugin)
+        .add_plugin(GameOverPlugin)
         .add_plugin(MainMenuPlugin)
         .add_startup_system(setup_cameras)
         .add_system(change_app_state)

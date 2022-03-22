@@ -45,7 +45,7 @@ pub fn detect_collision(
                     ))
                     .expect("failed to send event"); // TODO: Handle error
 
-                app_state.set(AppState::MainMenu).unwrap();
+                app_state.set(AppState::GameOver).unwrap();
 
                 break 'outer;
             }

@@ -35,12 +35,7 @@ impl Plugin for GamePlugin {
                     .with_system(update_flight_plan)
                     .with_system(update_score),
             )
-            .add_system_set(
-                SystemSet::on_exit(AppState::Game)
-                    .with_system(despawn_entities)
-                    .with_system(despawn_score)
-                    .with_system(end_game),
-            );
+            .add_system_set(SystemSet::on_exit(AppState::Game).with_system(end_game));
     }
 }
 
@@ -105,14 +100,4 @@ fn setup_score(mut commands: Commands, asset_server: Res<AssetServer>) {
 fn update_score(score: Res<Score>, mut query: Query<&mut Text>) {
     let mut text = query.single_mut();
     text.sections[1].value = format!("{}", score.get());
-}
-
-fn despawn_score(mut commands: Commands, score_overlay: Res<ScoreOverlay>) {
-    commands.entity(score_overlay.0).despawn_recursive();
-}
-
-fn despawn_entities(mut commands: Commands, query: Query<Entity, Without<Camera>>) {
-    for entity in query.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
 }
