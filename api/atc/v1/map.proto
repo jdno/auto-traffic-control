@@ -4,6 +4,7 @@ package atc.v1;
 
 message Map {
   Node airport = 1;
+  repeated Node routing_grid = 2;
 }
 
 message Node {
