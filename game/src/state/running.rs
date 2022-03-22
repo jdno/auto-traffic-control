@@ -5,8 +5,8 @@ use atc::v1::get_game_state_response::GameState;
 use crate::event::{Event, EventBus};
 use crate::map::Map;
 use crate::systems::{
-    detect_collision, follow_flight_plan, generate_flight_plan, setup_airport, setup_grid,
-    spawn_airplane, update_flight_plan, SpawnTimer,
+    despawn_airplane, detect_collision, follow_flight_plan, generate_flight_plan, setup_airport,
+    setup_grid, spawn_airplane, update_flight_plan, SpawnTimer,
 };
 
 pub struct GameStateRunningPlugin;
@@ -23,9 +23,10 @@ impl Plugin for GameStateRunningPlugin {
             )
             .add_system_set(
                 SystemSet::on_update(GameState::Running)
-                    .with_system(follow_flight_plan.label("movement"))
-                    .with_system(generate_flight_plan.after("movement"))
-                    .with_system(detect_collision.after("movement"))
+                    .with_system(follow_flight_plan.label("move"))
+                    .with_system(despawn_airplane.label("despawn").after("move"))
+                    .with_system(generate_flight_plan.after("despawn"))
+                    .with_system(detect_collision.after("despawn"))
                     .with_system(spawn_airplane)
                     .with_system(update_flight_plan),
             )
