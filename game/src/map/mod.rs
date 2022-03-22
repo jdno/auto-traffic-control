@@ -66,6 +66,7 @@ impl AsApi for Map {
     fn as_api(&self) -> Self::ApiType {
         ApiMap {
             airport: Some(self.airport.as_api()),
+            routing_grid: self.routing_grid.iter().map(|node| node.as_api()).collect(),
         }
     }
 }
