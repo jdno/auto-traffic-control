@@ -1,3 +1,5 @@
+use std::thread::sleep;
+use std::time::Duration;
 use tokio_stream::StreamExt;
 use tonic::transport::Channel;
 
@@ -19,8 +21,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut airplane_service = AirplaneServiceClient::connect("http://localhost:4747").await?;
     let mut event_service = EventServiceClient::connect("http://localhost:4747").await?;
     let mut game_service = GameServiceClient::connect("http://localhost:4747").await?;
-
-    let mut points: usize = 0;
 
     let mut stream = event_service
         .stream(StreamRequest {})
@@ -46,10 +46,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Event::AirplaneDetected(airplane_detected) => {
                 create_flight_plan(&mut airplane_service, airplane_detected).await;
             }
-            Event::AirplaneLanded(_) => points += 1,
-            Event::GameStopped(_) => {
+            Event::GameStopped(game_stopped) => {
+                let points = game_stopped.score;
                 println!("Finished with {points} points");
-                points = 0;
+
+                sleep(Duration::from_secs(5));
 
                 start_game(&mut game_service).await;
             }

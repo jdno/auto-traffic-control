@@ -3,10 +3,12 @@ use bevy::prelude::*;
 use crate::components::{AirplaneId, Landing};
 use crate::event::{Event, EventBus};
 use crate::map::Map;
+use crate::resources::Score;
 
 pub fn despawn_airplane(
     mut commands: Commands,
     map: Res<Map>,
+    mut score: ResMut<Score>,
     query: Query<(Entity, &AirplaneId, &Transform), With<Landing>>,
     event_bus: Local<EventBus>,
 ) {
@@ -15,6 +17,8 @@ pub fn despawn_airplane(
     for (entity, airplane_id, transform) in query.iter() {
         if transform.translation == airport {
             commands.entity(entity).despawn_recursive();
+
+            score.increment();
 
             event_bus
                 .sender()

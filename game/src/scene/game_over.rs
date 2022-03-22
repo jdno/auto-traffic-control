@@ -1,39 +1,24 @@
 use bevy::prelude::*;
 
-use atc::v1::get_game_state_response::GameState;
+use crate::AppState;
 
-use crate::event::{Event, EventBus};
+pub struct GameOverPlugin;
 
-struct Menu(Entity);
-
-pub struct GameStateReadyPlugin;
-
-impl Plugin for GameStateReadyPlugin {
+impl Plugin for GameOverPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(
-            SystemSet::on_enter(GameState::Ready)
-                .with_system(send_event)
-                .with_system(spawn),
-        )
-        .add_system_set(SystemSet::on_update(GameState::Ready))
-        .add_system_set(SystemSet::on_exit(GameState::Ready).with_system(despawn));
+        app.add_system_set(SystemSet::on_enter(AppState::GameOver).with_system(spawn))
+            .add_system_set(SystemSet::on_update(AppState::GameOver))
+            .add_system_set(SystemSet::on_exit(AppState::GameOver).with_system(despawn));
     }
 }
 
-fn send_event(event_bus: Local<EventBus>) {
-    event_bus
-        .sender()
-        .send(Event::GameStopped)
-        .expect("failed to send event"); // TODO: Handle error
-}
-
 fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let text = commands
+    commands
         .spawn_bundle(NodeBundle {
             style: Style {
                 size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
                 align_items: AlignItems::Center,
-                justify_content: JustifyContent::Center,
+                justify_content: JustifyContent::SpaceBetween,
                 flex_direction: FlexDirection::ColumnReverse,
                 ..Default::default()
             },
@@ -43,7 +28,7 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
         .with_children(|parent| {
             parent.spawn_bundle(TextBundle {
                 text: Text::with_section(
-                    "Ready",
+                    "Game Over",
                     TextStyle {
                         font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                         font_size: 48.0,
@@ -59,7 +44,7 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
                     ..Default::default()
                 },
                 text: Text::with_section(
-                    "Send a StartGame request to start a game",
+                    "Two planes got too close to each other. The simulation was aborted.",
                     TextStyle {
                         font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                         font_size: 24.0,
@@ -69,12 +54,11 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ),
                 ..Default::default()
             });
-        })
-        .id();
-
-    commands.insert_resource(Menu(text));
+        });
 }
 
-fn despawn(mut commands: Commands, menu: Res<Menu>) {
-    commands.entity(menu.0).despawn_recursive();
+fn despawn(mut commands: Commands, query: Query<Entity, Without<Camera>>) {
+    for entity in query.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
 }

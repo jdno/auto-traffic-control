@@ -3,12 +3,10 @@ use std::sync::Arc;
 use bevy::prelude::*;
 use tokio::sync::broadcast::{channel, Receiver};
 
-use atc::v1::get_game_state_response::GameState;
-
 use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
-use crate::state::{GameStateReadyPlugin, GameStateRunningPlugin};
+use crate::scene::{GameOverPlugin, GamePlugin, MainMenuPlugin};
 use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
 
@@ -17,7 +15,8 @@ mod command;
 mod components;
 mod event;
 mod map;
-mod state;
+mod resources;
+mod scene;
 mod store;
 mod systems;
 
@@ -32,6 +31,13 @@ const SCREEN_WIDTH: f32 = 800.0;
 /// Tiles must have the same size as the textures that are used to render them. This game uses
 /// textures with a size of 32 by 32 pixels, and thus tiles must be 32 pixels high and wide as well.
 const TILE_SIZE: i32 = 32;
+
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+pub enum AppState {
+    MainMenu,
+    Game,
+    GameOver,
+}
 
 #[tokio::main]
 async fn main() {
@@ -62,9 +68,10 @@ async fn main() {
         .add_plugins(DefaultPlugins)
         .insert_resource(command_sender)
         .insert_resource(event_sender)
-        .add_state(GameState::Ready)
-        .add_plugin(GameStateReadyPlugin)
-        .add_plugin(GameStateRunningPlugin)
+        .add_state(AppState::MainMenu)
+        .add_plugin(GamePlugin)
+        .add_plugin(GameOverPlugin)
+        .add_plugin(MainMenuPlugin)
         .add_startup_system(setup_cameras)
         .add_system(change_app_state)
         .run();

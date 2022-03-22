@@ -32,7 +32,7 @@ impl StoreWatcher {
                     self.update_flight_plan(id, flight_plan)
                 }
                 Event::GameStarted(map) => self.start_game(map),
-                Event::GameStopped => self.reset(),
+                Event::GameStopped(_) => self.reset(),
                 _ => {}
             }
         }

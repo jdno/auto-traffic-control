@@ -32,7 +32,9 @@ message GameStarted {
   Map map = 1;
 }
 
-message GameStopped {}
+message GameStopped {
+  uint32 score = 1;
+}
 
 message StreamRequest {}
 
