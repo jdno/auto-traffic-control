@@ -3,15 +3,12 @@ use geo::algorithm::euclidean_distance::EuclideanDistance;
 use geo::point;
 
 use crate::components::{AirplaneId, FlightPlan, Location, Speed, TravelledRoute};
-use crate::map::{Direction, Map};
-use crate::{Event, EventBus};
+use crate::event::{Event, EventBus};
+use crate::map::Direction;
 
 pub fn follow_flight_plan(
-    map: Res<Map>,
-    mut commands: Commands,
     time: Res<Time>,
     mut query: Query<(
-        Entity,
         &AirplaneId,
         &mut FlightPlan,
         &Speed,
@@ -20,9 +17,7 @@ pub fn follow_flight_plan(
     )>,
     event_bus: Local<EventBus>,
 ) {
-    let airport_vec3 = map.airport().as_vec3(2.0);
-
-    for (entity, airplane_id, mut flight_plan, speed, mut transform, mut travelled_route) in
+    for (airplane_id, mut flight_plan, speed, mut transform, mut travelled_route) in
         query.iter_mut()
     {
         let distance = speed.get() * time.delta().as_secs_f32();
@@ -33,7 +28,6 @@ pub fn follow_flight_plan(
             &mut travelled_route,
             distance,
         );
-        let mut airplane_landed = false;
 
         event_bus
             .sender()
@@ -43,19 +37,7 @@ pub fn follow_flight_plan(
             ))
             .expect("failed to send event"); // TODO: Handle error
 
-        // Airplane reached the airport
-        if transform.translation == airport_vec3 {
-            airplane_landed = true;
-
-            commands.entity(entity).despawn();
-
-            event_bus
-                .sender()
-                .send(Event::AirplaneLanded(airplane_id.clone()))
-                .expect("failed to send event"); // TODO: Handle error
-        }
-
-        if did_update_flight_plan && !airplane_landed {
+        if did_update_flight_plan && !flight_plan.get().is_empty() {
             event_bus
                 .sender()
                 .send(Event::FlightPlanUpdated(
