@@ -1,10 +1,12 @@
 use std::sync::Arc;
 
+use atc::v1::get_game_state_response::GameState;
 use atc::v1::Airplane;
 
 use crate::api::AsApi;
 use crate::components::{AirplaneId, FlightPlan, Location};
 use crate::event::EventReceiver;
+use crate::map::Map;
 use crate::{Event, Store};
 
 #[derive(Debug)]
@@ -27,8 +29,9 @@ impl StoreWatcher {
                 Event::AirplaneLanded(id) => self.remove_airplane(id),
                 Event::AirplaneMoved(id, location) => self.move_airplane(id, location),
                 Event::FlightPlanUpdated(id, flight_plan) => {
-                    self.update_flight_plan(id, flight_plan);
+                    self.update_flight_plan(id, flight_plan)
                 }
+                Event::GameStarted(map) => self.start_game(map),
                 Event::GameStopped => self.reset(),
                 _ => {}
             }
@@ -36,7 +39,7 @@ impl StoreWatcher {
     }
 
     fn insert_airplane(&self, id: AirplaneId, location: Location, flight_plan: FlightPlan) {
-        self.store.insert(
+        self.store.airplanes().insert(
             id.get().into(),
             Airplane {
                 id: id.as_api(),
@@ -47,22 +50,33 @@ impl StoreWatcher {
     }
 
     fn remove_airplane(&self, id: AirplaneId) {
-        self.store.remove(id.get());
+        self.store.airplanes().remove(id.get());
     }
 
     fn move_airplane(&self, id: AirplaneId, location: Location) {
-        if let Some(mut airplane) = self.store.get_mut(id.get()) {
+        if let Some(mut airplane) = self.store.airplanes().get_mut(id.get()) {
             airplane.point = Some(location.as_api());
         }
     }
 
     fn update_flight_plan(&self, id: AirplaneId, flight_plan: FlightPlan) {
-        if let Some(mut airplane) = self.store.get_mut(id.get()) {
+        if let Some(mut airplane) = self.store.airplanes().get_mut(id.get()) {
             airplane.flight_plan = flight_plan.as_api();
         }
     }
 
+    fn start_game(&self, map: Map) {
+        let mut game_started = self.store.game_state().lock();
+        *game_started = GameState::Running;
+
+        let mut map_guard = self.store.map().lock();
+        *map_guard = map;
+    }
+
     fn reset(&self) {
-        self.store.clear();
+        self.store.airplanes().clear();
+
+        let mut game_started = self.store.game_state().lock();
+        *game_started = GameState::Ready;
     }
 }

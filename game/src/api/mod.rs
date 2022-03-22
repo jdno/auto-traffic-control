@@ -13,7 +13,6 @@ use ::atc::v1::map_service_server::MapServiceServer;
 use crate::command::CommandSender;
 use crate::event::EventSender;
 use crate::store::Store;
-use crate::SharedGameState;
 
 use self::airplane::AirplaneService;
 use self::atc::AtcService;
@@ -35,19 +34,18 @@ impl Api {
     pub async fn serve(
         command_sender: CommandSender,
         event_sender: EventSender,
-        game_state: SharedGameState,
         store: Arc<Store>,
     ) -> Result<(), Error> {
         GrpcServer::builder()
             .add_service(AirplaneServiceServer::new(AirplaneService::new(
                 command_sender.clone(),
-                store,
+                store.clone(),
             )))
             .add_service(AtcServiceServer::new(AtcService))
             .add_service(EventServiceServer::new(EventService::new(event_sender)))
             .add_service(GameServiceServer::new(GameService::new(
                 command_sender,
-                game_state,
+                store,
             )))
             .add_service(MapServiceServer::new(MapService))
             .serve(Self::address_or_default())

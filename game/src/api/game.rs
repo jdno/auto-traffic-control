@@ -1,9 +1,11 @@
+use std::sync::Arc;
+
 use tonic::{Request, Response, Status};
 
 use atc::v1::{GetGameStateRequest, GetGameStateResponse, StartGameRequest, StartGameResponse};
 
-use crate::command::CommandSender;
-use crate::{Command, SharedGameState};
+use crate::command::{Command, CommandSender};
+use crate::store::{SharedGameState, Store};
 
 #[derive(Clone, Debug)]
 pub struct GameService {
@@ -12,10 +14,10 @@ pub struct GameService {
 }
 
 impl GameService {
-    pub fn new(command_bus: CommandSender, game_state: SharedGameState) -> Self {
+    pub fn new(command_bus: CommandSender, store: Arc<Store>) -> Self {
         Self {
             command_bus,
-            game_state,
+            game_state: store.game_state().clone(),
         }
     }
 }
@@ -49,7 +51,6 @@ impl atc::v1::game_service_server::GameService for GameService {
 mod tests {
     use std::sync::Arc;
 
-    use parking_lot::Mutex;
     use tokio::sync::broadcast::channel;
     use tonic::{Code, Request};
 
@@ -58,14 +59,15 @@ mod tests {
     use atc::v1::{GetGameStateRequest, StartGameRequest};
 
     use crate::command::{Command, CommandReceiver};
+    use crate::Store;
 
     use super::GameService;
 
     fn setup() -> (CommandReceiver, GameService) {
         let (command_sender, command_receiver) = channel::<Command>(1024);
-        let game_state = Arc::new(Mutex::new(GameState::Ready));
+        let store = Arc::new(Store::new());
 
-        let service = GameService::new(command_sender, game_state);
+        let service = GameService::new(command_sender, store);
 
         (command_receiver, service)
     }
