@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use rand::prelude::*;
 
-use crate::components::{AirplaneId, FlightPlan, TravelledRoute};
+use crate::components::{AirplaneId, FlightPlan, Landing, TravelledRoute};
 use crate::event::{Event, EventBus};
 use crate::map::{Map, Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 
@@ -9,7 +9,7 @@ const FLIGHT_PLAN_LENGTH: usize = 4;
 
 pub fn generate_flight_plan(
     map: Res<Map>,
-    mut query: Query<(&AirplaneId, &mut FlightPlan, &TravelledRoute)>,
+    mut query: Query<(&AirplaneId, &mut FlightPlan, &TravelledRoute), Without<Landing>>,
     event_bus: Local<EventBus>,
 ) {
     for (airplane_id, mut flight_plan, travelled_route) in query.iter_mut() {

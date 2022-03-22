@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 
-use crate::components::AirplaneId;
+use crate::components::{AirplaneId, Landing};
+use crate::event::{Event, EventBus};
 use crate::map::Map;
-use crate::{Event, EventBus};
 
 pub fn despawn_airplane(
     mut commands: Commands,
     map: Res<Map>,
-    query: Query<(Entity, &AirplaneId, &Transform)>,
+    query: Query<(Entity, &AirplaneId, &Transform), With<Landing>>,
     event_bus: Local<EventBus>,
 ) {
-    let airport = map.airport().as_vec3(1.0);
+    let airport = map.airport().as_vec3(2.0);
 
     for (entity, airplane_id, transform) in query.iter() {
         if transform.translation == airport {
