@@ -4,6 +4,7 @@ use atc::v1::get_game_state_response::GameState;
 
 use crate::event::{Event, EventBus};
 use crate::map::Map;
+use crate::resources::Score;
 use crate::systems::{
     despawn_airplane, detect_collision, follow_flight_plan, generate_flight_plan, land_airplane,
     setup_airport, setup_grid, spawn_airplane, update_flight_plan, SpawnTimer,
@@ -17,7 +18,7 @@ impl Plugin for GameStateRunningPlugin {
             .insert_resource(Map::new())
             .add_system_set(
                 SystemSet::on_enter(GameState::Running)
-                    .with_system(send_event)
+                    .with_system(start_game)
                     .with_system(setup_airport)
                     .with_system(setup_grid),
             )
@@ -31,16 +32,29 @@ impl Plugin for GameStateRunningPlugin {
                     .with_system(spawn_airplane)
                     .with_system(update_flight_plan),
             )
-            .add_system_set(SystemSet::on_exit(GameState::Running).with_system(despawn_entities));
+            .add_system_set(
+                SystemSet::on_exit(GameState::Running)
+                    .with_system(despawn_entities)
+                    .with_system(end_game),
+            );
     }
 }
 
-fn send_event(map: Res<Map>, event_bus: Local<EventBus>) {
+fn start_game(mut commands: Commands, map: Res<Map>, event_bus: Local<EventBus>) {
+    commands.insert_resource(Score::new());
+
     let map = map.into_inner().clone();
 
     event_bus
         .sender()
         .send(Event::GameStarted(map))
+        .expect("failed to send event"); // TODO: Handle error
+}
+
+fn end_game(score: Res<Score>, event_bus: Local<EventBus>) {
+    event_bus
+        .sender()
+        .send(Event::GameStopped(*score))
         .expect("failed to send event"); // TODO: Handle error
 }
 

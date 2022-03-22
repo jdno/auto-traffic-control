@@ -17,6 +17,7 @@ mod command;
 mod components;
 mod event;
 mod map;
+mod resources;
 mod state;
 mod store;
 mod systems;

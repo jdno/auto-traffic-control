@@ -20,8 +20,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut event_service = EventServiceClient::connect("http://localhost:4747").await?;
     let mut game_service = GameServiceClient::connect("http://localhost:4747").await?;
 
-    let mut points: usize = 0;
-
     let mut stream = event_service
         .stream(StreamRequest {})
         .await
@@ -46,10 +44,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Event::AirplaneDetected(airplane_detected) => {
                 create_flight_plan(&mut airplane_service, airplane_detected).await;
             }
-            Event::AirplaneLanded(_) => points += 1,
-            Event::GameStopped(_) => {
+            Event::GameStopped(game_stopped) => {
+                let points = game_stopped.score;
                 println!("Finished with {points} points");
-                points = 0;
 
                 start_game(&mut game_service).await;
             }

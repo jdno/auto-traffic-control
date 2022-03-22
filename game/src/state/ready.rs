@@ -2,29 +2,16 @@ use bevy::prelude::*;
 
 use atc::v1::get_game_state_response::GameState;
 
-use crate::event::{Event, EventBus};
-
 struct Menu(Entity);
 
 pub struct GameStateReadyPlugin;
 
 impl Plugin for GameStateReadyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(
-            SystemSet::on_enter(GameState::Ready)
-                .with_system(send_event)
-                .with_system(spawn),
-        )
-        .add_system_set(SystemSet::on_update(GameState::Ready))
-        .add_system_set(SystemSet::on_exit(GameState::Ready).with_system(despawn));
+        app.add_system_set(SystemSet::on_enter(GameState::Ready).with_system(spawn))
+            .add_system_set(SystemSet::on_update(GameState::Ready))
+            .add_system_set(SystemSet::on_exit(GameState::Ready).with_system(despawn));
     }
-}
-
-fn send_event(event_bus: Local<EventBus>) {
-    event_bus
-        .sender()
-        .send(Event::GameStopped)
-        .expect("failed to send event"); // TODO: Handle error
 }
 
 fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
