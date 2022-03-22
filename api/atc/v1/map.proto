@@ -16,6 +16,11 @@ message Point {
   int32 y = 2;
 }
 
+message GetMapRequest {}
+message GetMapResponse {
+  Map map = 1;
+}
+
 message NodeToPointRequest {
   Node node = 1;
 }
@@ -25,5 +30,6 @@ message NodeToPointResponse {
 }
 
 service MapService {
+  rpc GetMap(GetMapRequest) returns (GetMapResponse);
   rpc NodeToPoint(NodeToPointRequest) returns (NodeToPointResponse);
 }
