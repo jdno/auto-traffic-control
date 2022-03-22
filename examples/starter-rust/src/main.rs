@@ -1,3 +1,5 @@
+use std::thread::sleep;
+use std::time::Duration;
 use tokio_stream::StreamExt;
 use tonic::transport::Channel;
 
@@ -47,6 +49,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Event::GameStopped(game_stopped) => {
                 let points = game_stopped.score;
                 println!("Finished with {points} points");
+
+                sleep(Duration::from_secs(5));
 
                 start_game(&mut game_service).await;
             }
