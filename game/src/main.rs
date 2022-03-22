@@ -8,7 +8,7 @@ use atc::v1::get_game_state_response::GameState;
 use crate::api::Api;
 use crate::command::Command;
 use crate::event::{Event, EventBus};
-use crate::state::{GameStateReadyPlugin, GameStateRunningPlugin};
+use crate::scene::{GamePlugin, MainMenuPlugin};
 use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
 
@@ -18,7 +18,7 @@ mod components;
 mod event;
 mod map;
 mod resources;
-mod state;
+mod scene;
 mod store;
 mod systems;
 
@@ -64,8 +64,8 @@ async fn main() {
         .insert_resource(command_sender)
         .insert_resource(event_sender)
         .add_state(GameState::Ready)
-        .add_plugin(GameStateReadyPlugin)
-        .add_plugin(GameStateRunningPlugin)
+        .add_plugin(GamePlugin)
+        .add_plugin(MainMenuPlugin)
         .add_startup_system(setup_cameras)
         .add_system(change_app_state)
         .run();

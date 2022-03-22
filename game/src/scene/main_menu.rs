@@ -4,9 +4,9 @@ use atc::v1::get_game_state_response::GameState;
 
 struct Menu(Entity);
 
-pub struct GameStateReadyPlugin;
+pub struct MainMenuPlugin;
 
-impl Plugin for GameStateReadyPlugin {
+impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_system_set(SystemSet::on_enter(GameState::Ready).with_system(spawn))
             .add_system_set(SystemSet::on_update(GameState::Ready))

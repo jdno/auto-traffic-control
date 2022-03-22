@@ -10,9 +10,9 @@ use crate::systems::{
     setup_airport, setup_grid, spawn_airplane, update_flight_plan, SpawnTimer,
 };
 
-pub struct GameStateRunningPlugin;
+pub struct GamePlugin;
 
-impl Plugin for GameStateRunningPlugin {
+impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(SpawnTimer::new(Timer::from_seconds(2.0, true)))
             .insert_resource(Map::new())
