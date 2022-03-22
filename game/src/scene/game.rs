@@ -9,6 +9,8 @@ use crate::systems::{
 };
 use crate::AppState;
 
+pub struct ScoreOverlay(Entity);
+
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
@@ -19,7 +21,8 @@ impl Plugin for GamePlugin {
                 SystemSet::on_enter(AppState::Game)
                     .with_system(start_game)
                     .with_system(setup_airport)
-                    .with_system(setup_grid),
+                    .with_system(setup_grid)
+                    .with_system(setup_score),
             )
             .add_system_set(
                 SystemSet::on_update(AppState::Game)
@@ -29,11 +32,13 @@ impl Plugin for GamePlugin {
                     .with_system(generate_flight_plan)
                     .with_system(land_airplane)
                     .with_system(spawn_airplane)
-                    .with_system(update_flight_plan),
+                    .with_system(update_flight_plan)
+                    .with_system(update_score),
             )
             .add_system_set(
                 SystemSet::on_exit(AppState::Game)
                     .with_system(despawn_entities)
+                    .with_system(despawn_score)
                     .with_system(end_game),
             );
     }
@@ -55,6 +60,55 @@ fn end_game(score: Res<Score>, event_bus: Local<EventBus>) {
         .sender()
         .send(Event::GameStopped(*score))
         .expect("failed to send event"); // TODO: Handle error
+}
+
+fn setup_score(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let overlay_id = commands
+        .spawn_bundle(TextBundle {
+            text: Text {
+                sections: vec![
+                    TextSection {
+                        value: "Score: ".to_string(),
+                        style: TextStyle {
+                            font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
+                            font_size: 24.0,
+                            color: Color::rgb(0.9, 0.9, 0.9),
+                        },
+                    },
+                    TextSection {
+                        value: "".to_string(),
+                        style: TextStyle {
+                            font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
+                            font_size: 24.0,
+                            color: Color::rgb(0.9, 0.9, 0.9),
+                        },
+                    },
+                ],
+                ..Default::default()
+            },
+            style: Style {
+                position_type: PositionType::Absolute,
+                position: Rect {
+                    top: Val::Px(8.0),
+                    left: Val::Px(8.0),
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .id();
+
+    commands.insert_resource(ScoreOverlay(overlay_id));
+}
+
+fn update_score(score: Res<Score>, mut query: Query<&mut Text>) {
+    let mut text = query.single_mut();
+    text.sections[1].value = format!("{}", score.get());
+}
+
+fn despawn_score(mut commands: Commands, score_overlay: Res<ScoreOverlay>) {
+    commands.entity(score_overlay.0).despawn_recursive();
 }
 
 fn despawn_entities(mut commands: Commands, query: Query<Entity, Without<Camera>>) {
