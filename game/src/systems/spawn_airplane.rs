@@ -5,6 +5,7 @@ use crate::components::{
     Airplane, AirplaneIdGenerator, Collider, Location, Speed, Tag, TravelledRoute, AIRPLANE_SIZE,
 };
 use crate::map::{Map, Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::rendering::RenderLayer;
 use crate::{generate_random_plan, Event, EventBus};
 
 pub struct SpawnTimer(Timer);
@@ -48,7 +49,11 @@ pub fn spawn_airplane(
         commands
             .spawn_bundle(SpriteBundle {
                 transform: Transform {
-                    translation: Vec3::new(spawn_point.x(), spawn_point.y(), 2.0),
+                    translation: Vec3::new(
+                        spawn_point.x(),
+                        spawn_point.y(),
+                        RenderLayer::Airplane.z(),
+                    ),
                     scale: Vec3::new(AIRPLANE_SIZE, AIRPLANE_SIZE, 0.0),
                     ..Default::default()
                 },

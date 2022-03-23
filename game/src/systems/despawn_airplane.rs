@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use crate::components::{AirplaneId, FlightPlan, Landing, Tag};
 use crate::event::{Event, EventBus};
 use crate::map::{Airport, Map, Node};
+use crate::rendering::RenderLayer;
 use crate::resources::Score;
 
 pub fn despawn_airplane(
@@ -14,7 +15,7 @@ pub fn despawn_airplane(
 ) {
     for (entity, airplane_id, mut flight_plan, tag, transform) in query.iter_mut() {
         for airport in map.airports() {
-            let airport_location = airport.node().as_vec3(2.0);
+            let airport_location = airport.node().as_vec3(RenderLayer::Airplane.z());
             let airport_tag = airport.tag();
 
             let airplane_location = transform.translation;
