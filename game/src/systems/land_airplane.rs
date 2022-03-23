@@ -17,7 +17,7 @@ pub fn land_airplane(
 
         let final_node = flight_plan.get().get(0).unwrap();
 
-        if final_node == airport {
+        if final_node == airport.node() {
             commands.entity(entity).insert(Landing);
         }
     }

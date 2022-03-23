@@ -12,7 +12,7 @@ pub fn despawn_airplane(
     query: Query<(Entity, &AirplaneId, &Transform), With<Landing>>,
     event_bus: Local<EventBus>,
 ) {
-    let airport = map.airport().as_vec3(2.0);
+    let airport = map.airport().node().as_vec3(2.0);
 
     for (entity, airplane_id, transform) in query.iter() {
         if transform.translation == airport {

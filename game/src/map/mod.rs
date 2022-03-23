@@ -1,13 +1,15 @@
 use std::ops::RangeInclusive;
 
-use atc::v1::Map as ApiMap;
+use atc::v1::{Map as ApiMap, Tag};
 
 use crate::api::AsApi;
 use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
 
+pub use self::airport::*;
 pub use self::direction::*;
 pub use self::node::Node;
 
+mod airport;
 mod direction;
 mod node;
 
@@ -30,7 +32,7 @@ pub const MAP_WIDTH_RANGE: RangeInclusive<i32> = -(MAP_WIDTH as i32 / 2)..=(MAP_
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Map {
-    airport: Node,
+    airport: Airport,
     routing_grid: Vec<Node>,
 }
 
@@ -39,7 +41,7 @@ impl Map {
         Self::default()
     }
 
-    pub fn airport(&self) -> &Node {
+    pub fn airport(&self) -> &Airport {
         &self.airport
     }
 
@@ -50,7 +52,7 @@ impl Map {
 
 impl Default for Map {
     fn default() -> Self {
-        let airport = Node::new(0, 0);
+        let airport = Airport::new(Node::new(0, 0), Tag::Red);
         let routing_grid = generate_routing_grid(&airport);
 
         Self {
@@ -71,18 +73,20 @@ impl AsApi for Map {
     }
 }
 
-fn generate_routing_grid(airport: &Node) -> Vec<Node> {
+fn generate_routing_grid(airport: &Airport) -> Vec<Node> {
     let direction_of_runway = Direction::West;
 
+    let airport_node = airport.node();
     let mut nodes = Vec::with_capacity(MAP_WIDTH * MAP_HEIGHT - 7);
 
     for y in MAP_HEIGHT_RANGE {
         for x in MAP_WIDTH_RANGE {
             let node = Node::new(x, y);
-            let direction_to_airport = Direction::between(&node.as_point(), &airport.as_point());
+            let direction_to_airport =
+                Direction::between(&node.as_point(), &airport_node.as_point());
 
-            if airport != &node
-                && airport.is_neighbor(&node)
+            if airport_node != &node
+                && airport_node.is_neighbor(&node)
                 && direction_to_airport != direction_of_runway
             {
                 continue;
@@ -97,14 +101,15 @@ fn generate_routing_grid(airport: &Node) -> Vec<Node> {
 
 #[cfg(test)]
 mod tests {
-    use super::Map;
     use crate::map::{Node, MAP_HEIGHT, MAP_WIDTH};
+
+    use super::Map;
 
     #[test]
     fn generate_routing_grid_removes_neighbors() {
         let map = Map::default();
 
-        let airport = map.airport();
+        let airport = map.airport().node();
         let neighbors = vec![
             Node::new(airport.longitude(), airport.latitude() + 1),
             Node::new(airport.longitude() + 1, airport.latitude() + 1),

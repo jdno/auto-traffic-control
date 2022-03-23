@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::map::Map;
 
 pub fn setup_airport(map: Res<Map>, mut commands: Commands) {
-    let airport_vec3 = map.airport().as_vec3(1.0);
+    let airport_vec3 = map.airport().node().as_vec3(1.0);
 
     commands.spawn_bundle(SpriteBundle {
         transform: Transform {

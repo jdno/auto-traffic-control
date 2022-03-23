@@ -2,8 +2,15 @@ syntax = "proto3";
 
 package atc.v1;
 
+import "atc/v1/tag.proto";
+
+message Airport {
+  Node node = 1;
+  Tag tag = 2;
+}
+
 message Map {
-  Node airport = 1;
+  Airport airport = 1;
   repeated Node routing_grid = 2;
 }
 

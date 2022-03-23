@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package atc.v1;
+
+enum Tag {
+  TAG_UNSPECIFIED = 0;
+  TAG_BLUE = 1;
+  TAG_RED = 2;
+}

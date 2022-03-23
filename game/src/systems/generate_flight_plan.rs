@@ -46,7 +46,7 @@ pub fn generate_random_plan(travelled_route: &TravelledRoute, map: &Res<Map>) ->
         next_node = pick_next_tile(&current_node, &previous_node, map.routing_grid());
         flight_plan.push(next_node);
 
-        if &next_node == map.airport() {
+        if &next_node == map.airport().node() {
             break;
         }
 
