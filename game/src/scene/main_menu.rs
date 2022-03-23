@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::AppState;
+use crate::{setup_landscape, AppState};
 
 struct Menu(Entity);
 
@@ -8,9 +8,13 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(SystemSet::on_enter(AppState::MainMenu).with_system(spawn))
-            .add_system_set(SystemSet::on_update(AppState::MainMenu))
-            .add_system_set(SystemSet::on_exit(AppState::MainMenu).with_system(despawn));
+        app.add_system_set(
+            SystemSet::on_enter(AppState::MainMenu)
+                .with_system(setup_landscape)
+                .with_system(spawn),
+        )
+        .add_system_set(SystemSet::on_update(AppState::MainMenu))
+        .add_system_set(SystemSet::on_exit(AppState::MainMenu).with_system(despawn));
     }
 }
 

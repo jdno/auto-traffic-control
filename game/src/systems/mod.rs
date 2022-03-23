@@ -7,6 +7,7 @@ pub use self::land_airplane::*;
 pub use self::setup_airport::*;
 pub use self::setup_cameras::*;
 pub use self::setup_grid::*;
+pub use self::setup_landscape::*;
 pub use self::spawn_airplane::*;
 pub use self::update_flight_plan::*;
 
@@ -19,5 +20,6 @@ mod land_airplane;
 mod setup_airport;
 mod setup_cameras;
 mod setup_grid;
+mod setup_landscape;
 mod spawn_airplane;
 mod update_flight_plan;
