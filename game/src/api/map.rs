@@ -84,7 +84,7 @@ mod tests {
                     longitude: 0,
                     latitude: 0
                 }),
-                tag: Tag::RedTag.into()
+                tag: Tag::Red.into()
             },
             map.airport.unwrap()
         );

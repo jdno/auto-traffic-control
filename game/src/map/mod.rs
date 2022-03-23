@@ -52,7 +52,7 @@ impl Map {
 
 impl Default for Map {
     fn default() -> Self {
-        let airport = Airport::new(Node::new(0, 0), Tag::RedTag);
+        let airport = Airport::new(Node::new(0, 0), Tag::Red);
         let routing_grid = generate_routing_grid(&airport);
 
         Self {

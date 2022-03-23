@@ -4,6 +4,6 @@ package atc.v1;
 
 enum Tag {
   TAG_UNSPECIFIED = 0;
-  BLUE_TAG = 1;
-  RED_TAG = 2;
+  TAG_BLUE = 1;
+  TAG_RED = 2;
 }

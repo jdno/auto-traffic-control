@@ -18,6 +18,7 @@ impl Airport {
         &self.node
     }
 
+    #[allow(dead_code)] // TODO: Remove when tags are introduced to flight plans
     pub fn tag(&self) -> Tag {
         self.tag
     }
