@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use atc::v1::Map as ApiMap;
+use atc::v1::{Airport, Map as ApiMap, Tag};
 
 use crate::api::AsApi;
 use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
@@ -65,7 +65,10 @@ impl AsApi for Map {
 
     fn as_api(&self) -> Self::ApiType {
         ApiMap {
-            airport: Some(self.airport.as_api()),
+            airport: Some(Airport {
+                node: Some(self.airport.as_api()),
+                tag: Tag::RedTag.into(),
+            }),
             routing_grid: self.routing_grid.iter().map(|node| node.as_api()).collect(),
         }
     }
@@ -97,8 +100,9 @@ fn generate_routing_grid(airport: &Node) -> Vec<Node> {
 
 #[cfg(test)]
 mod tests {
-    use super::Map;
     use crate::map::{Node, MAP_HEIGHT, MAP_WIDTH};
+
+    use super::Map;
 
     #[test]
     fn generate_routing_grid_removes_neighbors() {

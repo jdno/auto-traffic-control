@@ -56,7 +56,7 @@ mod tests {
     use tonic::Request;
 
     use atc::v1::map_service_server::MapService as ServiceTrait;
-    use atc::v1::{GetMapRequest, Node, NodeToPointRequest};
+    use atc::v1::{Airport, GetMapRequest, Node, NodeToPointRequest, Tag};
 
     use crate::store::Store;
 
@@ -79,9 +79,12 @@ mod tests {
         let map = response.into_inner().map.unwrap();
 
         assert_eq!(
-            Node {
-                longitude: 0,
-                latitude: 0
+            Airport {
+                node: Some(Node {
+                    longitude: 0,
+                    latitude: 0
+                }),
+                tag: Tag::RedTag.into()
             },
             map.airport.unwrap()
         );
