@@ -76,22 +76,20 @@ impl AsApi for Map {
 
 fn generate_routing_grid(airport: &Airport) -> Vec<Node> {
     let airport_node = airport.node();
-    let mut nodes = Vec::with_capacity(MAP_WIDTH * MAP_HEIGHT - 7);
+    let mut nodes = Vec::with_capacity(MAP_WIDTH * MAP_HEIGHT);
 
     for y in MAP_HEIGHT_RANGE {
         for x in MAP_WIDTH_RANGE {
             let node = Node::unrestricted(x, y);
+
             let direction_to_airport =
                 Direction::between(&node.as_point(), &airport_node.as_point());
 
-            if airport_node != &node
+            let restricted = airport_node != &node
                 && airport_node.is_neighbor(&node)
-                && direction_to_airport != airport.runway()
-            {
-                continue;
-            }
+                && direction_to_airport != airport.runway();
 
-            nodes.push(node);
+            nodes.push(Node::new(x, y, restricted));
         }
     }
 
@@ -110,22 +108,22 @@ mod tests {
 
         let airport = map.airport().node();
         let neighbors = vec![
-            Node::unrestricted(airport.longitude(), airport.latitude() + 1),
-            Node::unrestricted(airport.longitude() + 1, airport.latitude() + 1),
-            Node::unrestricted(airport.longitude() + 1, airport.latitude()),
-            Node::unrestricted(airport.longitude() + 1, airport.latitude() - 1),
-            Node::unrestricted(airport.longitude(), airport.latitude() - 1),
-            Node::unrestricted(airport.longitude() - 1, airport.latitude() - 1),
+            Node::restricted(airport.longitude(), airport.latitude() + 1),
+            Node::restricted(airport.longitude() + 1, airport.latitude() + 1),
+            Node::restricted(airport.longitude() + 1, airport.latitude()),
+            Node::restricted(airport.longitude() + 1, airport.latitude() - 1),
+            Node::restricted(airport.longitude(), airport.latitude() - 1),
+            Node::restricted(airport.longitude() - 1, airport.latitude() - 1),
             // Runway to the west
-            // Node::unrestricted(airport.longitude() - 1, airport.latitude()),
-            Node::unrestricted(airport.longitude() - 1, airport.latitude() + 1),
+            Node::unrestricted(airport.longitude() - 1, airport.latitude()),
+            Node::restricted(airport.longitude() - 1, airport.latitude() + 1),
         ];
 
         neighbors
             .iter()
-            .for_each(|node| assert!(!map.routing_grid().contains(node)));
+            .for_each(|node| assert!(map.routing_grid().contains(node)));
 
-        assert_eq!(MAP_WIDTH * MAP_HEIGHT - 7, map.routing_grid().len());
+        assert_eq!(MAP_WIDTH * MAP_HEIGHT, map.routing_grid().len());
     }
 
     #[test]

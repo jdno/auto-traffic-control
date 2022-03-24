@@ -26,6 +26,7 @@ impl Node {
         }
     }
 
+    #[cfg(test)]
     pub fn restricted(longitude: i32, latitude: i32) -> Self {
         Self {
             longitude,
@@ -48,6 +49,10 @@ impl Node {
 
     pub fn latitude(&self) -> i32 {
         self.latitude
+    }
+
+    pub fn is_restricted(&self) -> bool {
+        self.restricted
     }
 
     // TODO: Move to map so that `restricted` can be set from the routing grid
