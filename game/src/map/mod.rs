@@ -78,6 +78,8 @@ impl AsApi for Map {
                 .map(|airport| airport.as_api())
                 .collect(),
             routing_grid: self.routing_grid.iter().map(|node| node.as_api()).collect(),
+            width: MAP_WIDTH as u32,
+            height: MAP_HEIGHT as u32,
         }
     }
 }
