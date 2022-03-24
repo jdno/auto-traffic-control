@@ -65,6 +65,7 @@ fn pick_next_tile(current_tile: &Node, previous_tile: &Option<Node>, map: &Map) 
         .into_iter()
         .filter(|node| &Some(*node) != previous_tile)
         .filter(|node| !airports.contains(&node))
+        .filter(|node| !node.is_restricted())
         .filter(|tile| {
             // Shouldn't be too close to the edge of the map
             tile.longitude().abs() != *MAP_WIDTH_RANGE.end()
