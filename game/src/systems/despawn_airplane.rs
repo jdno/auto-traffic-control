@@ -12,44 +12,48 @@ pub fn despawn_airplane(
     mut query: Query<(Entity, &AirplaneId, &mut FlightPlan, &Tag, &Transform), With<Landing>>,
     event_bus: Local<EventBus>,
 ) {
-    let airport_location = map.airport().node().as_vec3(2.0);
-    let airport_tag = map.airport().tag();
-
     for (entity, airplane_id, mut flight_plan, tag, transform) in query.iter_mut() {
-        let airplane_location = transform.translation;
+        for airport in map.airports() {
+            let airport_location = airport.node().as_vec3(2.0);
+            let airport_tag = airport.tag();
 
-        if airplane_location != airport_location {
-            continue;
-        }
+            let airplane_location = transform.translation;
 
-        if tag == &airport_tag {
-            commands.entity(entity).despawn_recursive();
+            if airplane_location != airport_location {
+                continue;
+            }
 
-            score.increment();
+            if tag == &airport_tag {
+                commands.entity(entity).despawn_recursive();
 
-            event_bus
-                .sender()
-                .send(Event::AirplaneLanded(airplane_id.clone()))
-                .expect("failed to send event"); // TODO: Handle error
-        } else {
-            let go_around = go_around_procedure(map.airport());
+                score.increment();
 
-            *flight_plan = FlightPlan::new(vec![go_around]);
+                event_bus
+                    .sender()
+                    .send(Event::AirplaneLanded(airplane_id.clone()))
+                    .expect("failed to send event"); // TODO: Handle error
+            } else {
+                let go_around = go_around_procedure(airport);
 
-            commands.entity(entity).remove::<Landing>();
+                *flight_plan = FlightPlan::new(vec![go_around]);
 
-            event_bus
-                .sender()
-                .send(Event::LandingAborted(airplane_id.clone()))
-                .expect("failed to send event"); // TODO: Handle error
+                commands.entity(entity).remove::<Landing>();
 
-            event_bus
-                .sender()
-                .send(Event::FlightPlanUpdated(
-                    airplane_id.clone(),
-                    flight_plan.clone(),
-                ))
-                .expect("failed to send event"); // TODO: Handle error
+                event_bus
+                    .sender()
+                    .send(Event::LandingAborted(airplane_id.clone()))
+                    .expect("failed to send event"); // TODO: Handle error
+
+                event_bus
+                    .sender()
+                    .send(Event::FlightPlanUpdated(
+                        airplane_id.clone(),
+                        flight_plan.clone(),
+                    ))
+                    .expect("failed to send event"); // TODO: Handle error
+            }
+
+            break;
         }
     }
 }

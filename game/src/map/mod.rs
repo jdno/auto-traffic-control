@@ -33,7 +33,7 @@ pub const MAP_WIDTH_RANGE: RangeInclusive<i32> = -(MAP_WIDTH as i32 / 2)..=(MAP_
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Map {
-    airport: Airport,
+    airports: Vec<Airport>,
     routing_grid: Vec<Node>,
 }
 
@@ -42,8 +42,8 @@ impl Map {
         Self::default()
     }
 
-    pub fn airport(&self) -> &Airport {
-        &self.airport
+    pub fn airports(&self) -> &[Airport] {
+        &self.airports
     }
 
     pub fn routing_grid(&self) -> &Vec<Node> {
@@ -53,11 +53,15 @@ impl Map {
 
 impl Default for Map {
     fn default() -> Self {
-        let airport = Airport::new(Node::unrestricted(0, 0), Direction::West, Tag::Red);
-        let routing_grid = generate_routing_grid(&airport);
+        let airports = vec![
+            Airport::new(Node::unrestricted(-2, -2), Direction::West, Tag::Red),
+            Airport::new(Node::unrestricted(1, 4), Direction::South, Tag::Blue),
+        ];
+
+        let routing_grid = generate_routing_grid(&airports);
 
         Self {
-            airport,
+            airports,
             routing_grid,
         }
     }
@@ -68,28 +72,36 @@ impl AsApi for Map {
 
     fn as_api(&self) -> Self::ApiType {
         ApiMap {
-            airport: Some(self.airport.as_api()),
+            airports: self
+                .airports
+                .iter()
+                .map(|airport| airport.as_api())
+                .collect(),
             routing_grid: self.routing_grid.iter().map(|node| node.as_api()).collect(),
         }
     }
 }
 
-fn generate_routing_grid(airport: &Airport) -> Vec<Node> {
-    let airport_node = airport.node();
+fn generate_routing_grid(airports: &[Airport]) -> Vec<Node> {
     let mut nodes = Vec::with_capacity(MAP_WIDTH * MAP_HEIGHT);
 
     for y in MAP_HEIGHT_RANGE {
         for x in MAP_WIDTH_RANGE {
-            let node = Node::unrestricted(x, y);
+            nodes.push(Node::unrestricted(x, y));
+        }
+    }
 
+    for airport in airports {
+        let airport_node = airport.node();
+
+        for neighbor in airport_node.neighbors() {
             let direction_to_airport =
-                Direction::between(&node.as_point(), &airport_node.as_point());
+                Direction::between(&neighbor.as_point(), &airport_node.as_point());
 
-            let restricted = airport_node != &node
-                && airport_node.is_neighbor(&node)
-                && direction_to_airport != airport.runway();
-
-            nodes.push(Node::new(x, y, restricted));
+            if direction_to_airport != airport.runway() {
+                *nodes.get_mut(neighbor.as_index()).unwrap() =
+                    Node::restricted(neighbor.longitude(), neighbor.latitude());
+            }
         }
     }
 
@@ -106,7 +118,7 @@ mod tests {
     fn generate_routing_grid_removes_neighbors() {
         let map = Map::default();
 
-        let airport = map.airport().node();
+        let airport = map.airports().get(0).unwrap().node();
         let neighbors = vec![
             Node::restricted(airport.longitude(), airport.latitude() + 1),
             Node::restricted(airport.longitude() + 1, airport.latitude() + 1),

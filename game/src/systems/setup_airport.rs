@@ -1,20 +1,28 @@
 use bevy::prelude::*;
 
+use crate::components::Tag;
 use crate::map::Map;
 
 pub fn setup_airport(map: Res<Map>, mut commands: Commands) {
-    let airport_vec3 = map.airport().node().as_vec3(1.0);
+    for airport in map.airports() {
+        let airport_vec3 = airport.node().as_vec3(1.0);
 
-    commands.spawn_bundle(SpriteBundle {
-        transform: Transform {
-            translation: airport_vec3,
-            scale: Vec3::new(24.0, 24.0, 1.0),
+        let color = match airport.tag() {
+            Tag::Blue => Color::BLUE,
+            Tag::Red => Color::RED,
+        };
+
+        commands.spawn_bundle(SpriteBundle {
+            transform: Transform {
+                translation: airport_vec3,
+                scale: Vec3::new(24.0, 24.0, 1.0),
+                ..Default::default()
+            },
+            sprite: Sprite {
+                color,
+                ..Default::default()
+            },
             ..Default::default()
-        },
-        sprite: Sprite {
-            color: Color::SEA_GREEN,
-            ..Default::default()
-        },
-        ..Default::default()
-    });
+        });
+    }
 }

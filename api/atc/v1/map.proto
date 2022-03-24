@@ -10,7 +10,7 @@ message Airport {
 }
 
 message Map {
-  Airport airport = 1;
+  repeated Airport airports = 1;
   repeated Node routing_grid = 2;
 }
 

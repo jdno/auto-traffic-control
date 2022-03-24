@@ -7,7 +7,7 @@ use geo::{point, Point};
 use atc::v1::Node as ApiNode;
 
 use crate::api::AsApi;
-use crate::map::{MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::map::{MAP_HEIGHT, MAP_HEIGHT_RANGE, MAP_WIDTH, MAP_WIDTH_RANGE};
 use crate::TILE_SIZE;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
@@ -18,15 +18,6 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn new(longitude: i32, latitude: i32, restricted: bool) -> Self {
-        Self {
-            longitude,
-            latitude,
-            restricted,
-        }
-    }
-
-    #[cfg(test)]
     pub fn restricted(longitude: i32, latitude: i32) -> Self {
         Self {
             longitude,
@@ -86,6 +77,15 @@ impl Node {
         delta_x.abs() <= 1 && delta_y.abs() <= 1
     }
 
+    pub fn as_index(&self) -> usize {
+        let x = self.longitude + MAP_WIDTH as i32 / 2;
+        let y = self.latitude + MAP_HEIGHT as i32 / 2;
+
+        let index = (y * MAP_WIDTH as i32) + x;
+
+        index as usize
+    }
+
     pub fn as_point(&self) -> Point<f32> {
         let x = (self.longitude * TILE_SIZE) as f32;
         let y = (self.latitude * TILE_SIZE) as f32;
@@ -141,7 +141,7 @@ impl AsApi for Node {
 mod tests {
     use geo::point;
 
-    use crate::map::{MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+    use crate::map::{MAP_HEIGHT, MAP_HEIGHT_RANGE, MAP_WIDTH, MAP_WIDTH_RANGE};
 
     use super::{Node, TILE_SIZE};
 
@@ -218,6 +218,18 @@ mod tests {
         let neighbor = Node::unrestricted(2, 0);
 
         assert!(!neighbor.is_neighbor(&node));
+    }
+
+    #[test]
+    fn as_index_at_bottom_left() {
+        let node = Node::unrestricted(*MAP_WIDTH_RANGE.start(), *MAP_HEIGHT_RANGE.start());
+        assert_eq!(0, node.as_index());
+    }
+
+    #[test]
+    fn as_index_at_top_right() {
+        let node = Node::unrestricted(*MAP_WIDTH_RANGE.end(), *MAP_HEIGHT_RANGE.end());
+        assert_eq!((MAP_WIDTH * MAP_HEIGHT) - 1, node.as_index());
     }
 
     #[test]

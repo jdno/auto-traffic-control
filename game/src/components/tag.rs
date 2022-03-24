@@ -6,6 +6,7 @@ use crate::api::AsApi;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Component)]
 pub enum Tag {
+    Blue,
     Red,
 }
 
@@ -14,6 +15,7 @@ impl AsApi for Tag {
 
     fn as_api(&self) -> Self::ApiType {
         match self {
+            Tag::Blue => ApiTag::Blue,
             Tag::Red => ApiTag::Red,
         }
     }
