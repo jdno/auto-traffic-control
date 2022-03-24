@@ -79,15 +79,15 @@ mod tests {
         let map = response.into_inner().map.unwrap();
 
         assert_eq!(
-            Airport {
+            vec![Airport {
                 node: Some(Node {
                     longitude: 0,
                     latitude: 0,
                     restricted: false
                 }),
                 tag: Tag::Red.into()
-            },
-            map.airport.unwrap()
+            }],
+            map.airports
         );
     }
 

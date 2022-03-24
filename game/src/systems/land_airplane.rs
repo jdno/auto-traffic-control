@@ -8,8 +8,6 @@ pub fn land_airplane(
     map: Res<Map>,
     query: Query<(Entity, &FlightPlan), Without<Landing>>,
 ) {
-    let airport = map.airport();
-
     for (entity, flight_plan) in query.iter() {
         if flight_plan.get().len() != 1 {
             continue;
@@ -17,8 +15,10 @@ pub fn land_airplane(
 
         let final_node = flight_plan.get().get(0).unwrap();
 
-        if final_node == airport.node() {
-            commands.entity(entity).insert(Landing);
+        for airport in map.airports() {
+            if final_node == airport.node() {
+                commands.entity(entity).insert(Landing);
+            }
         }
     }
 }

@@ -43,12 +43,8 @@ pub fn generate_random_plan(travelled_route: &TravelledRoute, map: &Res<Map>) ->
     let mut next_node;
 
     for _ in 0..FLIGHT_PLAN_LENGTH {
-        next_node = pick_next_tile(&current_node, &previous_node, map.routing_grid());
+        next_node = pick_next_tile(&current_node, &previous_node, map);
         flight_plan.push(next_node);
-
-        if &next_node == map.airport().node() {
-            break;
-        }
 
         previous_node = Some(current_node);
         current_node = next_node;
@@ -57,38 +53,23 @@ pub fn generate_random_plan(travelled_route: &TravelledRoute, map: &Res<Map>) ->
     FlightPlan::new(flight_plan.iter().rev().cloned().collect())
 }
 
-fn pick_next_tile(
-    current_tile: &Node,
-    previous_tile: &Option<Node>,
-    routing_grid: &[Node],
-) -> Node {
-    let mut potential_tiles = current_tile.neighbors();
-
-    // Mustn't be the previous tile
-    if let Some(previous_tile) = previous_tile {
-        if let Some(index) = potential_tiles
-            .iter()
-            .position(|tile| tile == previous_tile)
-        {
-            potential_tiles.remove(index);
-        }
-    }
-
-    // Mustn't be a restricted node
-    let potential_tiles: Vec<Node> = potential_tiles
+fn pick_next_tile(current_tile: &Node, previous_tile: &Option<Node>, map: &Map) -> Node {
+    let airports: Vec<&Node> = map
+        .airports()
         .iter()
-        .filter(|tile| routing_grid.contains(*tile))
-        .cloned()
+        .map(|airport| airport.node())
         .collect();
 
-    // Shouldn't be too close to the edge of the map
-    let potential_tiles: Vec<Node> = potential_tiles
-        .iter()
+    let potential_tiles: Vec<Node> = current_tile
+        .neighbors()
+        .into_iter()
+        .filter(|node| &Some(*node) != previous_tile)
+        .filter(|node| !airports.contains(&node))
         .filter(|tile| {
+            // Shouldn't be too close to the edge of the map
             tile.longitude().abs() != *MAP_WIDTH_RANGE.end()
                 && tile.latitude().abs() != *MAP_HEIGHT_RANGE.end()
         })
-        .cloned()
         .collect();
 
     // Pick random neighbor of the current tile
