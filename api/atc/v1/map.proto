@@ -12,6 +12,8 @@ message Airport {
 message Map {
   repeated Airport airports = 1;
   repeated Node routing_grid = 2;
+  uint32 width = 3;
+  uint32 height = 4;
 }
 
 message Node {
