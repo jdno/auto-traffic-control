@@ -2,21 +2,26 @@ use atc::v1::Airport as ApiAirport;
 
 use crate::api::AsApi;
 use crate::components::Tag;
-use crate::map::Node;
+use crate::map::{Direction, Node};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Airport {
     node: Node,
+    runway: Direction,
     tag: Tag,
 }
 
 impl Airport {
-    pub fn new(node: Node, tag: Tag) -> Self {
-        Self { node, tag }
+    pub fn new(node: Node, runway: Direction, tag: Tag) -> Self {
+        Self { node, runway, tag }
     }
 
     pub fn node(&self) -> &Node {
         &self.node
+    }
+
+    pub fn runway(&self) -> Direction {
+        self.runway
     }
 
     #[allow(dead_code)] // TODO: Remove when tags are introduced to flight plans

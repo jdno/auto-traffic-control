@@ -53,7 +53,7 @@ impl Map {
 
 impl Default for Map {
     fn default() -> Self {
-        let airport = Airport::new(Node::new(0, 0), Tag::Red);
+        let airport = Airport::new(Node::new(0, 0), Direction::West, Tag::Red);
         let routing_grid = generate_routing_grid(&airport);
 
         Self {
@@ -75,8 +75,6 @@ impl AsApi for Map {
 }
 
 fn generate_routing_grid(airport: &Airport) -> Vec<Node> {
-    let direction_of_runway = Direction::West;
-
     let airport_node = airport.node();
     let mut nodes = Vec::with_capacity(MAP_WIDTH * MAP_HEIGHT - 7);
 
@@ -88,7 +86,7 @@ fn generate_routing_grid(airport: &Airport) -> Vec<Node> {
 
             if airport_node != &node
                 && airport_node.is_neighbor(&node)
-                && direction_to_airport != direction_of_runway
+                && direction_to_airport != airport.runway()
             {
                 continue;
             }
