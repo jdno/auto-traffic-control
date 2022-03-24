@@ -3,7 +3,11 @@ use bevy::prelude::*;
 use crate::map::Map;
 
 pub fn setup_grid(map: Res<Map>, mut commands: Commands) {
-    for node in map.routing_grid() {
+    for node in map
+        .routing_grid()
+        .iter()
+        .filter(|node| !node.is_restricted())
+    {
         let point = node.as_point();
 
         commands.spawn_bundle(SpriteBundle {

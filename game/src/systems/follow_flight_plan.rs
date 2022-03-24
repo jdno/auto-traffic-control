@@ -96,9 +96,9 @@ mod tests {
 
     #[test]
     fn fly_and_reach_next_node() {
-        let mut current_position = Node::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Node::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
+        let mut current_position = Node::unrestricted(0, 0).as_vec3(0.0);
+        let mut flight_plan = FlightPlan::new(vec![Node::unrestricted(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::unrestricted(0, 0)]);
 
         fly(
             &mut current_position,
@@ -114,9 +114,9 @@ mod tests {
 
     #[test]
     fn fly_towards_next_node() {
-        let mut current_position = Node::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Node::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
+        let mut current_position = Node::unrestricted(0, 0).as_vec3(0.0);
+        let mut flight_plan = FlightPlan::new(vec![Node::unrestricted(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::unrestricted(0, 0)]);
 
         let movement_speed = (TILE_SIZE / 2) as f32;
 
@@ -133,9 +133,10 @@ mod tests {
 
     #[test]
     fn fly_past_node() {
-        let mut current_position = Node::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Node::new(2, 0), Node::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
+        let mut current_position = Node::unrestricted(0, 0).as_vec3(0.0);
+        let mut flight_plan =
+            FlightPlan::new(vec![Node::unrestricted(2, 0), Node::unrestricted(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::unrestricted(0, 0)]);
 
         let movement_speed = (TILE_SIZE + (TILE_SIZE / 2)) as f32;
 
@@ -153,9 +154,10 @@ mod tests {
 
     #[test]
     fn fly_past_node_and_change_direction() {
-        let mut current_position = Node::new(0, 0).as_vec3(0.0);
-        let mut flight_plan = FlightPlan::new(vec![Node::new(1, 1), Node::new(1, 0)]);
-        let mut travelled_route = TravelledRoute::new(vec![Node::new(0, 0)]);
+        let mut current_position = Node::unrestricted(0, 0).as_vec3(0.0);
+        let mut flight_plan =
+            FlightPlan::new(vec![Node::unrestricted(1, 1), Node::unrestricted(1, 0)]);
+        let mut travelled_route = TravelledRoute::new(vec![Node::unrestricted(0, 0)]);
 
         let movement_speed = (TILE_SIZE + (TILE_SIZE / 2)) as f32;
 

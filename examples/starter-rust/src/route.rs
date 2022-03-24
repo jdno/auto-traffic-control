@@ -37,6 +37,7 @@ pub fn route_between(start: &Node, destination: &Node, first_hop: bool) -> Vec<N
     let next_hop = Node {
         longitude: next_x,
         latitude: next_y,
+        restricted: false,
     };
 
     let mut remaining_route = route_between(&next_hop, destination, false);
@@ -58,6 +59,7 @@ mod tests {
         let start = Node {
             longitude: 0,
             latitude: 0,
+            restricted: false,
         };
 
         let route = route_between(&start, &start, true);
@@ -70,10 +72,12 @@ mod tests {
         let start = Node {
             longitude: 0,
             latitude: 0,
+            restricted: false,
         };
         let destination = Node {
             longitude: 2,
             latitude: 0,
+            restricted: false,
         };
 
         let route = route_between(&start, &destination, true);
@@ -83,7 +87,8 @@ mod tests {
                 start,
                 Node {
                     longitude: 1,
-                    latitude: 0
+                    latitude: 0,
+                    restricted: false
                 },
                 destination
             ],
@@ -96,10 +101,12 @@ mod tests {
         let start = Node {
             longitude: 0,
             latitude: 0,
+            restricted: false,
         };
         let destination = Node {
             longitude: 2,
             latitude: 2,
+            restricted: false,
         };
 
         let route = route_between(&start, &destination, true);
@@ -109,7 +116,8 @@ mod tests {
                 start,
                 Node {
                     longitude: 1,
-                    latitude: 1
+                    latitude: 1,
+                    restricted: false
                 },
                 destination
             ],
@@ -122,10 +130,12 @@ mod tests {
         let start = Node {
             longitude: 0,
             latitude: 0,
+            restricted: false,
         };
         let destination = Node {
             longitude: 3,
             latitude: 1,
+            restricted: false,
         };
 
         let route = route_between(&start, &destination, true);
@@ -135,11 +145,13 @@ mod tests {
                 start,
                 Node {
                     longitude: 1,
-                    latitude: 1
+                    latitude: 1,
+                    restricted: false
                 },
                 Node {
                     longitude: 2,
-                    latitude: 1
+                    latitude: 1,
+                    restricted: false
                 },
                 destination
             ],

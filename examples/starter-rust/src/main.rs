@@ -78,6 +78,7 @@ async fn create_flight_plan(
     let destination = Node {
         longitude: 0,
         latitude: 0,
+        restricted: false,
     };
     let route = route_between(first_hop, &destination, true);
 
