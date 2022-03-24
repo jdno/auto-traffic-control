@@ -28,6 +28,10 @@ message FlightPlanUpdated {
   repeated Node flight_plan = 2;
 }
 
+message LandingAborted {
+  string id = 1;
+}
+
 message GameStarted {
   Map map = 1;
 }
@@ -45,8 +49,9 @@ message StreamResponse {
     AirplaneLanded airplane_landed = 3;
     AirplaneMoved airplane_moved = 4;
     FlightPlanUpdated flight_plan_updated = 5;
-    GameStarted game_started = 6;
-    GameStopped game_stopped = 7;
+    LandingAborted landing_aborted = 6;
+    GameStarted game_started = 7;
+    GameStopped game_stopped = 8;
   }
 }
 

@@ -1,7 +1,7 @@
 use atc::v1::stream_response::Event as ApiEvent;
 use atc::v1::{
     Airplane, AirplaneCollided, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightPlanUpdated,
-    GameStarted, GameStopped,
+    GameStarted, GameStopped, LandingAborted,
 };
 
 use crate::api::AsApi;
@@ -20,6 +20,7 @@ pub enum Event {
     AirplaneLanded(AirplaneId),
     AirplaneMoved(AirplaneId, Location),
     FlightPlanUpdated(AirplaneId, FlightPlan),
+    LandingAborted(AirplaneId),
     GameStarted(Map),
     GameStopped(Score),
 }
@@ -57,6 +58,9 @@ impl AsApi for Event {
                     id: id.as_api(),
                     flight_plan: flight_plan.as_api(),
                 })
+            }
+            Event::LandingAborted(id) => {
+                ApiEvent::LandingAborted(LandingAborted { id: id.as_api() })
             }
             Event::GameStarted(map) => ApiEvent::GameStarted(GameStarted {
                 map: Some(map.as_api()),

@@ -37,6 +37,19 @@ pub fn despawn_airplane(
             *flight_plan = FlightPlan::new(vec![go_around]);
 
             commands.entity(entity).remove::<Landing>();
+
+            event_bus
+                .sender()
+                .send(Event::LandingAborted(airplane_id.clone()))
+                .expect("failed to send event"); // TODO: Handle error
+
+            event_bus
+                .sender()
+                .send(Event::FlightPlanUpdated(
+                    airplane_id.clone(),
+                    flight_plan.clone(),
+                ))
+                .expect("failed to send event"); // TODO: Handle error
         }
     }
 }
