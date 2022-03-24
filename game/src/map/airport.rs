@@ -1,9 +1,10 @@
-use atc::v1::{Airport as ApiAirport, Tag};
+use atc::v1::Airport as ApiAirport;
 
 use crate::api::AsApi;
+use crate::components::Tag;
 use crate::map::Node;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Airport {
     node: Node,
     tag: Tag,
@@ -30,7 +31,7 @@ impl AsApi for Airport {
     fn as_api(&self) -> Self::ApiType {
         ApiAirport {
             node: Some(self.node.as_api()),
-            tag: self.tag.into(),
+            tag: self.tag.as_api().into(),
         }
     }
 }

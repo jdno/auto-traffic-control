@@ -5,7 +5,7 @@ use atc::v1::{
 };
 
 use crate::api::AsApi;
-use crate::components::{AirplaneId, FlightPlan, Location};
+use crate::components::{AirplaneId, FlightPlan, Location, Tag};
 use crate::map::Map;
 use crate::resources::Score;
 
@@ -16,7 +16,7 @@ mod bus;
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub enum Event {
     AirplaneCollided(AirplaneId, AirplaneId),
-    AirplaneDetected(AirplaneId, Location, FlightPlan),
+    AirplaneDetected(AirplaneId, Location, FlightPlan, Tag),
     AirplaneLanded(AirplaneId),
     AirplaneMoved(AirplaneId, Location),
     FlightPlanUpdated(AirplaneId, FlightPlan),
@@ -35,12 +35,13 @@ impl AsApi for Event {
                     id2: airplane_id2.as_api(),
                 })
             }
-            Event::AirplaneDetected(id, location, flight_plan) => {
+            Event::AirplaneDetected(id, location, flight_plan, tag) => {
                 ApiEvent::AirplaneDetected(AirplaneDetected {
                     airplane: Some(Airplane {
                         id: id.as_api(),
                         point: Some(location.as_api()),
                         flight_plan: flight_plan.as_api(),
+                        tag: tag.as_api().into(),
                     }),
                 })
             }

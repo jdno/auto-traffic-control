@@ -1,8 +1,9 @@
 use std::ops::RangeInclusive;
 
-use atc::v1::{Map as ApiMap, Tag};
+use atc::v1::Map as ApiMap;
 
 use crate::api::AsApi;
+use crate::components::Tag;
 use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
 
 pub use self::airport::*;
