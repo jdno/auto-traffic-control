@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use rand::Rng;
+use rand::{thread_rng, Rng};
 
 use crate::components::{
     Airplane, AirplaneIdGenerator, Collider, Location, Speed, Tag, TravelledRoute, AIRPLANE_SIZE,
@@ -23,6 +23,8 @@ pub fn spawn_airplane(
     mut airplane_id_generator: Local<AirplaneIdGenerator>,
     event_bus: Local<EventBus>,
 ) {
+    let mut rng = thread_rng();
+
     if timer.0.tick(time.delta()).just_finished() {
         let spawn = random_spawn();
         let spawn_point = spawn.as_point();
@@ -32,6 +34,17 @@ pub fn spawn_airplane(
         let travelled_route = TravelledRoute::new(vec![spawn]);
         let flight_plan = generate_random_plan(&travelled_route, &map);
 
+        let tag = if rng.gen_bool(0.5) {
+            Tag::Blue
+        } else {
+            Tag::Red
+        };
+
+        let color = match tag {
+            Tag::Blue => Color::ALICE_BLUE,
+            Tag::Red => Color::SALMON,
+        };
+
         commands
             .spawn_bundle(SpriteBundle {
                 transform: Transform {
@@ -40,7 +53,7 @@ pub fn spawn_airplane(
                     ..Default::default()
                 },
                 sprite: Sprite {
-                    color: Color::RED,
+                    color,
                     ..Default::default()
                 },
                 ..Default::default()
@@ -50,7 +63,7 @@ pub fn spawn_airplane(
             .insert(Collider)
             .insert(flight_plan.clone())
             .insert(Speed::new(32.0))
-            .insert(Tag::Red)
+            .insert(tag)
             .insert(travelled_route);
 
         event_bus
@@ -59,7 +72,7 @@ pub fn spawn_airplane(
                 airplane_id,
                 Location::from(&spawn),
                 flight_plan,
-                Tag::Red,
+                tag,
             ))
             .expect("failed to send event"); // TODO: Handle error
     }
