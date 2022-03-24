@@ -111,7 +111,7 @@ mod tests {
     use crate::api::airplane::AirplaneService;
     use crate::api::AsApi;
     use crate::command::CommandReceiver;
-    use crate::components::{AirplaneId, FlightPlan, Location};
+    use crate::components::{AirplaneId, FlightPlan, Location, Tag};
     use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
     use crate::{Command, Store};
 
@@ -132,6 +132,7 @@ mod tests {
             id: id.as_api(),
             point: Some(location.as_api()),
             flight_plan: flight_plan.as_api(),
+            tag: Tag::Red.as_api().into(),
         };
 
         store.airplanes().insert("AT-4321".into(), airplane);
@@ -225,6 +226,7 @@ mod tests {
             id: id.as_api(),
             point: Some(location.as_api()),
             flight_plan: flight_plan.as_api(),
+            tag: Tag::Red.as_api().into(),
         };
 
         store.airplanes().insert("AT-4321".into(), airplane);
@@ -250,6 +252,7 @@ mod tests {
             id: id.as_api(),
             point: Some(location.as_api()),
             flight_plan: flight_plan.as_api(),
+            tag: Tag::Red.as_api().into(),
         };
 
         store.airplanes().insert("AT-4321".into(), airplane);

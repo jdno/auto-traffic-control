@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use rand::Rng;
 
 use crate::components::{
-    Airplane, AirplaneIdGenerator, Collider, Location, Speed, TravelledRoute, AIRPLANE_SIZE,
+    Airplane, AirplaneIdGenerator, Collider, Location, Speed, Tag, TravelledRoute, AIRPLANE_SIZE,
 };
 use crate::map::{Map, Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::{generate_random_plan, Event, EventBus};
@@ -50,6 +50,7 @@ pub fn spawn_airplane(
             .insert(Collider)
             .insert(flight_plan.clone())
             .insert(Speed::new(32.0))
+            .insert(Tag::Red)
             .insert(travelled_route);
 
         event_bus
@@ -58,6 +59,7 @@ pub fn spawn_airplane(
                 airplane_id,
                 Location::from(&spawn),
                 flight_plan,
+                Tag::Red,
             ))
             .expect("failed to send event"); // TODO: Handle error
     }

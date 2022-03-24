@@ -4,7 +4,7 @@ use atc::v1::get_game_state_response::GameState;
 use atc::v1::Airplane;
 
 use crate::api::AsApi;
-use crate::components::{AirplaneId, FlightPlan, Location};
+use crate::components::{AirplaneId, FlightPlan, Location, Tag};
 use crate::event::EventReceiver;
 use crate::map::Map;
 use crate::{Event, Store};
@@ -23,8 +23,8 @@ impl StoreWatcher {
     pub async fn connect(&mut self) {
         while let Ok(event) = self.event_bus.recv().await {
             match event {
-                Event::AirplaneDetected(id, location, flight_plan) => {
-                    self.insert_airplane(id, location, flight_plan)
+                Event::AirplaneDetected(id, location, flight_plan, tag) => {
+                    self.insert_airplane(id, location, flight_plan, tag)
                 }
                 Event::AirplaneLanded(id) => self.remove_airplane(id),
                 Event::AirplaneMoved(id, location) => self.move_airplane(id, location),
@@ -38,13 +38,20 @@ impl StoreWatcher {
         }
     }
 
-    fn insert_airplane(&self, id: AirplaneId, location: Location, flight_plan: FlightPlan) {
+    fn insert_airplane(
+        &self,
+        id: AirplaneId,
+        location: Location,
+        flight_plan: FlightPlan,
+        tag: Tag,
+    ) {
         self.store.airplanes().insert(
             id.get().into(),
             Airplane {
                 id: id.as_api(),
                 point: Some(location.as_api()),
                 flight_plan: flight_plan.as_api(),
+                tag: tag.as_api().into(),
             },
         );
     }

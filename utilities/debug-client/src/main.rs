@@ -11,6 +11,7 @@ fn should_print(event: &Event) -> bool {
         Event::AirplaneLanded(_) => true,
         Event::AirplaneMoved(_) => false,
         Event::FlightPlanUpdated(_) => false,
+        Event::LandingAborted(_) => true,
         Event::GameStarted(_) => true,
         Event::GameStopped(_) => true,
     }
@@ -68,11 +69,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         .join(", ")
                 );
             }
+            Event::LandingAborted(landing_aborted) => {
+                println!(
+                    "Landing aborted: Airplane {} has the wrong tag",
+                    landing_aborted.id
+                );
+            }
             Event::GameStarted(_) => {
-                println!("Game started")
+                println!("Game started");
             }
             Event::GameStopped(_) => {
-                println!("Game stopped")
+                println!("Game stopped");
             }
         }
     }

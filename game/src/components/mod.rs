@@ -5,6 +5,7 @@ pub use self::flight_plan::*;
 pub use self::landing::*;
 pub use self::location::*;
 pub use self::speed::*;
+pub use self::tag::*;
 pub use self::travelled_route::*;
 
 mod airplane;
@@ -14,4 +15,5 @@ mod flight_plan;
 mod landing;
 mod location;
 mod speed;
+mod tag;
 mod travelled_route;
