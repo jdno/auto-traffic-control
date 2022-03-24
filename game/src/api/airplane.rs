@@ -126,7 +126,7 @@ mod tests {
     fn init_airplane(id: &str, store: &Arc<Store>) -> (AirplaneId, Location, FlightPlan) {
         let id = AirplaneId::new(id.into());
         let location = Location::new(0, 0);
-        let flight_plan = FlightPlan::new(vec![Node::new(0, 0)]);
+        let flight_plan = FlightPlan::new(vec![Node::unrestricted(0, 0)]);
 
         let airplane = Airplane {
             id: id.as_api(),
@@ -174,7 +174,7 @@ mod tests {
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
-            flight_plan: vec![Node::new(0, 0).as_api()],
+            flight_plan: vec![Node::unrestricted(0, 0).as_api()],
         });
         let status = service.update_flight_plan(request).await.unwrap_err();
 
@@ -189,10 +189,11 @@ mod tests {
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
             flight_plan: vec![
-                Node::new(1, 0).as_api(),
-                Node::new(3, 0).as_api(),
-                Node::new(1, 0).as_api(),
-                Node::new(MAP_WIDTH_RANGE.start() - 1, MAP_HEIGHT_RANGE.start() - 1).as_api(),
+                Node::unrestricted(1, 0).as_api(),
+                Node::unrestricted(3, 0).as_api(),
+                Node::unrestricted(1, 0).as_api(),
+                Node::unrestricted(MAP_WIDTH_RANGE.start() - 1, MAP_HEIGHT_RANGE.start() - 1)
+                    .as_api(),
             ],
         });
         let response = service.update_flight_plan(request).await.unwrap();
@@ -220,7 +221,7 @@ mod tests {
 
         let id = AirplaneId::new("AT-4321".into());
         let location = Location::new(0, 0);
-        let flight_plan = FlightPlan::new(vec![Node::new(0, 0)]);
+        let flight_plan = FlightPlan::new(vec![Node::unrestricted(0, 0)]);
 
         let airplane = Airplane {
             id: id.as_api(),
@@ -233,7 +234,7 @@ mod tests {
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),
-            flight_plan: vec![Node::new(0, 0).as_api()],
+            flight_plan: vec![Node::unrestricted(0, 0).as_api()],
         });
         let status = service.update_flight_plan(request).await.unwrap_err();
 
@@ -246,7 +247,7 @@ mod tests {
 
         let id = AirplaneId::new("AT-4321".into());
         let location = Location::new(0, 0);
-        let flight_plan = FlightPlan::new(vec![Node::new(0, 0)]);
+        let flight_plan = FlightPlan::new(vec![Node::unrestricted(0, 0)]);
 
         let airplane = Airplane {
             id: id.as_api(),
@@ -257,7 +258,8 @@ mod tests {
 
         store.airplanes().insert("AT-4321".into(), airplane);
 
-        let new_flight_plan = FlightPlan::new(vec![Node::new(-1, 0), Node::new(0, 0)]);
+        let new_flight_plan =
+            FlightPlan::new(vec![Node::unrestricted(-1, 0), Node::unrestricted(0, 0)]);
 
         let request = Request::new(UpdateFlightPlanRequest {
             id: "AT-4321".into(),

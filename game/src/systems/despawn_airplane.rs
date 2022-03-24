@@ -58,7 +58,7 @@ fn go_around_procedure(airport: &Airport) -> Node {
     let runway_direction = airport.runway().to_vec3();
     let next_hop_in_direction = runway_direction * Vec3::splat(-2.0);
 
-    Node::new(
+    Node::unrestricted(
         next_hop_in_direction.x as i32,
         next_hop_in_direction.y as i32,
     )

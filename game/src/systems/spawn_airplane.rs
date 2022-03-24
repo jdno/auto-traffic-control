@@ -71,19 +71,19 @@ fn random_spawn() -> Node {
     match rng.gen_range(0u32..4u32) {
         0 => {
             let x = rng.gen_range(MAP_WIDTH_RANGE);
-            Node::new(x, *MAP_HEIGHT_RANGE.end())
+            Node::unrestricted(x, *MAP_HEIGHT_RANGE.end())
         }
         1 => {
             let y = rng.gen_range(MAP_HEIGHT_RANGE);
-            Node::new(*MAP_WIDTH_RANGE.end(), y)
+            Node::unrestricted(*MAP_WIDTH_RANGE.end(), y)
         }
         2 => {
             let x = rng.gen_range(MAP_WIDTH_RANGE);
-            Node::new(x, *MAP_HEIGHT_RANGE.start())
+            Node::unrestricted(x, *MAP_HEIGHT_RANGE.start())
         }
         _ => {
             let y = rng.gen_range(MAP_HEIGHT_RANGE);
-            Node::new(*MAP_WIDTH_RANGE.start(), y)
+            Node::unrestricted(*MAP_WIDTH_RANGE.start(), y)
         }
     }
 }

@@ -14,13 +14,31 @@ use crate::TILE_SIZE;
 pub struct Node {
     longitude: i32,
     latitude: i32,
+    restricted: bool,
 }
 
 impl Node {
-    pub fn new(longitude: i32, latitude: i32) -> Self {
+    pub fn new(longitude: i32, latitude: i32, restricted: bool) -> Self {
         Self {
             longitude,
             latitude,
+            restricted,
+        }
+    }
+
+    pub fn restricted(longitude: i32, latitude: i32) -> Self {
+        Self {
+            longitude,
+            latitude,
+            restricted: true,
+        }
+    }
+
+    pub fn unrestricted(longitude: i32, latitude: i32) -> Self {
+        Self {
+            longitude,
+            latitude,
+            restricted: false,
         }
     }
 
@@ -32,6 +50,7 @@ impl Node {
         self.latitude
     }
 
+    // TODO: Move to map so that `restricted` can be set from the routing grid
     pub fn neighbors(&self) -> Vec<Node> {
         let width_range = max(*MAP_WIDTH_RANGE.start(), self.longitude - 1)
             ..=min(*MAP_WIDTH_RANGE.end(), self.longitude + 1);
@@ -41,12 +60,14 @@ impl Node {
         let mut neighbors = Vec::new();
 
         for y in height_range {
+            // TODO: Refactor to avoid clone
             for x in width_range.clone() {
-                // TODO: Refactor to avoid clone
                 if x == self.longitude && y == self.latitude {
                     continue;
                 }
-                neighbors.push(Node::new(x, y));
+
+                // TODO: Get restriction from routing grid
+                neighbors.push(Node::unrestricted(x, y));
             }
         }
 
@@ -94,6 +115,7 @@ impl From<&Point<i32>> for Node {
         Self {
             longitude: x,
             latitude: y,
+            restricted: false, // TODO: Get restriction from routing grid
         }
     }
 }
@@ -105,6 +127,7 @@ impl AsApi for Node {
         ApiNode {
             longitude: self.longitude(),
             latitude: self.latitude(),
+            restricted: self.restricted,
         }
     }
 }
@@ -119,20 +142,20 @@ mod tests {
 
     #[test]
     fn neighbors_at_center() {
-        let node = Node::new(0, 0);
+        let node = Node::unrestricted(0, 0);
 
         let neighbors = node.neighbors();
 
         assert_eq!(
             vec![
-                Node::new(-1, -1),
-                Node::new(0, -1),
-                Node::new(1, -1),
-                Node::new(-1, 0),
-                Node::new(1, 0),
-                Node::new(-1, 1),
-                Node::new(0, 1),
-                Node::new(1, 1),
+                Node::unrestricted(-1, -1),
+                Node::unrestricted(0, -1),
+                Node::unrestricted(1, -1),
+                Node::unrestricted(-1, 0),
+                Node::unrestricted(1, 0),
+                Node::unrestricted(-1, 1),
+                Node::unrestricted(0, 1),
+                Node::unrestricted(1, 1),
             ],
             neighbors
         );
@@ -141,17 +164,17 @@ mod tests {
     #[test]
     fn neighbors_at_edge() {
         let edge = *MAP_WIDTH_RANGE.start();
-        let node = Node::new(edge, 0);
+        let node = Node::unrestricted(edge, 0);
 
         let neighbors = node.neighbors();
 
         assert_eq!(
             vec![
-                Node::new(edge, -1),
-                Node::new(edge + 1, -1),
-                Node::new(edge + 1, 0),
-                Node::new(edge, 1),
-                Node::new(edge + 1, 1),
+                Node::unrestricted(edge, -1),
+                Node::unrestricted(edge + 1, -1),
+                Node::unrestricted(edge + 1, 0),
+                Node::unrestricted(edge, 1),
+                Node::unrestricted(edge + 1, 1),
             ],
             neighbors
         );
@@ -162,15 +185,15 @@ mod tests {
         let x = *MAP_WIDTH_RANGE.start();
         let y = *MAP_HEIGHT_RANGE.start();
 
-        let node = Node::new(x, y);
+        let node = Node::unrestricted(x, y);
 
         let neighbors = node.neighbors();
 
         assert_eq!(
             vec![
-                Node::new(x + 1, y),
-                Node::new(x, y + 1),
-                Node::new(x + 1, y + 1),
+                Node::unrestricted(x + 1, y),
+                Node::unrestricted(x, y + 1),
+                Node::unrestricted(x + 1, y + 1),
             ],
             neighbors
         );
@@ -178,23 +201,23 @@ mod tests {
 
     #[test]
     fn is_neighbor_with_neighbor() {
-        let node = Node::new(0, 0);
-        let neighbor = Node::new(1, 1);
+        let node = Node::unrestricted(0, 0);
+        let neighbor = Node::unrestricted(1, 1);
 
         assert!(neighbor.is_neighbor(&node));
     }
 
     #[test]
     fn is_neighbor_with_distant_node() {
-        let node = Node::new(0, 0);
-        let neighbor = Node::new(2, 0);
+        let node = Node::unrestricted(0, 0);
+        let neighbor = Node::unrestricted(2, 0);
 
         assert!(!neighbor.is_neighbor(&node));
     }
 
     #[test]
     fn trait_display() {
-        let node = Node::new(1, 2);
+        let node = Node::unrestricted(1, 2);
 
         assert_eq!("Node { x: 1, y: 2 }", &node.to_string());
     }

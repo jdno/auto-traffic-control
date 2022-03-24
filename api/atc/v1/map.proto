@@ -17,6 +17,7 @@ message Map {
 message Node {
   int32 longitude = 1;
   int32 latitude = 2;
+  bool restricted = 3;
 }
 
 message Point {

@@ -53,7 +53,7 @@ impl Map {
 
 impl Default for Map {
     fn default() -> Self {
-        let airport = Airport::new(Node::new(0, 0), Direction::West, Tag::Red);
+        let airport = Airport::new(Node::unrestricted(0, 0), Direction::West, Tag::Red);
         let routing_grid = generate_routing_grid(&airport);
 
         Self {
@@ -80,7 +80,7 @@ fn generate_routing_grid(airport: &Airport) -> Vec<Node> {
 
     for y in MAP_HEIGHT_RANGE {
         for x in MAP_WIDTH_RANGE {
-            let node = Node::new(x, y);
+            let node = Node::unrestricted(x, y);
             let direction_to_airport =
                 Direction::between(&node.as_point(), &airport_node.as_point());
 
@@ -110,15 +110,15 @@ mod tests {
 
         let airport = map.airport().node();
         let neighbors = vec![
-            Node::new(airport.longitude(), airport.latitude() + 1),
-            Node::new(airport.longitude() + 1, airport.latitude() + 1),
-            Node::new(airport.longitude() + 1, airport.latitude()),
-            Node::new(airport.longitude() + 1, airport.latitude() - 1),
-            Node::new(airport.longitude(), airport.latitude() - 1),
-            Node::new(airport.longitude() - 1, airport.latitude() - 1),
+            Node::unrestricted(airport.longitude(), airport.latitude() + 1),
+            Node::unrestricted(airport.longitude() + 1, airport.latitude() + 1),
+            Node::unrestricted(airport.longitude() + 1, airport.latitude()),
+            Node::unrestricted(airport.longitude() + 1, airport.latitude() - 1),
+            Node::unrestricted(airport.longitude(), airport.latitude() - 1),
+            Node::unrestricted(airport.longitude() - 1, airport.latitude() - 1),
             // Runway to the west
-            // Node::new(airport.longitude() - 1, airport.latitude()),
-            Node::new(airport.longitude() - 1, airport.latitude() + 1),
+            // Node::unrestricted(airport.longitude() - 1, airport.latitude()),
+            Node::unrestricted(airport.longitude() - 1, airport.latitude() + 1),
         ];
 
         neighbors

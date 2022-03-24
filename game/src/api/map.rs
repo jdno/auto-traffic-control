@@ -34,7 +34,7 @@ impl atc::v1::map_service_server::MapService for MapService {
         request: Request<NodeToPointRequest>,
     ) -> Result<Response<NodeToPointResponse>, Status> {
         if let Some(api_node) = request.into_inner().node {
-            let node = Node::new(api_node.longitude, api_node.latitude);
+            let node = Node::unrestricted(api_node.longitude, api_node.latitude);
             let point = node.to_location();
 
             Ok(Response::new(NodeToPointResponse {
@@ -82,7 +82,8 @@ mod tests {
             Airport {
                 node: Some(Node {
                     longitude: 0,
-                    latitude: 0
+                    latitude: 0,
+                    restricted: false
                 }),
                 tag: Tag::Red.into()
             },
@@ -98,6 +99,7 @@ mod tests {
             node: Some(Node {
                 longitude: 0,
                 latitude: 0,
+                restricted: false,
             }),
         });
 
@@ -116,6 +118,7 @@ mod tests {
             node: Some(Node {
                 longitude: 1,
                 latitude: 2,
+                restricted: false,
             }),
         });
 
