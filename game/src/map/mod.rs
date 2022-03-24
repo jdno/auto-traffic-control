@@ -53,11 +53,11 @@ impl Map {
 
 impl Default for Map {
     fn default() -> Self {
-        let airports = vec![Airport::new(
-            Node::unrestricted(0, 0),
-            Direction::West,
-            Tag::Red,
-        )];
+        let airports = vec![
+            Airport::new(Node::unrestricted(-2, -2), Direction::West, Tag::Red),
+            Airport::new(Node::unrestricted(1, 4), Direction::South, Tag::Blue),
+        ];
+
         let routing_grid = generate_routing_grid(&airports);
 
         Self {
@@ -87,18 +87,20 @@ fn generate_routing_grid(airports: &[Airport]) -> Vec<Node> {
 
     for y in MAP_HEIGHT_RANGE {
         for x in MAP_WIDTH_RANGE {
-            for airport in airports {
-                let airport_node = airport.node();
-                let node = Node::unrestricted(x, y);
+            nodes.push(Node::unrestricted(x, y));
+        }
+    }
 
-                let direction_to_airport =
-                    Direction::between(&node.as_point(), &airport_node.as_point());
+    for airport in airports {
+        let airport_node = airport.node();
 
-                let restricted = airport_node != &node
-                    && airport_node.is_neighbor(&node)
-                    && direction_to_airport != airport.runway();
+        for neighbor in airport_node.neighbors() {
+            let direction_to_airport =
+                Direction::between(&neighbor.as_point(), &airport_node.as_point());
 
-                nodes.push(Node::new(x, y, restricted));
+            if direction_to_airport != airport.runway() {
+                *nodes.get_mut(neighbor.as_index()).unwrap() =
+                    Node::restricted(neighbor.longitude(), neighbor.latitude());
             }
         }
     }
