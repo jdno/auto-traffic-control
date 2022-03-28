@@ -30,8 +30,7 @@ pub fn generate_flight_plan(
     }
 }
 
-// TODO: Refactor into a shared module
-pub fn generate_random_plan(travelled_route: &TravelledRoute, map: &Res<Map>) -> FlightPlan {
+fn generate_random_plan(travelled_route: &TravelledRoute, map: &Res<Map>) -> FlightPlan {
     let mut flight_plan = Vec::new();
 
     let mut reversed_route = travelled_route.get().iter().rev();

@@ -1,12 +1,14 @@
 use bevy::prelude::*;
+use geo::point;
 use rand::{thread_rng, Rng};
 
 use crate::components::{
-    Airplane, AirplaneIdGenerator, Collider, Location, Speed, Tag, TravelledRoute,
+    Airplane, AirplaneIdGenerator, Collider, FlightPlan, Location, Speed, Tag, TravelledRoute,
 };
-use crate::map::{Direction, Map, Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
+use crate::event::{Event, EventBus};
+use crate::map::{Direction, Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 use crate::rendering::RenderLayer;
-use crate::{generate_random_plan, Event, EventBus};
+use crate::TILE_SIZE;
 
 pub struct SpawnTimer(Timer);
 
@@ -16,9 +18,7 @@ impl SpawnTimer {
     }
 }
 
-#[allow(clippy::too_many_arguments)] // TODO: Load assets in a system and pass only atlas handle
 pub fn spawn_airplane(
-    map: Res<Map>,
     mut commands: Commands,
     time: Res<Time>,
     mut timer: ResMut<SpawnTimer>,
@@ -34,15 +34,13 @@ pub fn spawn_airplane(
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     if timer.0.tick(time.delta()).just_finished() {
-        let spawn = random_spawn();
-        let spawn_point = spawn.as_point();
+        let (spawn, entry) = random_spawn();
+        let spawn_point = point!(x: spawn.x, y: spawn.y);
 
         let airplane_id = airplane_id_generator.generate();
+        let flight_plan = FlightPlan::new(vec![entry]);
 
-        let travelled_route = TravelledRoute::new(vec![spawn]);
-        let flight_plan = generate_random_plan(&travelled_route, &map);
-
-        let direction = Direction::between(&flight_plan.next().unwrap().as_point(), &spawn_point);
+        let direction = Direction::between(&entry.as_point(), &spawn_point);
 
         let tag = if rng.gen_bool(0.5) {
             Tag::Blue
@@ -76,7 +74,7 @@ pub fn spawn_airplane(
             .insert(flight_plan.clone())
             .insert(Speed::new(32.0))
             .insert(tag)
-            .insert(travelled_route);
+            .insert(TravelledRoute::new(Vec::new()));
 
         event_bus
             .sender()
@@ -90,25 +88,42 @@ pub fn spawn_airplane(
     }
 }
 
-fn random_spawn() -> Node {
+fn random_spawn() -> (Vec3, Node) {
     let mut rng = rand::thread_rng();
 
-    match rng.gen_range(0u32..4u32) {
+    let (entry, direction) = match rng.gen_range(0u32..4u32) {
         0 => {
             let x = rng.gen_range(MAP_WIDTH_RANGE);
-            Node::unrestricted(x, *MAP_HEIGHT_RANGE.end())
+            (
+                Node::unrestricted(x, *MAP_HEIGHT_RANGE.end()),
+                Direction::South,
+            )
         }
         1 => {
             let y = rng.gen_range(MAP_HEIGHT_RANGE);
-            Node::unrestricted(*MAP_WIDTH_RANGE.end(), y)
+            (
+                Node::unrestricted(*MAP_WIDTH_RANGE.end(), y),
+                Direction::West,
+            )
         }
         2 => {
             let x = rng.gen_range(MAP_WIDTH_RANGE);
-            Node::unrestricted(x, *MAP_HEIGHT_RANGE.start())
+            (
+                Node::unrestricted(x, *MAP_HEIGHT_RANGE.start()),
+                Direction::North,
+            )
         }
         _ => {
             let y = rng.gen_range(MAP_HEIGHT_RANGE);
-            Node::unrestricted(*MAP_WIDTH_RANGE.start(), y)
+            (
+                Node::unrestricted(*MAP_WIDTH_RANGE.start(), y),
+                Direction::East,
+            )
         }
-    }
+    };
+
+    let offset = direction.to_vec3() * Vec3::splat(-3.0 * TILE_SIZE as f32);
+    let spawn = entry.as_vec3(RenderLayer::Airplane.z()) + offset;
+
+    (spawn, entry)
 }

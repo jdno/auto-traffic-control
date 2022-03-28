@@ -59,6 +59,15 @@ impl From<&Mut<'_, bevy::prelude::Transform>> for Location {
     }
 }
 
+impl From<&Vec3> for Location {
+    fn from(vec3: &Vec3) -> Self {
+        Self {
+            x: vec3.x as i32,
+            y: vec3.y as i32,
+        }
+    }
+}
+
 impl Display for Location {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "Location {{ x: {}, y: {} }}", self.x, self.y)

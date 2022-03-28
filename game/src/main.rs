@@ -5,7 +5,7 @@ use tokio::sync::broadcast::{channel, Receiver};
 
 use crate::api::Api;
 use crate::command::Command;
-use crate::event::{Event, EventBus};
+use crate::event::Event;
 use crate::scene::{GameOverPlugin, GamePlugin, MainMenuPlugin};
 use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
