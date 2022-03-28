@@ -83,7 +83,7 @@ fn fly(
             return true;
         } else {
             let direction = Direction::between(&next_point, &current_point);
-            *current_position += direction.to_vec3() * travelled_distance;
+            *current_position += direction.to_vec3().normalize() * travelled_distance;
         }
     }
 
