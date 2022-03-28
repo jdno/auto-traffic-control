@@ -1,3 +1,7 @@
+use bevy::prelude::*;
+
+pub const FONT_COLOR: Color = Color::BLACK;
+
 pub enum RenderLayer {
     Landscape,
     Decoration,

@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::event::{Event, EventBus};
 use crate::map::Map;
+use crate::rendering::FONT_COLOR;
 use crate::resources::Score;
 use crate::systems::{
     despawn_airplane, detect_collision, follow_flight_plan, generate_flight_plan, land_airplane,
@@ -68,7 +69,7 @@ fn setup_score(mut commands: Commands, asset_server: Res<AssetServer>) {
                         style: TextStyle {
                             font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                             font_size: 24.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
+                            color: FONT_COLOR,
                         },
                     },
                     TextSection {
@@ -76,7 +77,7 @@ fn setup_score(mut commands: Commands, asset_server: Res<AssetServer>) {
                         style: TextStyle {
                             font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                             font_size: 24.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
+                            color: FONT_COLOR,
                         },
                     },
                 ],
