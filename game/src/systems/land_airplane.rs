@@ -13,7 +13,7 @@ pub fn land_airplane(
             continue;
         }
 
-        let final_node = flight_plan.get().get(0).unwrap();
+        let final_node = flight_plan.next().unwrap();
 
         for airport in map.airports() {
             if final_node == airport.node() {
