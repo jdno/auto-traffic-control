@@ -38,6 +38,12 @@ pub fn follow_flight_plan(
             .expect("failed to send event"); // TODO: Handle error
 
         if did_update_flight_plan && !flight_plan.get().is_empty() {
+            let current_point = travelled_route.get().last().unwrap().as_point();
+            let next_point = flight_plan.next().unwrap().as_point(); // Safe due to check above
+
+            let direction = Direction::between(&next_point, &current_point);
+            transform.rotation = Quat::from_rotation_z(direction.to_degree().to_radians());
+
             event_bus
                 .sender()
                 .send(Event::FlightPlanUpdated(

@@ -2,9 +2,7 @@ use bevy::prelude::*;
 use rand::{thread_rng, Rng};
 
 use crate::rendering::RenderLayer;
-use crate::{SCREEN_HEIGHT, SCREEN_WIDTH};
-
-const TEXTURE_SIZE: i32 = 16;
+use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE};
 
 pub fn setup_landscape(
     mut commands: Commands,
@@ -14,29 +12,43 @@ pub fn setup_landscape(
     let mut rng = thread_rng();
 
     let texture_handle = asset_server.load("sprites/spritesheet.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 16.0), 4, 1);
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 8, 5);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
-    let horizontal_tiles = SCREEN_WIDTH as i32 / TEXTURE_SIZE / 2 + 1;
-    let vertical_tiles = SCREEN_HEIGHT as i32 / TEXTURE_SIZE / 2 + 1;
+    let horizontal_tiles = (SCREEN_WIDTH as i32 / TILE_SIZE + 1) as i32;
+    let vertical_tiles = (SCREEN_HEIGHT as i32 / TILE_SIZE + 1) as i32;
 
     for y in -vertical_tiles..=vertical_tiles {
         for x in -horizontal_tiles..=horizontal_tiles {
-            // 25% chance of a decoration
-            let sprite = match rng.gen_range(0..12) {
-                0 => 1, // tree
-                1 => 2, // trees
-                2 => 3, // bush
-                _ => 0, // grass
-            };
-
-            let x = x * TEXTURE_SIZE;
-            let y = y * TEXTURE_SIZE;
+            let x = (x * TILE_SIZE) as f32;
+            let y = (y * TILE_SIZE) as f32;
 
             commands.spawn_bundle(SpriteSheetBundle {
                 texture_atlas: texture_atlas_handle.clone(),
                 transform: Transform {
-                    translation: Vec3::new(x as f32, y as f32, RenderLayer::Landscape.z()),
+                    translation: Vec3::new(x, y, RenderLayer::Landscape.z()),
+                    ..Default::default()
+                },
+                sprite: TextureAtlasSprite::new(0),
+                ..Default::default()
+            });
+
+            // 25% chance of a decoration
+            let sprite = match rng.gen_range(0..28) {
+                0 => 1, // #
+                1 => 2, // //
+                2 => 3, // {
+                3 => 4, // ;
+                4 => 5, // )
+                5 => 6, // &
+                6 => 7, // }
+                _ => continue,
+            };
+
+            commands.spawn_bundle(SpriteSheetBundle {
+                texture_atlas: texture_atlas_handle.clone(),
+                transform: Transform {
+                    translation: Vec3::new(x - 16.0, y - 16.0, RenderLayer::Decoration.z()),
                     ..Default::default()
                 },
                 sprite: TextureAtlasSprite::new(sprite),
