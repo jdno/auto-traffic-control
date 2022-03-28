@@ -2,10 +2,11 @@ use bevy::prelude::*;
 
 use crate::event::{Event, EventBus};
 use crate::map::Map;
+use crate::rendering::FONT_COLOR;
 use crate::resources::Score;
 use crate::systems::{
     despawn_airplane, detect_collision, follow_flight_plan, generate_flight_plan, land_airplane,
-    setup_airport, setup_grid, spawn_airplane, update_flight_plan, SpawnTimer,
+    setup_airport, setup_grid, setup_landscape, spawn_airplane, update_flight_plan, SpawnTimer,
 };
 use crate::AppState;
 
@@ -22,6 +23,7 @@ impl Plugin for GamePlugin {
                     .with_system(start_game)
                     .with_system(setup_airport)
                     .with_system(setup_grid)
+                    .with_system(setup_landscape)
                     .with_system(setup_score),
             )
             .add_system_set(
@@ -67,7 +69,7 @@ fn setup_score(mut commands: Commands, asset_server: Res<AssetServer>) {
                         style: TextStyle {
                             font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                             font_size: 24.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
+                            color: FONT_COLOR,
                         },
                     },
                     TextSection {
@@ -75,7 +77,7 @@ fn setup_score(mut commands: Commands, asset_server: Res<AssetServer>) {
                         style: TextStyle {
                             font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                             font_size: 24.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
+                            color: FONT_COLOR,
                         },
                     },
                 ],

@@ -15,6 +15,7 @@ mod command;
 mod components;
 mod event;
 mod map;
+mod rendering;
 mod resources;
 mod scene;
 mod store;

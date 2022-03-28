@@ -14,6 +14,10 @@ impl FlightPlan {
         Self(flight_plan)
     }
 
+    pub fn next(&self) -> Option<&Node> {
+        self.0.last()
+    }
+
     pub fn get(&self) -> &Vec<Node> {
         &self.0
     }

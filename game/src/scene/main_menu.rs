@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
-use crate::AppState;
+use crate::rendering::FONT_COLOR;
+use crate::{setup_landscape, AppState};
 
 struct Menu(Entity);
 
@@ -8,9 +9,13 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(SystemSet::on_enter(AppState::MainMenu).with_system(spawn))
-            .add_system_set(SystemSet::on_update(AppState::MainMenu))
-            .add_system_set(SystemSet::on_exit(AppState::MainMenu).with_system(despawn));
+        app.add_system_set(
+            SystemSet::on_enter(AppState::MainMenu)
+                .with_system(setup_landscape)
+                .with_system(spawn),
+        )
+        .add_system_set(SystemSet::on_update(AppState::MainMenu))
+        .add_system_set(SystemSet::on_exit(AppState::MainMenu).with_system(despawn));
     }
 }
 
@@ -34,7 +39,7 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
                     TextStyle {
                         font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                         font_size: 48.0,
-                        color: Color::rgb(0.9, 0.9, 0.9),
+                        color: FONT_COLOR,
                     },
                     Default::default(),
                 ),
@@ -50,7 +55,7 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
                     TextStyle {
                         font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                         font_size: 24.0,
-                        color: Color::rgb(0.9, 0.9, 0.9),
+                        color: FONT_COLOR,
                     },
                     Default::default(),
                 ),
