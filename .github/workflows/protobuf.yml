@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Buf
-        uses: bufbuild/buf-setup-action@v1.2.1
+        uses: bufbuild/buf-setup-action@v1.3.0
 
       - name: Run Buf
         uses: bufbuild/buf-lint-action@v1.0.0
