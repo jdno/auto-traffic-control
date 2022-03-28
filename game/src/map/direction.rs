@@ -54,6 +54,19 @@ impl Direction {
         panic!("failed to determine direction");
     }
 
+    pub fn to_degree(self) -> f32 {
+        match self {
+            Direction::North => 90.0,
+            Direction::NorthEast => 45.0,
+            Direction::East => 0.0,
+            Direction::SouthEast => 315.0,
+            Direction::South => 270.0,
+            Direction::SouthWest => 225.0,
+            Direction::West => 180.0,
+            Direction::NorthWest => 135.0,
+        }
+    }
+
     pub fn to_vec3(self) -> Vec3 {
         match self {
             Direction::North => Vec3::new(0.0, 1.0, 0.0),
