@@ -52,10 +52,10 @@ impl FlightPlan {
     fn is_within_map_bounds(&self) -> Result<(), ValidationError> {
         for node in self.0.iter() {
             if !MAP_WIDTH_RANGE.contains(&node.longitude()) {
-                return Err(ValidationError::NodeOutOfBounds);
+                return Err(ValidationError::NodeOutsideMap);
             }
             if !MAP_HEIGHT_RANGE.contains(&node.latitude()) {
-                return Err(ValidationError::NodeOutOfBounds);
+                return Err(ValidationError::NodeOutsideMap);
             }
         }
 
@@ -68,7 +68,7 @@ impl FlightPlan {
             let next = window[1];
 
             if !previous.is_neighbor(&next) {
-                return Err(ValidationError::NotInLogicalOrder);
+                return Err(ValidationError::InvalidStep);
             }
         }
 
@@ -82,7 +82,7 @@ impl FlightPlan {
         if self.0.last() == previous_flight_plan.get().last() {
             Ok(())
         } else {
-            Err(ValidationError::InvalidFirstNode)
+            Err(ValidationError::InvalidStart)
         }
     }
 
@@ -92,7 +92,7 @@ impl FlightPlan {
             let next = window[2];
 
             if previous == next {
-                return Err(ValidationError::HasSharpTurns);
+                return Err(ValidationError::SharpTurn);
             }
         }
 
@@ -102,7 +102,7 @@ impl FlightPlan {
     fn has_restricted_nodes(&self, routing_grid: &[Node]) -> Result<(), ValidationError> {
         for node in self.0.iter() {
             if !routing_grid.contains(node) {
-                return Err(ValidationError::HasRestrictedNodes);
+                return Err(ValidationError::RestrictedNode);
             }
         }
 
@@ -184,10 +184,10 @@ mod tests {
 
         assert_eq!(
             vec![
-                ValidationError::NodeOutOfBounds,
-                ValidationError::NotInLogicalOrder,
-                ValidationError::InvalidFirstNode,
-                ValidationError::HasRestrictedNodes,
+                ValidationError::NodeOutsideMap,
+                ValidationError::InvalidStep,
+                ValidationError::InvalidStart,
+                ValidationError::RestrictedNode,
             ],
             result.err().unwrap()
         );
