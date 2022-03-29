@@ -5,6 +5,9 @@
 - name: C-dependency
   color: e74c3c
   description: "Update a dependency"
+- name: C-documentation
+  color: e74c3c
+  description: "Improve the documentation"
 - name: C-feature-request
   color: e74c3c
   description: "Request a new feature"
