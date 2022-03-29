@@ -15,6 +15,7 @@ const config = {
   favicon: "img/logo.svg",
   organizationName: "jdno", // Usually your GitHub org/user name.
   projectName: "atc", // Usually your repo name.
+  trailingSlash: false,
 
   presets: [
     [
