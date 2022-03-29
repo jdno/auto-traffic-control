@@ -203,11 +203,11 @@ mod tests {
             _ => panic!("unexpected payload"),
         };
         let expected_errors: Vec<i32> = vec![
-            ValidationError::NodeOutOfBounds.into(),
-            ValidationError::NotInLogicalOrder.into(),
-            ValidationError::InvalidFirstNode.into(),
-            ValidationError::HasSharpTurns.into(),
-            ValidationError::HasRestrictedNodes.into(),
+            ValidationError::NodeOutsideMap.into(),
+            ValidationError::InvalidStep.into(),
+            ValidationError::InvalidStart.into(),
+            ValidationError::SharpTurn.into(),
+            ValidationError::RestrictedNode.into(),
         ];
 
         assert_eq!(expected_errors, actual_errors);

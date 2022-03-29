@@ -38,11 +38,11 @@ message UpdateFlightPlanError {
   // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX
   enum ValidationError {
     UNSPECIFIED = 0;
-    NODE_OUT_OF_BOUNDS = 1;
-    NOT_IN_LOGICAL_ORDER = 2;
-    HAS_SHARP_TURNS = 3;
-    INVALID_FIRST_NODE = 4;
-    HAS_RESTRICTED_NODES = 5;
+    NODE_OUTSIDE_MAP = 1;
+    INVALID_STEP = 2;
+    SHARP_TURN = 3;
+    INVALID_START = 4;
+    RESTRICTED_NODE = 5;
   }
   repeated ValidationError errors = 1;
 }
