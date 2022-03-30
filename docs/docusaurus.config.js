@@ -48,6 +48,12 @@ const config = {
         },
         items: [
           {
+            type: "doc",
+            docId: "getting-started",
+            position: "left",
+            label: "Docs",
+          },
+          {
             href: "https://github.com/jdno/atc",
             label: "GitHub",
             position: "right",
