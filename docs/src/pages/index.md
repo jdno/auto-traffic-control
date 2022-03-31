@@ -16,8 +16,8 @@ Check out the [Getting Started](/docs/getting-started) guide to start playing.
 
 ## Features
 
-- Write code in your favorite programming language
-- Use your own editor and programming environment
-- Play in an open-ended sandbox
+❤️ Write code in your favorite programming language  
+👩‍💻 Use your own editor and programming environment  
+✈️ Play in an open-ended sandbox
 
 [grpc]: https://grpc.io/
