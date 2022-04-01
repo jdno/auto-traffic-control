@@ -23,7 +23,7 @@ server = []
 
 [dependencies]
 prost = "0.10.0"
-tonic = "0.6.2"
+tonic = "0.7.0"
 
 [build-dependencies]
 glob = "0.3.0"
