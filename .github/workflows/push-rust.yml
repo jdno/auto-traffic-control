@@ -1,5 +1,5 @@
 ---
-name: Push / Rust
+name: Rust
 
 "on": [push]
 

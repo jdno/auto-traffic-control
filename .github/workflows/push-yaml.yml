@@ -1,5 +1,5 @@
 ---
-name: Push / YAML
+name: YAML
 
 "on": [push]
 

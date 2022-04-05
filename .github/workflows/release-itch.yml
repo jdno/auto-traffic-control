@@ -1,5 +1,5 @@
 ---
-name: Release / itch.io
+name: itch.io
 
 "on":
   release:
