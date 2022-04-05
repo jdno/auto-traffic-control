@@ -169,13 +169,13 @@ jobs:
           args: --release
 
       - name: Create distribution folder
-        run: mkdir .\dist
+        run: mkdir ./dist
 
       - name: Copy release artifact into distribution folder
-        run: cp target\release\auto-traffic-control .\dist\auto-traffic-control
+        run: cp target/release/auto-traffic-control.exe ./dist/auto-traffic-control.exe
 
       - name: Copy assets into distribution folder
-        run: cp -r game\assets .\dist\assets
+        run: cp -r game/assets ./dist/assets
 
       - name: Set version
         run: echo "version=${{ github.event.release.name }}" >> $GITHUB_ENV
