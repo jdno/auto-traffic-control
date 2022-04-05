@@ -5,7 +5,7 @@ name: Protobuf
 
 jobs:
   lint:
-    name: Lint
+    name: Lint code
     runs-on: ubuntu-latest
 
     steps:
