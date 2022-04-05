@@ -33,16 +33,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-release-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-release-v1-
+        uses: swatinem/rust-cache@v1.3.0
 
       - name: Build release artifact
         uses: actions-rs/cargo@v1
@@ -94,16 +85,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-release-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-release-v1-
+        uses: swatinem/rust-cache@v1.3.0
 
       - name: Install cargo-bundle
         run: cargo install cargo-bundle
@@ -151,16 +133,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-release-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-release-v1-
+        uses: swatinem/rust-cache@v1.3.0
 
       - name: Build release artifact
         uses: actions-rs/cargo@v1
