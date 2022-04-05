@@ -1,0 +1,198 @@
+---
+name: "Publish to itch.io"
+
+"on":
+  release:
+    types:
+      - prereleased
+      - released
+
+env:
+  itch_project: jdno/auto-traffic-control
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+          libx11-dev \
+          libasound2-dev \
+          libudev-dev
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-stable-cargo-v1-
+
+      - name: Build release artifact
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+
+      - name: Create distribution folder
+        run: mkdir ./dist
+
+      - name: Copy release artifact into distribution folder
+        run: cp target/release/auto-traffic-control ./dist/auto-traffic-control
+
+      - name: Copy assets into distribution folder
+        run: cp -r game/assets ./dist/assets
+
+      - name: Set version
+        run: echo "version=${{ github.event.release.name }}" >> $GITHUB_ENV
+
+      - name: Set beta channel
+        if: github.event.action == 'prereleased'
+        run: echo "itch_channel=linux-beta" >> $GITHUB_ENV
+
+      - name: Set release channel
+        if: github.event.action == 'released'
+        run: echo "itch_channel=linux-stable" >> $GITHUB_ENV
+
+      - name: Publish game to itch.io
+        uses: robpc/itchio-upload-action@v1
+        with:
+          path: dist
+          project: ${{ env.itch_project }}
+          channel: ${{ env.itch_channel }}
+          version: ${{ env.version }}
+          api-key: ${{ secrets.ITCHIO_API_KEY }}
+
+  macos:
+    name: macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-stable-cargo-v1-
+
+      - name: Install cargo-bundle
+        run: cargo install cargo-bundle
+
+      - name: Build release artifact
+        working-directory: game
+        run: cargo bundle --release
+
+      - name: Move assets to binary
+        working-directory: target/release/bundle/osx/Auto Traffic Control.app
+        run: cp -r Contents/Resources/assets Contents/MacOS/assets
+
+      - name: Set version
+        run: echo "version=${{ github.event.release.name }}" >> $GITHUB_ENV
+
+      - name: Set beta channel
+        if: github.event.action == 'prereleased'
+        run: echo "itch_channel=macos-beta" >> $GITHUB_ENV
+
+      - name: Set release channel
+        if: github.event.action == 'released'
+        run: echo "itch_channel=macos-stable" >> $GITHUB_ENV
+
+      - name: Publish game to itch.io
+        uses: robpc/itchio-upload-action@v1
+        with:
+          path: target/release/bundle/osx
+          project: ${{ env.itch_project }}
+          channel: ${{ env.itch_channel }}
+          version: ${{ env.version }}
+          api-key: ${{ secrets.ITCHIO_API_KEY }}
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-stable-cargo-v1-
+
+      - name: Build release artifact
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+
+      - name: Create distribution folder
+        run: mkdir ./dist
+
+      - name: Copy release artifact into distribution folder
+        run: cp target/release/auto-traffic-control.exe ./dist/auto-traffic-control.exe
+
+      - name: Copy assets into distribution folder
+        run: cp -r game/assets ./dist/assets
+
+      - name: Set version
+        run: echo "version=${{ github.event.release.name }}" >> $GITHUB_ENV
+
+      - name: Set beta channel
+        if: github.event.action == 'prereleased'
+        run: echo "itch_channel=windows-beta" >> $GITHUB_ENV
+
+      - name: Set release channel
+        if: github.event.action == 'released'
+        run: echo "itch_channel=windows-stable" >> $GITHUB_ENV
+
+      - name: Publish game to itch.io
+        uses: robpc/itchio-upload-action@v1
+        with:
+          path: dist
+          project: ${{ env.itch_project }}
+          channel: ${{ env.itch_channel }}
+          version: ${{ env.version }}
+          api-key: ${{ secrets.ITCHIO_API_KEY }}

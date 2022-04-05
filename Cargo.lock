@@ -223,6 +223,7 @@ version = "0.1.0"
 dependencies = [
  "atc",
  "bevy",
+ "core-foundation 0.9.3",
  "dashmap",
  "geo",
  "parking_lot 0.12.0",
