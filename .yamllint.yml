@@ -1,0 +1,7 @@
+---
+extends: default
+
+rules:
+  line-length:
+    ignore: |
+      .github/workflows/*
