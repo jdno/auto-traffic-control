@@ -1,5 +1,5 @@
 ---
-name: "Publish to itch.io"
+name: Release / itch.io
 
 "on":
   release:
@@ -12,7 +12,7 @@ env:
 
 jobs:
   linux:
-    name: Linux
+    name: Publish Linux build
     runs-on: ubuntu-latest
 
     steps:
@@ -41,8 +41,8 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-stable-cargo-v1-
+          key: ${{ runner.os }}-cargo-release-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-release-v1-
 
       - name: Build release artifact
         uses: actions-rs/cargo@v1
@@ -80,7 +80,7 @@ jobs:
           api-key: ${{ secrets.ITCHIO_API_KEY }}
 
   macos:
-    name: macOS
+    name: Publish macOS build
     runs-on: macos-latest
 
     steps:
@@ -102,8 +102,8 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-stable-cargo-v1-
+          key: ${{ runner.os }}-cargo-release-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-release-v1-
 
       - name: Install cargo-bundle
         run: cargo install cargo-bundle
@@ -137,7 +137,7 @@ jobs:
           api-key: ${{ secrets.ITCHIO_API_KEY }}
 
   windows:
-    name: Windows
+    name: Publish Windows build
     runs-on: windows-latest
 
     steps:
@@ -159,8 +159,8 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-stable-cargo-v1-
+          key: ${{ runner.os }}-cargo-release-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-release-v1-
 
       - name: Build release artifact
         uses: actions-rs/cargo@v1

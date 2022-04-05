@@ -1,11 +1,11 @@
 ---
-name: JSON
+name: Push / JSON
 
 "on": [push]
 
 jobs:
   style:
-    name: Style
+    name: Check style
     runs-on: ubuntu-latest
 
     steps:

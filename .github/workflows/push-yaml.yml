@@ -1,11 +1,11 @@
 ---
-name: YAML
+name: Push / YAML
 
 "on": [push]
 
 jobs:
   lint:
-    name: Lint
+    name: Lint code
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,7 @@ jobs:
         uses: actionshub/yamllint@1.0.0
 
   style:
-    name: Style
+    name: Check style
     runs-on: ubuntu-latest
 
     steps:

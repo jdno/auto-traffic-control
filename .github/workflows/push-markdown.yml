@@ -1,11 +1,11 @@
 ---
-name: Markdown
+name: Push / Markdown
 
 "on": [push]
 
 jobs:
   lint:
-    name: Lint
+    name: Lint code
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
           files: "**.md"
 
   style:
-    name: Style
+    name: Check style
     runs-on: ubuntu-latest
 
     steps:

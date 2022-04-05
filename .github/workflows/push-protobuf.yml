@@ -1,11 +1,11 @@
 ---
-name: Protobuf
+name: Push / Protobuf
 
 "on": [push]
 
 jobs:
   lint:
-    name: Lint
+    name: Lint code
     runs-on: ubuntu-latest
 
     steps:

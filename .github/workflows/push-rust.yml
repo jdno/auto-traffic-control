@@ -1,11 +1,11 @@
 ---
-name: Rust
+name: Push / Rust
 
 "on": [push]
 
 jobs:
   lint:
-    name: Lint
+    name: Lint code
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +19,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: clippy
+
       - name: Cache build artifacts
         uses: actions/cache@v3
         with:
@@ -28,16 +36,8 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-stable-cargo-v1-
-
-      - name: Set up Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: clippy
+          key: ${{ runner.os }}-cargo-debug-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-debug-v1-
 
       - name: Run Clippy
         uses: actions-rs/cargo@v1
@@ -46,7 +46,7 @@ jobs:
           args: --all-targets --all-features -- -D warnings
 
   style:
-    name: Style
+    name: Check style
     runs-on: ubuntu-latest
 
     steps:
@@ -68,7 +68,7 @@ jobs:
           args: --all -- --check
 
   test:
-    name: Test
+    name: Run tests
     runs-on: ubuntu-latest
 
     steps:
@@ -82,6 +82,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
       - name: Cache build artifacts
         uses: actions/cache@v3
         with:
@@ -91,14 +97,8 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-stable-cargo-v1-${{ hashFiles('Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-stable-cargo-v1-
-
-      - name: Set up Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+          key: ${{ runner.os }}-cargo-debug-v1-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-debug-v1-
 
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@master

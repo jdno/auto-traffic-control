@@ -1,11 +1,11 @@
 ---
-name: Shell
+name: Push / Shell
 
 "on": [push]
 
 jobs:
   lint:
-    name: Lint
+    name: Lint code
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,7 @@ jobs:
         uses: ludeeus/action-shellcheck@1.1.0
 
   style:
-    name: Style
+    name: Check style
     runs-on: ubuntu-latest
 
     steps:
