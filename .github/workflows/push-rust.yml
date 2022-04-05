@@ -89,7 +89,8 @@ jobs:
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@master
         with:
-          version: 0.18.2
+          args: --skip-clean
+          version: 0.20.0
 
       - name: Upload to codecov.io
         uses: codecov/codecov-action@v2.1.0
