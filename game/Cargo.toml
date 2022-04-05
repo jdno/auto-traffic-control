@@ -6,7 +6,7 @@ edition = "2021"
 
 rust-version = "1.56"
 
-description = "A video game for programmers about safely routing airplanes"
+description = "A video game for programmers about air traffic control"
 repository = "https://github.com/jdno/atc"
 categories = [
     "games"
@@ -19,10 +19,22 @@ publish = false
 # See more keys and their definitions at
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
+# cargo-bundle is used to create a macOS .app bundle for distribution on itch.io
+# https://github.com/burtonageo/cargo-bundle
+[package.metadata.bundle]
+name = "Auto Traffic Control"
+identifier = "dev.jdno.auto-traffic-control"
+resources = [
+    "assets"
+]
+copyright = "Copyright (c) 2022 Jan David Nose"
+category = "public.app-category.games"
+
 [dependencies]
 atc = { path = "../sdk/rust", version = "0.1.0", features = ["server"] }
 
 bevy = "0.6.1"
+core-foundation = "0.9.3"
 dashmap = "5.2.0"
 geo = "0.19.0"
 parking_lot = "0.12.0"
