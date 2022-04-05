@@ -109,10 +109,8 @@ jobs:
         run: cargo install cargo-bundle
 
       - name: Build release artifact
-        uses: actions-rs/cargo@v1
-        with:
-          command: bundle
-          args: --release
+        working-directory: game
+        run: cargo bundle --release
 
       - name: Move assets to binary
         working-directory: target/release/bundle/osx/Auto Traffic Control.app
