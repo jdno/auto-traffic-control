@@ -114,7 +114,7 @@ jobs:
 
       - name: Publish game to itch.io
         run: |
-          butler push dist ${{ env.itch_project }}:${{ env.itch_channel }} --userversion ${{ env.version }}
+          butler push target/release/bundle/osx ${{ env.itch_project }}:${{ env.itch_channel }} --userversion ${{ env.version }}
         env:
           BUTLER_API_KEY: ${{ secrets.ITCHIO_API_KEY }}
 
@@ -151,15 +151,15 @@ jobs:
         run: cp -r game/assets ./dist/assets
 
       - name: Set version
-        run: echo "version=${{ github.event.release.name }}" >> $GITHUB_ENV
+        run: echo "version=${{ github.event.release.name }}" >> $env:GITHUB_ENV
 
       - name: Set beta channel
         if: github.event.action == 'prereleased'
-        run: echo "itch_channel=windows-beta" >> $GITHUB_ENV
+        run: echo "itch_channel=windows-beta" >> $env:GITHUB_ENV
 
       - name: Set release channel
         if: github.event.action == 'released'
-        run: echo "itch_channel=windows-stable" >> $GITHUB_ENV
+        run: echo "itch_channel=windows-stable" >> $env:GITHUB_ENV
 
       - name: Set up butler
         uses: jdno/setup-butler@v1
