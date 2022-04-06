@@ -61,14 +61,14 @@ jobs:
         if: github.event.action == 'released'
         run: echo "itch_channel=linux-stable" >> $GITHUB_ENV
 
+      - name: Set up butler
+        uses: jdno/setup-butler@v1
+
       - name: Publish game to itch.io
-        uses: robpc/itchio-upload-action@v1
-        with:
-          path: dist
-          project: ${{ env.itch_project }}
-          channel: ${{ env.itch_channel }}
-          version: ${{ env.version }}
-          api-key: ${{ secrets.ITCHIO_API_KEY }}
+        run: |
+          butler push dist ${{ env.itch_project }}:${{ env.itch_channel }} --userversion ${{ env.version }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.ITCHIO_API_KEY }}
 
   macos:
     name: Publish macOS build
@@ -109,14 +109,14 @@ jobs:
         if: github.event.action == 'released'
         run: echo "itch_channel=macos-stable" >> $GITHUB_ENV
 
+      - name: Set up butler
+        uses: jdno/setup-butler@v1
+
       - name: Publish game to itch.io
-        uses: robpc/itchio-upload-action@v1
-        with:
-          path: target/release/bundle/osx
-          project: ${{ env.itch_project }}
-          channel: ${{ env.itch_channel }}
-          version: ${{ env.version }}
-          api-key: ${{ secrets.ITCHIO_API_KEY }}
+        run: |
+          butler push dist ${{ env.itch_project }}:${{ env.itch_channel }} --userversion ${{ env.version }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.ITCHIO_API_KEY }}
 
   windows:
     name: Publish Windows build
@@ -161,11 +161,11 @@ jobs:
         if: github.event.action == 'released'
         run: echo "itch_channel=windows-stable" >> $GITHUB_ENV
 
+      - name: Set up butler
+        uses: jdno/setup-butler@v1
+
       - name: Publish game to itch.io
-        uses: robpc/itchio-upload-action@v1
-        with:
-          path: dist
-          project: ${{ env.itch_project }}
-          channel: ${{ env.itch_channel }}
-          version: ${{ env.version }}
-          api-key: ${{ secrets.ITCHIO_API_KEY }}
+        run: |
+          butler push dist ${{ env.itch_project }}:${{ env.itch_channel }} --userversion ${{ env.version }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.ITCHIO_API_KEY }}
