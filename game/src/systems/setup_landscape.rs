@@ -11,9 +11,14 @@ pub fn setup_landscape(
 ) {
     let mut rng = thread_rng();
 
-    let texture_handle = asset_server.load("sprites/spritesheet.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 8, 5);
-    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+    let landscape_handle = asset_server.load("sprites/landscape.png");
+    let landscape_atlas = TextureAtlas::from_grid(landscape_handle, Vec2::new(32.0, 32.0), 1, 1);
+    let landscape_atlas_handle = texture_atlases.add(landscape_atlas);
+
+    let decorations_handle = asset_server.load("sprites/decorations.png");
+    let decorations_atlas =
+        TextureAtlas::from_grid(decorations_handle, Vec2::new(128.0, 128.0), 4, 2);
+    let decorations_atlas_handle = texture_atlases.add(decorations_atlas);
 
     let horizontal_tiles = (SCREEN_WIDTH as i32 / TILE_SIZE + 1) as i32;
     let vertical_tiles = (SCREEN_HEIGHT as i32 / TILE_SIZE + 1) as i32;
@@ -24,7 +29,7 @@ pub fn setup_landscape(
             let y = (y * TILE_SIZE) as f32;
 
             commands.spawn_bundle(SpriteSheetBundle {
-                texture_atlas: texture_atlas_handle.clone(),
+                texture_atlas: landscape_atlas_handle.clone(),
                 transform: Transform {
                     translation: Vec3::new(x, y, RenderLayer::Landscape.z()),
                     ..Default::default()
@@ -34,24 +39,22 @@ pub fn setup_landscape(
             });
 
             // 25% chance of a decoration
-            let sprite = match rng.gen_range(0..28) {
-                0 => 1, // #
-                1 => 2, // //
-                2 => 3, // {
-                3 => 4, // ;
-                4 => 5, // )
-                5 => 6, // &
-                6 => 7, // }
-                _ => continue,
-            };
+            let sprite = rng.gen_range(0..32);
+            if sprite >= 8 {
+                continue;
+            }
 
             commands.spawn_bundle(SpriteSheetBundle {
-                texture_atlas: texture_atlas_handle.clone(),
+                texture_atlas: decorations_atlas_handle.clone(),
                 transform: Transform {
                     translation: Vec3::new(x - 16.0, y - 16.0, RenderLayer::Decoration.z()),
                     ..Default::default()
                 },
-                sprite: TextureAtlasSprite::new(sprite),
+                sprite: TextureAtlasSprite {
+                    index: sprite,
+                    custom_size: Some(Vec2::new(32.0, 32.0)),
+                    ..Default::default()
+                },
                 ..Default::default()
             });
         }
