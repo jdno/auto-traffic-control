@@ -11,8 +11,8 @@ pub fn setup_airport(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let texture_handle = asset_server.load("sprites/spritesheet.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 8, 5);
+    let texture_handle = asset_server.load("sprites/airports.png");
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(128.0, 128.0), 8, 2);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     for airport in map.airports() {
@@ -20,8 +20,8 @@ pub fn setup_airport(
         let runway_vec3 = airport_vec3 + airport.runway().to_vec3() * Vec3::splat(TILE_SIZE as f32);
 
         let color_offset = match airport.tag() {
-            Tag::Blue => 24,
-            Tag::Red => 32,
+            Tag::Blue => 0,
+            Tag::Red => 8,
         };
 
         let airport_offset = match airport.runway() {
@@ -39,7 +39,11 @@ pub fn setup_airport(
                 translation: airport_vec3,
                 ..Default::default()
             },
-            sprite: TextureAtlasSprite::new(color_offset + airport_offset),
+            sprite: TextureAtlasSprite {
+                index: color_offset + airport_offset,
+                custom_size: Some(Vec2::new(32.0, 32.0)),
+                ..Default::default()
+            },
             ..Default::default()
         });
 
@@ -49,7 +53,11 @@ pub fn setup_airport(
                 translation: runway_vec3,
                 ..Default::default()
             },
-            sprite: TextureAtlasSprite::new(color_offset + runway_offset),
+            sprite: TextureAtlasSprite {
+                index: color_offset + runway_offset,
+                custom_size: Some(Vec2::new(32.0, 32.0)),
+                ..Default::default()
+            },
             ..Default::default()
         });
     }
