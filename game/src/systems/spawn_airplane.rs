@@ -29,8 +29,8 @@ pub fn spawn_airplane(
 ) {
     let mut rng = thread_rng();
 
-    let texture_handle = asset_server.load("sprites/spritesheet.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 8, 5);
+    let texture_handle = asset_server.load("sprites/airplanes.png");
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(128.0, 128.0), 2, 1);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     if timer.0.tick(time.delta()).just_finished() {
@@ -49,8 +49,8 @@ pub fn spawn_airplane(
         };
 
         let color_offset = match tag {
-            Tag::Blue => 10,
-            Tag::Red => 18,
+            Tag::Blue => 0,
+            Tag::Red => 1,
         };
 
         commands
@@ -65,7 +65,11 @@ pub fn spawn_airplane(
                     rotation: Quat::from_rotation_z(direction.to_degree().to_radians()),
                     ..Default::default()
                 },
-                sprite: TextureAtlasSprite::new(color_offset),
+                sprite: TextureAtlasSprite {
+                    index: color_offset,
+                    custom_size: Some(Vec2::new(32.0, 32.0)),
+                    ..Default::default()
+                },
                 ..Default::default()
             })
             .insert(Airplane)
