@@ -8,6 +8,7 @@ pub enum RenderLayer {
     RoutingGrid,
     Airport,
     Airplane,
+    Ui,
 }
 
 impl RenderLayer {
@@ -18,6 +19,7 @@ impl RenderLayer {
             RenderLayer::RoutingGrid => 2.0,
             RenderLayer::Airport => 3.0,
             RenderLayer::Airplane => 4.0,
+            RenderLayer::Ui => 5.0,
         }
     }
 }
