@@ -56,6 +56,13 @@ const config = {
             label: "Docs",
           },
           {
+            type: "doc",
+            docId: "api/introduction",
+            position: "left",
+            label: "API",
+          },
+
+          {
             href: "https://jdno.itch.io/auto-traffic-control",
             label: "itch.io",
             position: "right",
