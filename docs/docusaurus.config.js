@@ -24,11 +24,13 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/jdno/atc/tree/main/docs",
+          editUrl:
+            "https://github.com/jdno/auto-traffic-control/tree/main/docs",
         },
         blog: {
           showReadingTime: true,
-          editUrl: "https://github.com/jdno/atc/tree/main/docs",
+          editUrl:
+            "https://github.com/jdno/auto-traffic-control/tree/main/docs",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -48,7 +50,18 @@ const config = {
         },
         items: [
           {
-            href: "https://github.com/jdno/atc",
+            type: "doc",
+            docId: "getting-started",
+            position: "left",
+            label: "Docs",
+          },
+          {
+            href: "https://jdno.itch.io/auto-traffic-control",
+            label: "itch.io",
+            position: "right",
+          },
+          {
+            href: "https://github.com/jdno/auto-traffic-control",
             label: "GitHub",
             position: "right",
           },
@@ -65,8 +78,12 @@ const config = {
                 to: "/",
               },
               {
+                label: "Download",
+                href: "https://jdno.itch.io/auto-traffic-control",
+              },
+              {
                 label: "Repository",
-                href: "https://github.com/jdno/atc",
+                href: "https://github.com/jdno/auto-traffic-control",
               },
             ],
           },
