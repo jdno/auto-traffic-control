@@ -1,0 +1,7 @@
+---
+# Disable duplicate heading warning, used in API docs for requests and responses
+MD024: false
+
+# Disable check for duplicate title in front matter, used to customize sidebar
+MD025:
+  front_matter_title: ""
