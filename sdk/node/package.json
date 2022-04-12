@@ -4,7 +4,7 @@
   "description": "A video game for programmers about air traffic control",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/jdno/auto-traffic-control/issues"
   },
-  "homepage": "https://auto-traffic-control.com"
+  "homepage": "https://auto-traffic-control.com",
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  }
 }
