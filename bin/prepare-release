@@ -47,6 +47,7 @@ files=(
 	"examples/starter-rust/Cargo.toml"
 	"game/Cargo.toml"
 	"sdk/rust/Cargo.toml"
+	"sdk/rust/README.md"
 	"utilities/debug-client/Cargo.toml"
 )
 
