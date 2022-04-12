@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::{point, Point};
 
-use atc::v1::Node as ApiNode;
+use auto_traffic_control::v1::Node as ApiNode;
 
 use crate::api::AsApi;
 use crate::map::{MAP_HEIGHT, MAP_HEIGHT_RANGE, MAP_WIDTH, MAP_WIDTH_RANGE};

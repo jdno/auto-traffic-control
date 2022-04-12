@@ -7,12 +7,12 @@ use pathfinding::prelude::astar;
 use tokio_stream::StreamExt;
 use tonic::transport::Channel;
 
-use atc::v1::airplane_service_client::AirplaneServiceClient;
-use atc::v1::event_service_client::EventServiceClient;
-use atc::v1::game_service_client::GameServiceClient;
-use atc::v1::get_game_state_response::GameState;
-use atc::v1::stream_response::Event;
-use atc::v1::{
+use auto_traffic_control::v1::airplane_service_client::AirplaneServiceClient;
+use auto_traffic_control::v1::event_service_client::EventServiceClient;
+use auto_traffic_control::v1::game_service_client::GameServiceClient;
+use auto_traffic_control::v1::get_game_state_response::GameState;
+use auto_traffic_control::v1::stream_response::Event;
+use auto_traffic_control::v1::{
     AirplaneDetected, GetGameStateRequest, Node, StartGameRequest, StreamRequest,
     UpdateFlightPlanRequest,
 };

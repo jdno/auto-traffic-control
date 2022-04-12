@@ -1,12 +1,12 @@
 use semver::Version as SemVer;
 use tonic::{Request, Response, Status};
 
-use atc::v1::{GetVersionRequest, GetVersionResponse, Version};
+use auto_traffic_control::v1::{GetVersionRequest, GetVersionResponse, Version};
 
 pub struct AtcService;
 
 #[tonic::async_trait]
-impl atc::v1::atc_service_server::AtcService for AtcService {
+impl auto_traffic_control::v1::atc_service_server::AtcService for AtcService {
     async fn get_version(
         &self,
         _request: Request<GetVersionRequest>,
@@ -29,8 +29,8 @@ impl atc::v1::atc_service_server::AtcService for AtcService {
 mod tests {
     use tonic::Request;
 
-    use atc::v1::atc_service_server::AtcService as ServiceTrait;
-    use atc::v1::GetVersionRequest;
+    use auto_traffic_control::v1::atc_service_server::AtcService as ServiceTrait;
+    use auto_traffic_control::v1::GetVersionRequest;
 
     use super::AtcService;
 

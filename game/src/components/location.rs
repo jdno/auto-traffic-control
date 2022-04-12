@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 use bevy::prelude::*;
 use geo::Point;
 
-use atc::v1::Point as ApiPoint;
+use auto_traffic_control::v1::Point as ApiPoint;
 
 use crate::api::AsApi;
 use crate::map::Node;

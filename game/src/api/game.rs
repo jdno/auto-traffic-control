@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use tonic::{Request, Response, Status};
 
-use atc::v1::{GetGameStateRequest, GetGameStateResponse, StartGameRequest, StartGameResponse};
+use auto_traffic_control::v1::{
+    GetGameStateRequest, GetGameStateResponse, StartGameRequest, StartGameResponse,
+};
 
 use crate::command::{Command, CommandSender};
 use crate::store::{SharedGameState, Store};
@@ -23,7 +25,7 @@ impl GameService {
 }
 
 #[tonic::async_trait]
-impl atc::v1::game_service_server::GameService for GameService {
+impl auto_traffic_control::v1::game_service_server::GameService for GameService {
     async fn get_game_state(
         &self,
         _request: Request<GetGameStateRequest>,
@@ -54,9 +56,9 @@ mod tests {
     use tokio::sync::broadcast::channel;
     use tonic::{Code, Request};
 
-    use atc::v1::game_service_server::GameService as ServiceTrait;
-    use atc::v1::get_game_state_response::GameState;
-    use atc::v1::{GetGameStateRequest, StartGameRequest};
+    use auto_traffic_control::v1::game_service_server::GameService as ServiceTrait;
+    use auto_traffic_control::v1::get_game_state_response::GameState;
+    use auto_traffic_control::v1::{GetGameStateRequest, StartGameRequest};
 
     use crate::command::{Command, CommandReceiver};
     use crate::Store;

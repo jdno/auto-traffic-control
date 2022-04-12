@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use atc::v1::get_game_state_response::GameState;
-use atc::v1::Airplane;
+use auto_traffic_control::v1::get_game_state_response::GameState;
+use auto_traffic_control::v1::Airplane;
 
 use crate::api::AsApi;
 use crate::components::{AirplaneId, FlightPlan, Location, Tag};

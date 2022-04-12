@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use atc::v1::update_flight_plan_error::ValidationError;
-use atc::v1::Node as ApiNode;
+use auto_traffic_control::v1::update_flight_plan_error::ValidationError;
+use auto_traffic_control::v1::Node as ApiNode;
 
 use crate::api::AsApi;
 use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
@@ -110,8 +110,8 @@ impl FlightPlan {
     }
 }
 
-impl From<&Vec<atc::v1::Node>> for FlightPlan {
-    fn from(api_flight_plan: &Vec<atc::v1::Node>) -> Self {
+impl From<&Vec<auto_traffic_control::v1::Node>> for FlightPlan {
+    fn from(api_flight_plan: &Vec<auto_traffic_control::v1::Node>) -> Self {
         let tiles = api_flight_plan
             .iter()
             .rev()
@@ -132,7 +132,7 @@ impl AsApi for FlightPlan {
 
 #[cfg(test)]
 mod tests {
-    use atc::v1::update_flight_plan_error::ValidationError;
+    use auto_traffic_control::v1::update_flight_plan_error::ValidationError;
 
     use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
 

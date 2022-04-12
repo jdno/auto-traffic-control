@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use atc::v1::Map as ApiMap;
+use auto_traffic_control::v1::Map as ApiMap;
 
 use crate::api::AsApi;
 use crate::components::Tag;

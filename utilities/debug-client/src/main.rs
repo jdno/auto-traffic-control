@@ -1,8 +1,8 @@
 use tokio_stream::StreamExt;
 
-use atc::v1::event_service_client::EventServiceClient;
-use atc::v1::stream_response::Event;
-use atc::v1::StreamRequest;
+use auto_traffic_control::v1::event_service_client::EventServiceClient;
+use auto_traffic_control::v1::stream_response::Event;
+use auto_traffic_control::v1::StreamRequest;
 
 fn should_print(event: &Event) -> bool {
     match event {

@@ -1,18 +1,17 @@
 [package]
-name = "atc"
+name = "auto-traffic-control"
 license = "MIT OR Apache-2.0"
 version = "0.1.0"
 edition = "2021"
 
 rust-version = "1.56"
 
-description = "A video game for programmers about safely routing airplanes"
-repository = "https://github.com/jdno/atc"
+description = "A video game for programmers about air traffic control"
+homepage = "https://auto-traffic-control.com"
+repository = "https://github.com/jdno/auto-traffic-control"
 categories = [
     "games"
 ]
-
-publish = false
 
 # See more keys and their definitions at
 # https://doc.rust-lang.org/cargo/reference/manifest.html
