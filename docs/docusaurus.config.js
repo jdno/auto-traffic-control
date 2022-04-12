@@ -8,7 +8,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const config = {
   title: "Auto Traffic Control",
   tagline: "A Video Game for Programmers",
-  url: "https://autotrafficcontrol.com",
+  url: "https://auto-traffic-control.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
