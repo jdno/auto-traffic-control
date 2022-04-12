@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Enable strict mode for Bash
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+IFS=$'\n\t'
+
+bin_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+root_directory="$(cd "${bin_directory}/../../.." || exit 1 && pwd)"
+proto_directory="$root_directory/api"
+
+protobufs=$(find "$proto_directory" -name '*.proto')
+
+# Compile Protocol Buffers to Javascript
+# shellcheck disable=SC2086
+./node_modules/.bin/grpc_tools_node_protoc \
+	--proto_path="$proto_directory" \
+	--plugin=protoc-gen-grpc=./node_modules/.bin/grpc_tools_node_protoc_plugin \
+	--js_out=import_style=commonjs:src \
+	--grpc_out=grpc_js:src \
+	$protobufs
+
+# Generate TypeScript definitions
+# shellcheck disable=SC2086
+protoc \
+	--plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \
+	--ts_out=grpc_js:src \
+	-I "$proto_directory" \
+	$protobufs
+
+# Compile TypeScript wrapper around generated code
+./node_modules/.bin/tsc -p tsconfig.json
