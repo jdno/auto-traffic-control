@@ -1,0 +1,30 @@
+---
+name: SDK
+
+"on":
+  release:
+    types:
+      - prereleased
+      - released
+
+jobs:
+  rust:
+    name: Publish Rust SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache build artifacts
+        uses: swatinem/rust-cache@v1.4.0
+
+      - name: Publish to crates.io
+        working-directory: sdk/rust
+        run: cargo publish --token ${{ secrets.CRATES_TOKEN }} -v --all-features
