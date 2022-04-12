@@ -1,11 +1,13 @@
 {
   "name": "auto-traffic-control",
-  "version": "0.2.0-alpha.2",
+  "version": "0.2.0-alpha.3",
   "description": "A video game for programmers about air traffic control",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "bin/build"
+    "build": "bin/build",
+    "clean": "rm -rf dist",
+    "prepack": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
