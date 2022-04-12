@@ -1,5 +1,5 @@
 use crate::{Coord, Point};
-use atc::v1::Tag;
+use auto_traffic_control::v1::Tag;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Airport {

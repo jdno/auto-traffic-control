@@ -1,4 +1,4 @@
-use atc::v1::Airport as ApiAirport;
+use auto_traffic_control::v1::Airport as ApiAirport;
 
 use crate::api::AsApi;
 use crate::components::Tag;

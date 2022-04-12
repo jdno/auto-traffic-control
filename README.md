@@ -2,9 +2,17 @@
 
 [![GitHub branch checks state](https://img.shields.io/github/checks-status/jdno/atc/main)](https://github.com/jdno/atc/actions)
 
-**Auto Traffic Control** is a video game for programmers. Players have to safely
-route airplanes to an airport, which they do by writing code that interacts with
-the game world.
+[Homepage](https://auto-traffic-control.com) |
+[Documentation](https://auto-traffic-control.com/docs/getting-started) |
+[Community](https://github.com/jdno/auto-traffic-control/discussions)
+
+**Auto Traffic Control** is a video game played by programming. The player's
+task is to create a program that can safely manage the airspace above two
+airports.
+
+The game is designed to provide an open-ended sandbox that players can use to
+freely practice programming. The game provides a language-agnostic gRPC API,
+giving players free choice of programming language or paradigm.
 
 ## License
 

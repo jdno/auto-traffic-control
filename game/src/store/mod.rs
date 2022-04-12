@@ -3,8 +3,8 @@ use std::sync::Arc;
 use dashmap::DashMap;
 use parking_lot::Mutex;
 
-use atc::v1::get_game_state_response::GameState;
-use atc::v1::Airplane;
+use auto_traffic_control::v1::get_game_state_response::GameState;
+use auto_traffic_control::v1::Airplane;
 
 use crate::map::Map;
 

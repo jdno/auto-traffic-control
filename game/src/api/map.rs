@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use tonic::{Request, Response, Status};
 
-use atc::v1::{GetMapRequest, GetMapResponse, NodeToPointRequest, NodeToPointResponse, Point};
+use auto_traffic_control::v1::{
+    GetMapRequest, GetMapResponse, NodeToPointRequest, NodeToPointResponse, Point,
+};
 
 use crate::api::AsApi;
 use crate::map::Node;
@@ -20,7 +22,7 @@ impl MapService {
 }
 
 #[tonic::async_trait]
-impl atc::v1::map_service_server::MapService for MapService {
+impl auto_traffic_control::v1::map_service_server::MapService for MapService {
     async fn get_map(
         &self,
         _request: Request<GetMapRequest>,
@@ -55,8 +57,8 @@ mod tests {
 
     use tonic::Request;
 
-    use atc::v1::map_service_server::MapService as ServiceTrait;
-    use atc::v1::{Airport, GetMapRequest, Node, NodeToPointRequest, Tag};
+    use auto_traffic_control::v1::map_service_server::MapService as ServiceTrait;
+    use auto_traffic_control::v1::{Airport, GetMapRequest, Node, NodeToPointRequest, Tag};
 
     use crate::store::Store;
 

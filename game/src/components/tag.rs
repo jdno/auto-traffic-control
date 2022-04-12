@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use atc::v1::Tag as ApiTag;
+use auto_traffic_control::v1::Tag as ApiTag;
 
 use crate::api::AsApi;
 

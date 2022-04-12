@@ -4,11 +4,11 @@ use std::sync::Arc;
 
 use tonic::transport::{Error, Server as GrpcServer};
 
-use ::atc::v1::airplane_service_server::AirplaneServiceServer;
-use ::atc::v1::atc_service_server::AtcServiceServer;
-use ::atc::v1::event_service_server::EventServiceServer;
-use ::atc::v1::game_service_server::GameServiceServer;
-use ::atc::v1::map_service_server::MapServiceServer;
+use ::auto_traffic_control::v1::airplane_service_server::AirplaneServiceServer;
+use ::auto_traffic_control::v1::atc_service_server::AtcServiceServer;
+use ::auto_traffic_control::v1::event_service_server::EventServiceServer;
+use ::auto_traffic_control::v1::game_service_server::GameServiceServer;
+use ::auto_traffic_control::v1::map_service_server::MapServiceServer;
 
 use crate::command::CommandSender;
 use crate::event::EventSender;

@@ -1,5 +1,5 @@
-use atc::v1::stream_response::Event as ApiEvent;
-use atc::v1::{
+use auto_traffic_control::v1::stream_response::Event as ApiEvent;
+use auto_traffic_control::v1::{
     Airplane, AirplaneCollided, AirplaneDetected, AirplaneLanded, AirplaneMoved, FlightPlanUpdated,
     GameStarted, GameStopped, LandingAborted,
 };
@@ -26,7 +26,7 @@ pub enum Event {
 }
 
 impl AsApi for Event {
-    type ApiType = atc::v1::stream_response::Event;
+    type ApiType = auto_traffic_control::v1::stream_response::Event;
 
     fn as_api(&self) -> Self::ApiType {
         match self {

@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use tonic::{Request, Response, Status};
 
-use atc::v1::update_flight_plan_response::Payload;
-use atc::v1::{
+use auto_traffic_control::v1::update_flight_plan_response::Payload;
+use auto_traffic_control::v1::{
     GetAirplaneRequest, GetAirplaneResponse, UpdateFlightPlanError, UpdateFlightPlanRequest,
     UpdateFlightPlanResponse, UpdateFlightPlanSuccess,
 };
@@ -32,7 +32,7 @@ impl AirplaneService {
 }
 
 #[tonic::async_trait]
-impl atc::v1::airplane_service_server::AirplaneService for AirplaneService {
+impl auto_traffic_control::v1::airplane_service_server::AirplaneService for AirplaneService {
     async fn get_airplane(
         &self,
         request: Request<GetAirplaneRequest>,
@@ -103,10 +103,10 @@ mod tests {
     use tokio::sync::broadcast::channel;
     use tonic::{Code, Request};
 
-    use atc::v1::airplane_service_server::AirplaneService as ServiceTrait;
-    use atc::v1::update_flight_plan_error::ValidationError;
-    use atc::v1::update_flight_plan_response::Payload;
-    use atc::v1::{Airplane, GetAirplaneRequest, UpdateFlightPlanRequest};
+    use auto_traffic_control::v1::airplane_service_server::AirplaneService as ServiceTrait;
+    use auto_traffic_control::v1::update_flight_plan_error::ValidationError;
+    use auto_traffic_control::v1::update_flight_plan_response::Payload;
+    use auto_traffic_control::v1::{Airplane, GetAirplaneRequest, UpdateFlightPlanRequest};
 
     use crate::api::airplane::AirplaneService;
     use crate::api::AsApi;

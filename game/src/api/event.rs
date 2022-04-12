@@ -5,7 +5,7 @@ use tokio_stream::StreamExt;
 use tonic::codegen::futures_core::Stream;
 use tonic::{Request, Response, Status};
 
-use atc::v1::{StreamRequest, StreamResponse};
+use auto_traffic_control::v1::{StreamRequest, StreamResponse};
 
 use crate::api::AsApi;
 use crate::event::EventSender;
@@ -22,7 +22,7 @@ impl EventService {
 }
 
 #[tonic::async_trait]
-impl atc::v1::event_service_server::EventService for EventService {
+impl auto_traffic_control::v1::event_service_server::EventService for EventService {
     type StreamStream =
         Pin<Box<dyn Stream<Item = Result<StreamResponse, Status>> + Send + Sync + 'static>>;
 

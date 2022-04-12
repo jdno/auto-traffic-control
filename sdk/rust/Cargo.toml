@@ -1,18 +1,22 @@
 [package]
-name = "atc"
+name = "auto-traffic-control"
 license = "MIT OR Apache-2.0"
 version = "0.1.0"
 edition = "2021"
 
 rust-version = "1.56"
 
-description = "A video game for programmers about safely routing airplanes"
-repository = "https://github.com/jdno/atc"
+description = "A video game for programmers about air traffic control"
+homepage = "https://auto-traffic-control.com"
+repository = "https://github.com/jdno/auto-traffic-control"
 categories = [
+    "api-bindings",
     "games"
 ]
-
-publish = false
+keywords = [
+    "game",
+    "gamedev",
+]
 
 # See more keys and their definitions at
 # https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -22,6 +26,9 @@ publish = false
 # gRPC backend. Only Auto Traffic Control itself needs this feature.
 server = []
 
+[[example]]
+name = "get_version"
+
 [dependencies]
 prost = "0.10.0"
 tonic = "0.7.1"
@@ -29,3 +36,6 @@ tonic = "0.7.1"
 [build-dependencies]
 glob = "0.3.0"
 tonic-build = "0.7.0"
+
+[dev-dependencies]
+tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
