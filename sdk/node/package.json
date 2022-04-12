@@ -1,0 +1,22 @@
+{
+  "name": "auto-traffic-control",
+  "version": "0.2.0-alpha.1",
+  "description": "A video game for programmers about air traffic control",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdno/auto-traffic-control.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "Jan David",
+  "license": "(MIT OR Apache-2.0)",
+  "bugs": {
+    "url": "https://github.com/jdno/auto-traffic-control/issues"
+  },
+  "homepage": "https://auto-traffic-control.com"
+}
