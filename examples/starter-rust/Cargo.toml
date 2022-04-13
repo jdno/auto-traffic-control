@@ -18,7 +18,7 @@ publish = false
 [dependencies]
 auto-traffic-control = { path = "../../sdk/rust", version = "0.1.0", features = ["server"] }
 
-pathfinding = "3.0.11"
+pathfinding = "3.0.12"
 tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
 tokio-stream = { version = "0.1.8" }
 tonic = "0.7.1"
