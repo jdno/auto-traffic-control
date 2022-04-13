@@ -19,3 +19,18 @@ jobs:
         uses: bufbuild/buf-lint-action@v1.0.0
         with:
           input: api
+
+  style:
+    name: Check style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Buf
+        uses: bufbuild/buf-setup-action@v1.3.1
+
+      - name: Run Buf
+        working-directory: api
+        run: buf format --exit-code
