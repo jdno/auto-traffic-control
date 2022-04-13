@@ -30,7 +30,7 @@ server = []
 name = "get_version"
 
 [dependencies]
-prost = "0.10.0"
+prost = "0.10.1"
 tonic = "0.7.1"
 
 [build-dependencies]
