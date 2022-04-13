@@ -11,7 +11,7 @@ freely practice programming. The game provides a language-agnostic
 [gRPC] API, giving players free choice of programming language or paradigm.
 
 :::tip
-Check out the [Getting Started](/docs/getting-started) guide to start playing.
+Check out the [Getting Started](/docs) guide to start playing.
 :::
 
 ## Features

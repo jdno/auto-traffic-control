@@ -51,13 +51,13 @@ const config = {
         items: [
           {
             type: "doc",
-            docId: "getting-started",
+            docId: "index",
             position: "left",
             label: "Docs",
           },
           {
             type: "doc",
-            docId: "api/introduction",
+            docId: "api/index",
             position: "left",
             label: "API",
           },
