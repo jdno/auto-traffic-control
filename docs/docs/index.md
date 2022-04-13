@@ -1,4 +1,8 @@
-# Getting Started
+---
+title: Quickstart
+---
+
+# Quickstart
 
 ## 👋 Welcome
 
@@ -92,7 +96,7 @@ a connection to the server, you can start playing the game by sending the
 
 Have fun exploring the game!
 
-[getting started]: /docs/getting-started
+[getting started]: /docs
 [github]: https://github.com/jdno/auto-traffic-control
 [grpc]: https://grpc.io/
 [itch.io]: https://itch.io

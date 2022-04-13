@@ -3,7 +3,7 @@
 [![GitHub branch checks state](https://img.shields.io/github/checks-status/jdno/atc/main)](https://github.com/jdno/atc/actions)
 
 [Homepage](https://auto-traffic-control.com) |
-[Documentation](https://auto-traffic-control.com/docs/getting-started) |
+[Documentation](https://auto-traffic-control.com/docs) |
 [Community](https://github.com/jdno/auto-traffic-control/discussions)
 
 **Auto Traffic Control** is a video game played by programming. The player's
