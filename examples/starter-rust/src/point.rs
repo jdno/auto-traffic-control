@@ -1,8 +1,6 @@
 use std::ops::Deref;
 use std::rc::Rc;
 
-use pathfinding::prelude::*;
-
 use crate::map::Map;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
@@ -17,7 +15,7 @@ pub struct Point {
 
 impl Point {
     pub fn distance(&self, other: &Point) -> u32 {
-        (absdiff(self.x, other.x) + absdiff(self.y, other.y)) as u32
+        (self.x.abs_diff(other.x) + self.y.abs_diff(other.y)) as u32
     }
 
     pub fn neighbors(&self) -> Vec<(Point, u32)> {
