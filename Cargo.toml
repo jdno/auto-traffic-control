@@ -7,4 +7,5 @@ members = [
     "examples/starter-rust",
     "sdk/rust",
     "utilities/debug-client",
+    "utilities/test-server",
 ]
