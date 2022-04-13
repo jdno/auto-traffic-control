@@ -29,31 +29,7 @@ over your own code. Which means this getting started guide can only show you an
 example that you can copy, tweak, or ignore. Whatever you choose to do, the goal
 of this step is to set up a runnable program.
 
-Below are two examples, one using [Node](#node) and one using [Rust](#rust).
-
-### Node
-
-First, create a new project for your program.
-
-```shell
-npm init
-```
-
-Then create an `index.js` file and paste in the following content:
-
-```javascript
-function main() {
-  console.log("Hello, World!");
-}
-
-main();
-```
-
-You can run the program with the following command:
-
-```shell
-node index.js
-```
+Below is an example for getting started with Rust.
 
 ### Rust
 
@@ -82,7 +58,7 @@ package as a dependency to your project.
 
 | Language | Package                                                                                                             |
 | -------- | ------------------------------------------------------------------------------------------------------------------- |
-| Node     | [![npm](https://img.shields.io/npm/v/auto-traffic-control)](https://www.npmjs.com/package/auto-traffic-control)     |
+| Node     | _coming soon_                                                                                                       |
 | Rust     | [![Crates.io](https://img.shields.io/crates/v/auto-traffic-control)](https://crates.io/crates/auto-traffic-control) |
 
 <!-- markdownlint-enable line-length -->
