@@ -59,7 +59,7 @@ done
 echo "Updating changelog..."
 
 vim -c "%s/^\* /- /g" -c "wq" "${root_directory}/CHANGELOG.md"
-vim -c "%s!https://github\.com/jdno/atc/pull/\(\d\+\)![#\1](https://github.com/jdno/atc/pull/\1)!g" -c "wq" "${root_directory}/CHANGELOG.md"
+vim -c "%s!https://github\.com/jdno/auto-traffic-control/pull/\(\d\+\)![#\1](https://github.com/jdno/auto-traffic-control/pull/\1)!g" -c "wq" "${root_directory}/CHANGELOG.md"
 vim -c "%s!@\(\w\+\)![@\1](https://github.com/\1)!g" -c "wq" "${root_directory}/CHANGELOG.md"
 
 # Commit changes
