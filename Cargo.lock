@@ -209,7 +209,7 @@ dependencies = [
 
 [[package]]
 name = "auto-traffic-control"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "glob",
  "prost",
@@ -220,7 +220,7 @@ dependencies = [
 
 [[package]]
 name = "auto-traffic-control-game"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "auto-traffic-control",
  "bevy",
@@ -1331,7 +1331,7 @@ dependencies = [
 
 [[package]]
 name = "debug-client"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "auto-traffic-control",
  "tokio",
@@ -3209,7 +3209,7 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "starter-rust"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "auto-traffic-control",
  "pathfinding",
