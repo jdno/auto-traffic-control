@@ -45,7 +45,7 @@ jobs:
         run: mkdir ./dist
 
       - name: Copy release artifact into distribution folder
-        run: cp target/release/auto-traffic-control ./dist/auto-traffic-control
+        run: cp target/release/auto-traffic-control-game ./dist/auto-traffic-control
 
       - name: Copy assets into distribution folder
         run: cp -r game/assets ./dist/assets
@@ -145,7 +145,7 @@ jobs:
         run: mkdir ./dist
 
       - name: Copy release artifact into distribution folder
-        run: cp target/release/auto-traffic-control.exe ./dist/auto-traffic-control.exe
+        run: cp target/release/auto-traffic-control-game.exe ./dist/auto-traffic-control.exe
 
       - name: Copy assets into distribution folder
         run: cp -r game/assets ./dist/assets
