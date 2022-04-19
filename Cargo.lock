@@ -219,6 +219,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "auto-traffic-control-example"
+version = "0.2.0"
+dependencies = [
+ "auto-traffic-control",
+ "tokio",
+]
+
+[[package]]
 name = "auto-traffic-control-game"
 version = "0.2.0"
 dependencies = [
@@ -2043,15 +2051,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "integer-sqrt"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "276ec31bcb4a9ee45f58bec6f9ec700ae4cf4f4f8f2fa7e06cb406bd5ffdd770"
-dependencies = [
- "num-traits",
-]
-
-[[package]]
 name = "io-kit-sys"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2715,21 +2714,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pathfinding"
-version = "3.0.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d08659d5e25818f3234e84f365db8fe93a5ddf028c7fb9fdc1bd34004750d8d"
-dependencies = [
- "fixedbitset",
- "indexmap",
- "integer-sqrt",
- "itertools",
- "num-traits",
- "rustc-hash",
- "thiserror",
-]
-
-[[package]]
 name = "pdqselect"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3245,17 +3229,6 @@ name = "stable_deref_trait"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
-
-[[package]]
-name = "starter-rust"
-version = "0.2.0"
-dependencies = [
- "auto-traffic-control",
- "pathfinding",
- "tokio",
- "tokio-stream",
- "tonic",
-]
 
 [[package]]
 name = "stdweb"

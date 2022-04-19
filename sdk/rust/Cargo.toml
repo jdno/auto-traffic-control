@@ -26,9 +26,6 @@ keywords = [
 # gRPC backend. Only Auto Traffic Control itself needs this feature.
 server = []
 
-[[example]]
-name = "get_version"
-
 [dependencies]
 prost = "0.10.1"
 tonic = "0.7.1"
