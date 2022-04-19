@@ -1,7 +1,11 @@
 ---
 name: Rust
 
-"on": [push]
+"on":
+  push:
+    paths:
+      - "**.rs"
+      - "**.toml"
 
 env:
   CARGO_INCREMENTAL: 0

@@ -1,7 +1,11 @@
 ---
 name: YAML
 
-"on": [push]
+"on":
+  push:
+    paths:
+      - "**.yaml"
+      - "**.yml"
 
 jobs:
   lint:

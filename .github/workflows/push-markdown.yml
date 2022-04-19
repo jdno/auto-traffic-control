@@ -1,7 +1,10 @@
 ---
 name: Markdown
 
-"on": [push]
+"on":
+  push:
+    paths:
+      - "**.md"
 
 jobs:
   lint:
