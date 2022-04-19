@@ -1,0 +1,33 @@
+{
+  "name": "auto-traffic-control-example",
+  "version": "0.2.0",
+  "description": "An example showing how to use Auto Traffic Control's API",
+  "private": true,
+  "main": "main.ts",
+  "scripts": {
+    "start": "npx ts-node main.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdno/auto-traffic-control.git"
+  },
+  "keywords": [
+    "game",
+    "api",
+    "grpc"
+  ],
+  "author": "Jan David",
+  "license": "(MIT OR Apache-2.0)",
+  "bugs": {
+    "url": "https://github.com/jdno/auto-traffic-control/issues"
+  },
+  "homepage": "https://github.com/jdno/auto-traffic-control#readme",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.6.6",
+    "auto-traffic-control": "^0.3.0-alpha.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}
