@@ -19,7 +19,7 @@ impl CommandBus {
 
 impl FromWorld for CommandBus {
     fn from_world(world: &mut World) -> Self {
-        let sender = world.get_resource::<CommandSender>().unwrap();
+        let sender = world.resource::<CommandSender>();
 
         Self {
             receiver: sender.subscribe(),
