@@ -16,10 +16,8 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y \
-          protobuf-compiler
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Print version of protoc
         run: protoc --version
