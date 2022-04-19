@@ -31,7 +31,7 @@ jobs:
           cache-dependency-path: sdk/node/package-lock.json
 
       - name: Install dependencies for Buf
-        run: npm install -g grpc_tools_node_protoc_plugin grpc-tools
+        run: npm install -g grpc_tools_node_protoc_ts grpc-tools
 
       - name: Set up Buf
         uses: bufbuild/buf-setup-action@v1.3.1
@@ -59,7 +59,7 @@ jobs:
           path: sdk/node/**
 
   test-server:
-    name: Build test-server
+    name: Build test server
     runs-on: ubuntu-latest
 
     steps:
