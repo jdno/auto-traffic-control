@@ -1,6 +1,6 @@
 # 🛬 Auto Traffic Control
 
-[![GitHub branch checks state](https://img.shields.io/github/checks-status/jdno/atc/main)](https://github.com/jdno/atc/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jdno/auto-traffic-control/main)](https://github.com/jdno/auto-traffic-control/actions)
 
 [Homepage](https://auto-traffic-control.com) |
 [Documentation](https://auto-traffic-control.com/docs) |
