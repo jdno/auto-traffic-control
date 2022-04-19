@@ -11,6 +11,15 @@
 - name: C-feature-request
   color: e74c3c
   description: "Request a new feature"
+- name: L-github
+  color: 34495e
+  description: "Tag the GitHub ecosystem"
+- name: L-node
+  color: 34495e
+  description: "Tag the Node ecosystem"
+- name: L-rust
+  color: 34495e
+  description: "Tag the Rust ecosystem"
 - name: R-added
   color: 95a5a6
   description: "Add a new feature to the release notes"
