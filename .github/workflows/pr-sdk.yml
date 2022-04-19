@@ -1,0 +1,88 @@
+---
+name: SDK
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/pr-sdk.yml"
+      - "api/**"
+      - "examples/**"
+      - "sdk/**"
+      - "utilities/test-server/**"
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_PROFILE_TEST_DEBUG: 0
+
+jobs:
+  test-server:
+    name: Build test-server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache build artifacts
+        uses: swatinem/rust-cache@v1.4.0
+
+      - name: Compile test-server
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: -p test-server
+
+      - name: Upload test-server
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-server
+          path: target/debug/test-server
+
+  rust:
+    name: Test Rust bot
+    runs-on: ubuntu-latest
+
+    needs: test-server
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache build artifacts
+        uses: swatinem/rust-cache@v1.4.0
+
+      - name: Compile Rust example
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: -p auto-traffic-control-example
+
+      - name: Download test-server
+        uses: actions/download-artifact@v3
+        with:
+          name: test-server
+          path: bin
+
+      - name: Set permissions for test-server
+        run: chmod +x bin/test-server
+
+      - name: Start test-server
+        run: bin/test-server &
+
+      - name: Run Rust example
+        uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: -p auto-traffic-control-example
