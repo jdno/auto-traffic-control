@@ -18,7 +18,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         println!("Auto Traffic Control is running version '{version_string}'");
     } else {
-        println!("Requesting the version returned an empty response.");
+        panic!("Requesting the version returned an empty response.");
     }
 
     Ok(())

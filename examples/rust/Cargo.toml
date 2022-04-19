@@ -1,11 +1,12 @@
 [package]
-name = "starter-rust"
+name = "auto-traffic-control-example"
 license = "MIT OR Apache-2.0"
 version = "0.2.0"
 edition = "2021"
 
-description = "A starter bot for the video game Auto Traffic Control"
-repository = "https://github.com/jdno/atc"
+description = "An example showing how to use Auto Traffic Control's API"
+homepage = "https://auto-traffic-control.com"
+repository = "https://github.com/jdno/auto-traffic-control"
 categories = [
     "games"
 ]
@@ -16,9 +17,6 @@ publish = false
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-auto-traffic-control = { path = "../../sdk/rust", version = "0.2.0", features = ["server"] }
+auto-traffic-control = { path = "../../sdk/rust", version = "0.2.0" }
 
-pathfinding = "3.0.12"
 tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
-tokio-stream = { version = "0.1.8" }
-tonic = "0.7.1"

@@ -3,8 +3,8 @@
 resolver = "2"
 
 members = [
+    "examples/rust",
     "game",
-    "examples/starter-rust",
     "sdk/rust",
     "utilities/debug-client",
     "utilities/test-server",
