@@ -34,15 +34,13 @@ message UpdateFlightPlanResponse {
 
 message UpdateFlightPlanSuccess {}
 message UpdateFlightPlanError {
-  // buf:lint:ignore ENUM_VALUE_PREFIX
-  // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX
   enum ValidationError {
-    UNSPECIFIED = 0;
-    NODE_OUTSIDE_MAP = 1;
-    INVALID_STEP = 2;
-    SHARP_TURN = 3;
-    INVALID_START = 4;
-    RESTRICTED_NODE = 5;
+    VALIDATION_ERROR_UNSPECIFIED = 0;
+    VALIDATION_ERROR_NODE_OUTSIDE_MAP = 1;
+    VALIDATION_ERROR_INVALID_STEP = 2;
+    VALIDATION_ERROR_SHARP_TURN = 3;
+    VALIDATION_ERROR_INVALID_START = 4;
+    VALIDATION_ERROR_RESTRICTED_NODE = 5;
   }
   repeated ValidationError errors = 1;
 }
