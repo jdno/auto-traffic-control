@@ -3377,6 +3377,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "test-server"
+version = "0.2.0"
+dependencies = [
+ "auto-traffic-control",
+ "prost",
+ "semver 1.0.7",
+ "tokio",
+ "tonic",
+]
+
+[[package]]
 name = "thiserror"
 version = "1.0.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"

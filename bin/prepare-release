@@ -49,6 +49,7 @@ files=(
 	"sdk/rust/Cargo.toml"
 	"sdk/rust/README.md"
 	"utilities/debug-client/Cargo.toml"
+	"utilities/test-server/Cargo.toml"
 )
 
 for file in "${files[@]}"; do

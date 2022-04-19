@@ -1,0 +1,23 @@
+[package]
+name = "test-server"
+license = "MIT OR Apache-2.0"
+version = "0.2.0"
+edition = "2021"
+
+rust-version = "1.56"
+
+description = "Run a mock server for integration tests"
+repository = "https://github.com/jdno/auto-traffic-control"
+
+publish = false
+
+# See more keys and their definitions at
+# https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+auto-traffic-control = { path = "../../sdk/rust", version = "0.2.0", features = ["server"] }
+
+prost = "0.10.1"
+semver = "1.0.7"
+tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
+tonic = "0.7.1"
