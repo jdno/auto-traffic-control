@@ -44,6 +44,43 @@ jobs:
           name: test-server
           path: target/debug/test-server
 
+  javascript:
+    name: Test JavaScript bot
+    runs-on: ubuntu-latest
+
+    needs: test-server
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: examples/javascript/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./examples/javascript
+        run: npm install
+
+      - name: Download test-server
+        uses: actions/download-artifact@v3
+        with:
+          name: test-server
+          path: bin
+
+      - name: Set permissions for test-server
+        run: chmod +x bin/test-server
+
+      - name: Start test-server
+        run: bin/test-server &
+
+      - name: Run JavaScript example
+        working-directory: ./examples/javascript
+        run: npm start
+
   rust:
     name: Test Rust bot
     runs-on: ubuntu-latest
@@ -86,3 +123,40 @@ jobs:
         with:
           command: run
           args: -p auto-traffic-control-example
+
+  typescript:
+    name: Test TypeScript bot
+    runs-on: ubuntu-latest
+
+    needs: test-server
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: examples/typescript/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./examples/typescript
+        run: npm install
+
+      - name: Download test-server
+        uses: actions/download-artifact@v3
+        with:
+          name: test-server
+          path: bin
+
+      - name: Set permissions for test-server
+        run: chmod +x bin/test-server
+
+      - name: Start test-server
+        run: bin/test-server &
+
+      - name: Run JavaScript example
+        working-directory: ./examples/typescript
+        run: npm start
