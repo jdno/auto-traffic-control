@@ -20,6 +20,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+          protobuf-compiler
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -30,7 +35,7 @@ jobs:
           cache: npm
           cache-dependency-path: sdk/node/package-lock.json
 
-      - name: Install dependencies for Buf
+      - name: Install Buf dependencies
         run: npm install -g grpc_tools_node_protoc_ts grpc-tools
 
       - name: Set up Buf
