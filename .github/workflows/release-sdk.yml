@@ -8,6 +8,58 @@ name: SDK
       - released
 
 jobs:
+  node:
+    name: Node
+    runs-on: ubuntu-latest
+
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print version of protoc
+        run: protoc --version
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: sdk/node/package-lock.json
+
+      - name: Install Buf dependencies
+        run: npm install -g grpc_tools_node_protoc_plugin_ts grpc-tools
+
+      - name: Set up Buf
+        uses: bufbuild/buf-setup-action@v1.3.1
+
+      - name: Run Buf
+        working-directory: api
+        run: buf generate
+
+      - name: Install dependencies
+        working-directory: ./sdk/node
+        run: npm install
+
+      - name: Authenticate using a token
+        working-directory: ./sdk/node
+        run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
+
+      - name: Build Node client
+        working-directory: ./sdk/node
+        run: npm run build
+
+      - name: Publish to npm
+        working-directory: ./sdk/node
+        run: npm publish
+
   rust:
     name: Publish Rust SDK
     runs-on: ubuntu-latest

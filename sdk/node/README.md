@@ -1,7 +1,7 @@
 # 🛬 Auto Traffic Control
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jdno/auto-traffic-control/main)](https://github.com/jdno/auto-traffic-control/actions)
-[![Version](https://img.shields.io/crates/v/auto-traffic-control)](https://crates.io/crates/auto-traffic-control)
+[![Version](https://img.shields.io/npm/v/auto-traffic-control)](https://crates.io/crates/auto-traffic-control)
 [![License](https://img.shields.io/crates/l/auto-traffic-control)](https://crates.io/crates/auto-traffic-control)
 
 [Homepage](https://auto-traffic-control.com) |
@@ -16,57 +16,62 @@ The game is designed to provide an open-ended sandbox that players can use to
 freely practice programming. The game provides a language-agnostic gRPC API,
 giving players free choice of programming language or paradigm.
 
-This crate contains the auto-generated Rust SDK for the game's gRPC API.
+This crate contains the auto-generated Node SDK for the game's gRPC API.
 
 ## Usage
 
-First, add `auto-traffic-control` as a new dependency to your `Cargo.toml`.
+First, install `auto-traffic-control` as a new dependency:
 
-```toml
-[dependencies]
-auto-traffic-control = "0.2.0"
+```shell
+npm install auto-traffic-control
 ```
-
-You also need to add [`tonic`](https://crates.io/crates/tonic), the Rust
-implementation of gRPC, and [`tokio`](https://crates.io/crates/tokio), the async
-runtime, as a dependency.
 
 Then, create a service client and send a request. Check out the
 [documentation](https://auto-traffic-control.com) to learn about the different
 services and their endpoints.
 
-The following [example](../../examples/rust/src/main.rs) queries the version of
-the game through the
+The following TypeScript [example](../../examples/typescript/main.ts) queries
+the version of the game through the
 [`AtcService`](https://auto-traffic-control.com/docs/api/Services/atc-service).
 
 <!-- markdownlint-disable line-length -->
 
-```rust
-use auto_traffic_control::v1::atc_service_client::AtcServiceClient;
-use auto_traffic_control::v1::GetVersionRequest;
+```typescript
+import {
+  getCredentials,
+  AtcServiceClient,
+  GetVersionRequest,
+  GetVersionResponse,
+} from "auto-traffic-control";
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut atc_service = AtcServiceClient::connect("http://localhost:4747").await?;
+const atcService = new AtcServiceClient("localhost:4747", getCredentials());
 
-    let response = atc_service.get_version(GetVersionRequest {}).await?;
-    let version_field = response.into_inner().version;
-
-    if let Some(version) = version_field {
-        let mut version_string = format!("{}.{}.{}", version.major, version.minor, version.patch);
-
-        if !version.pre.is_empty() {
-            version_string.push('-');
-            version_string.push_str(&version.pre);
-        }
-
-        println!("Auto Traffic Control is running version '{version_string}'");
-    } else {
-        println!("Requesting the version returned an empty response.");
+atcService.getVersion(
+  new GetVersionRequest(),
+  (err, response: GetVersionResponse) => {
+    if (err != null) {
+      throw err;
     }
 
-    Ok(())
-}
+    const version = response.getVersion();
+
+    if (version != null) {
+      let versionString = [
+        version.getMajor(),
+        version.getMinor(),
+        version.getPatch(),
+      ].join(".");
+
+      if (version.getPre() !== "") {
+        versionString = versionString.concat(version.getPre());
+      }
+
+      console.log(`Auto Traffic Control is running version '${versionString}'`);
+    } else {
+      throw new Error("Requesting the version returned an empty response.");
+    }
+  }
+);
 ```
 
 <!-- markdownlint-enable line-length -->

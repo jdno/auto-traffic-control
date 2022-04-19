@@ -1,0 +1,19 @@
+---
+version: v1
+
+managed:
+  enabled: true
+
+plugins:
+  - name: js
+    out: ../sdk/node/src
+    opt: import_style=commonjs,binary
+
+  - name: grpc
+    out: ../sdk/node/src
+    opt: grpc_js
+    path: grpc_tools_node_protoc_plugin
+
+  - name: ts
+    out: ../sdk/node/src
+    opt: grpc_js
