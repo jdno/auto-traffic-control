@@ -19,7 +19,7 @@ impl EventBus {
 
 impl FromWorld for EventBus {
     fn from_world(world: &mut World) -> Self {
-        let sender = world.get_resource::<EventSender>().unwrap();
+        let sender = world.resource::<EventSender>();
 
         Self {
             sender: sender.clone(),
