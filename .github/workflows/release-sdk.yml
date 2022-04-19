@@ -21,6 +21,9 @@ jobs:
           sudo apt-get update && sudo apt-get install -y \
           protobuf-compiler
 
+      - name: Print version of protoc
+        run: protoc --version
+
       - name: Checkout code
         uses: actions/checkout@v3
 
