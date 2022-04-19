@@ -1,5 +1,7 @@
-dist/
 src/atc/
+src/**.d.ts
+src/**.js
+src/**.js.map
 
 ### Node.gitignore
 # Logs
