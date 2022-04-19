@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Set up Protoc
         uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print version of protoc
         run: protoc --version
@@ -49,10 +51,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./sdk/node
         run: npm install
-
-      - name: Authenticate using a token
-        working-directory: ./sdk/node
-        run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
 
       - name: Build Node client
         working-directory: ./sdk/node

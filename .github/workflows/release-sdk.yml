@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Set up Protoc
         uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print version of protoc
         run: protoc --version
