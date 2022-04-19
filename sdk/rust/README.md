@@ -16,7 +16,7 @@ The game is designed to provide an open-ended sandbox that players can use to
 freely practice programming. The game provides a language-agnostic gRPC API,
 giving players free choice of programming language or paradigm.
 
-This crate contains the auto-generated client for the gRPC API.
+This crate contains the auto-generated client for the game's gRPC API.
 
 ## Usage
 

@@ -1,14 +1,11 @@
-import * as grpc from "@grpc/grpc-js";
 import {
+  getCredentials,
   AtcServiceClient,
   GetVersionRequest,
   GetVersionResponse,
 } from "auto-traffic-control";
 
-const atcService = new AtcServiceClient(
-  "localhost:4747",
-  grpc.credentials.createInsecure()
-);
+const atcService = new AtcServiceClient("localhost:4747", getCredentials());
 
 atcService.getVersion(
   new GetVersionRequest(),

@@ -23,8 +23,7 @@
   },
   "homepage": "https://github.com/jdno/auto-traffic-control#readme",
   "dependencies": {
-    "@grpc/grpc-js": "^1.6.6",
-    "auto-traffic-control": "^0.3.0-alpha.2"
+    "auto-traffic-control": "file:../../sdk/node"
   },
   "devDependencies": {
     "ts-node": "^10.7.0",
