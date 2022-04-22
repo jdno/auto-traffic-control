@@ -42,7 +42,7 @@ jobs:
         run: npm install -g grpc_tools_node_protoc_ts grpc-tools
 
       - name: Set up Buf
-        uses: bufbuild/buf-setup-action@v1.3.1
+        uses: bufbuild/buf-setup-action@v1.4.0
 
       - name: Run Buf
         working-directory: api
