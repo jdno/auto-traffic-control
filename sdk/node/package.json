@@ -1,6 +1,6 @@
 {
   "name": "auto-traffic-control",
-  "version": "0.3.0-alpha.2",
+  "version": "0.3.0",
   "description": "A video game for programmers about air traffic control",
   "main": "src/index.js",
   "types": "src/index.d.ts",

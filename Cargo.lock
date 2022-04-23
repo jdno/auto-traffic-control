@@ -209,7 +209,7 @@ dependencies = [
 
 [[package]]
 name = "auto-traffic-control"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "glob",
  "prost",
@@ -220,7 +220,7 @@ dependencies = [
 
 [[package]]
 name = "auto-traffic-control-example"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "auto-traffic-control",
  "tokio",
@@ -228,7 +228,7 @@ dependencies = [
 
 [[package]]
 name = "auto-traffic-control-game"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "auto-traffic-control",
  "bevy",
@@ -1376,7 +1376,7 @@ dependencies = [
 
 [[package]]
 name = "debug-client"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "auto-traffic-control",
  "tokio",
@@ -3350,7 +3350,7 @@ dependencies = [
 
 [[package]]
 name = "test-server"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "auto-traffic-control",
  "prost",
