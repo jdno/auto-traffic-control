@@ -1,8 +1,8 @@
 # 🛬 Auto Traffic Control
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jdno/auto-traffic-control/main)](https://github.com/jdno/auto-traffic-control/actions)
-[![Version](https://img.shields.io/npm/v/auto-traffic-control)](https://crates.io/crates/auto-traffic-control)
-[![License](https://img.shields.io/crates/l/auto-traffic-control)](https://crates.io/crates/auto-traffic-control)
+[![Version](https://img.shields.io/npm/v/auto-traffic-control)](https://www.npmjs.com/package/auto-traffic-control)
+[![License](https://img.shields.io/crates/l/auto-traffic-control)](https://www.npmjs.com/package/auto-traffic-control)
 
 [Homepage](https://auto-traffic-control.com) |
 [Documentation](https://auto-traffic-control.com/docs) |
@@ -75,6 +75,14 @@ atcService.getVersion(
 ```
 
 <!-- markdownlint-enable line-length -->
+
+## Tutorial
+
+The documentation for the game contains an in-depth tutorial on how to play the
+game with TypeScript. Check out the tutorial for more examples using this
+package:
+
+<https://auto-traffic-control.com/docs/tutorial>
 
 ## License
 
