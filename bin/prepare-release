@@ -44,8 +44,11 @@ root_directory="$(cd "${bin_directory}/.." || exit 5 && pwd)"
 echo "Bumping version..."
 
 files=(
-	"examples/starter-rust/Cargo.toml"
+	"examples/javascript/package.json"
+	"examples/rust/Cargo.toml"
+	"examples/typescript/package.json"
 	"game/Cargo.toml"
+	"sdk/node/package.json"
 	"sdk/rust/Cargo.toml"
 	"sdk/rust/README.md"
 	"utilities/debug-client/Cargo.toml"

@@ -7,6 +7,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0](https://github.com/jdno/atc/releases/tag/v0.3.0)
+
+### Added
+
+- Publish Node SDK by [@jdno](https://github.com/jdno) in [#97](https://github.com/jdno/auto-traffic-control/pull/97)
+- Write tutorial for a TypeScript bot by [@jdno](https://github.com/jdno) in [#104](https://github.com/jdno/auto-traffic-control/pull/104)
+
+### Changed
+
+- Rename enum variants in Protocol Buffer by [@jdno](https://github.com/jdno) in [#99](https://github.com/jdno/auto-traffic-control/pull/99)
+
+**Full Changelog**: <https://github.com/jdno/auto-traffic-control/compare/v0.2.0...v0.3.0>
+
 ## [0.2.0](https://github.com/jdno/atc/releases/tag/v0.2.0)
 
 ### Added
