@@ -62,7 +62,7 @@ package as a dependency to your project.
 
 | Language | Package                                                                                                             |
 | -------- | ------------------------------------------------------------------------------------------------------------------- |
-| Node     | _coming soon_                                                                                                       |
+| Node     | [![npm](https://img.shields.io/npm/v/auto-traffic-control)](https://www.npmjs.com/package/auto-traffic-control)     |
 | Rust     | [![Crates.io](https://img.shields.io/crates/v/auto-traffic-control)](https://crates.io/crates/auto-traffic-control) |
 
 <!-- markdownlint-enable line-length -->

@@ -235,7 +235,6 @@ dependencies = [
  "core-foundation 0.9.3",
  "dashmap",
  "geo",
- "geo-types",
  "parking_lot 0.12.0",
  "prost",
  "rand",
