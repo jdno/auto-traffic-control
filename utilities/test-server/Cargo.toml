@@ -19,5 +19,5 @@ auto-traffic-control = { path = "../../sdk/rust", version = "0.3.0", features = 
 
 prost = "0.10.1"
 semver = "1.0.7"
-tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.18.0", features = ["macros", "rt-multi-thread"] }
 tonic = "0.7.1"
