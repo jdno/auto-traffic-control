@@ -3,13 +3,14 @@ import {
   AtcServiceClient,
   GetVersionRequest,
   GetVersionResponse,
+  ServiceError,
 } from "auto-traffic-control";
 
 const atcService = new AtcServiceClient("localhost:4747", getCredentials());
 
 atcService.getVersion(
   new GetVersionRequest(),
-  (err, response: GetVersionResponse) => {
+  (err: ServiceError | null, response: GetVersionResponse) => {
     if (err != null) {
       throw err;
     }

@@ -1,4 +1,4 @@
-import { credentials, ChannelCredentials } from "@grpc/grpc-js";
+import { credentials, ChannelCredentials, ServiceError } from "@grpc/grpc-js";
 
 export * from "./atc/v1/airplane_pb";
 export * from "./atc/v1/airplane_grpc_pb";
@@ -11,6 +11,8 @@ export * from "./atc/v1/game_grpc_pb";
 export * from "./atc/v1/map_pb";
 export * from "./atc/v1/map_grpc_pb";
 export * from "./atc/v1/tag_pb";
+
+export { ChannelCredentials, ServiceError };
 
 export function getCredentials(): ChannelCredentials {
   return credentials.createInsecure();
