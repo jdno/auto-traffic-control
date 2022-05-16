@@ -24,7 +24,7 @@ First, add `auto-traffic-control` as a new dependency to your `Cargo.toml`.
 
 ```toml
 [dependencies]
-auto-traffic-control = "0.3.0"
+auto-traffic-control = "0.3.1"
 ```
 
 You also need to add [`tonic`](https://crates.io/crates/tonic), the Rust
