@@ -1,7 +1,7 @@
 [package]
 name = "auto-traffic-control-example"
 license = "MIT OR Apache-2.0"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 
 description = "An example showing how to use Auto Traffic Control's API"
@@ -17,6 +17,6 @@ publish = false
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-auto-traffic-control = { path = "../../sdk/rust", version = "0.3.0" }
+auto-traffic-control = { path = "../../sdk/rust", version = "0.3.1" }
 
 tokio = { version = "1.18.2", features = ["macros", "rt-multi-thread"] }
