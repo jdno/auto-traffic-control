@@ -6,7 +6,8 @@ use crate::rendering::FONT_COLOR;
 use crate::resources::Score;
 use crate::systems::{
     despawn_airplane, detect_collision, follow_flight_plan, generate_flight_plan, land_airplane,
-    setup_airport, setup_grid, setup_landscape, spawn_airplane, update_flight_plan, SpawnTimer,
+    rotate_airplane, setup_airport, setup_grid, setup_landscape, spawn_airplane,
+    update_flight_plan, SpawnTimer,
 };
 use crate::AppState;
 
@@ -33,6 +34,7 @@ impl Plugin for GamePlugin {
                     .with_system(detect_collision)
                     .with_system(generate_flight_plan)
                     .with_system(land_airplane)
+                    .with_system(rotate_airplane)
                     .with_system(spawn_airplane)
                     .with_system(update_flight_plan)
                     .with_system(update_score),
