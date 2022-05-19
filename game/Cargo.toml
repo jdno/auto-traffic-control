@@ -1,7 +1,7 @@
 [package]
 name = "auto-traffic-control-game"
 license = "MIT OR Apache-2.0"
-version = "0.3.1"
+version = "0.3.2"
 edition = "2021"
 
 rust-version = "1.60"
@@ -31,7 +31,7 @@ copyright = "Copyright (c) 2022 Jan David Nose"
 category = "public.app-category.games"
 
 [dependencies]
-auto-traffic-control = { path = "../sdk/rust", version = "0.3.1", features = ["server"] }
+auto-traffic-control = { path = "../sdk/rust", version = "0.3.2", features = ["server"] }
 
 bevy = "0.7.0"
 dashmap = "5.2.0"
