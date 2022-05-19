@@ -1,6 +1,6 @@
 {
   "name": "auto-traffic-control-example",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "An example showing how to use Auto Traffic Control's API",
   "private": true,
   "type": "module",
