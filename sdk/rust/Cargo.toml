@@ -27,7 +27,7 @@ keywords = [
 server = []
 
 [dependencies]
-prost = "0.10.3"
+prost = "0.10.4"
 tonic = "0.7.2"
 
 [build-dependencies]
