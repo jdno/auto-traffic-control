@@ -21,7 +21,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Buf
-        uses: bufbuild/buf-lint-action@v1.0.0
+        uses: bufbuild/buf-lint-action@v1.0.1
         with:
           input: api
 
