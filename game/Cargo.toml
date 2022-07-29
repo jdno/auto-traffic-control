@@ -40,7 +40,7 @@ parking_lot = "0.12.1"
 prost = "0.10.4"
 rand = "0.8.5"
 semver = "1.0.12"
-tokio = { version = "1.20.0", features = ["macros", "rt-multi-thread", "sync"] }
+tokio = { version = "1.20.1", features = ["macros", "rt-multi-thread", "sync"] }
 tokio-stream = { version = "0.1.9", features = ["sync"] }
 tonic = "0.7.2"
 
