@@ -200,7 +200,7 @@ name = "auto-traffic-control"
 version = "0.3.2"
 dependencies = [
  "glob",
- "prost",
+ "prost 0.10.4",
  "tokio",
  "tonic",
  "tonic-build",
@@ -224,7 +224,7 @@ dependencies = [
  "dashmap",
  "geo",
  "parking_lot 0.12.1",
- "prost",
+ "prost 0.10.4",
  "rand",
  "semver 1.0.12",
  "tokio",
@@ -1061,15 +1061,6 @@ dependencies = [
  "glob",
  "libc",
  "libloading",
-]
-
-[[package]]
-name = "cmake"
-version = "0.1.48"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8ad8cef104ac57b68b89df3208164d228503abbdce70f6880ffa3d970e7443a"
-dependencies = [
- "cc",
 ]
 
 [[package]]
@@ -2896,25 +2887,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "71adf41db68aa0daaefc69bb30bcd68ded9b9abaad5d1fbb6304c4fb390e083e"
 dependencies = [
  "bytes",
- "prost-derive",
+ "prost-derive 0.10.0",
+]
+
+[[package]]
+name = "prost"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "399c3c31cdec40583bb68f0b18403400d01ec4289c383aa047560439952c4dd7"
+dependencies = [
+ "bytes",
+ "prost-derive 0.11.0",
 ]
 
 [[package]]
 name = "prost-build"
-version = "0.10.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "328f9f29b82409216decb172d81e936415d21245befa79cd34c3f29d87d1c50b"
+checksum = "d49d928704208aba2cb1fb022ce1a319bdedcb03caf51ddf82734fa903407762"
 dependencies = [
  "bytes",
- "cfg-if 1.0.0",
- "cmake",
  "heck",
  "itertools",
  "lazy_static",
  "log",
  "multimap",
  "petgraph",
- "prost",
+ "prost 0.11.0",
  "prost-types",
  "regex",
  "tempfile",
@@ -2935,13 +2934,26 @@ dependencies = [
 ]
 
 [[package]]
-name = "prost-types"
-version = "0.10.0"
+name = "prost-derive"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "926681c118ae6e512a3ccefd4abbe5521a14f4cc1e207356d4d00c0b7f2006fd"
+checksum = "7345d5f0e08c0536d7ac7229952590239e77abf0a0100a1b1d890add6ea96364"
+dependencies = [
+ "anyhow",
+ "itertools",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "prost-types"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d30bc806a29b347314be074ff0608ef8e547286e8ea68b061a2fe55689edc01f"
 dependencies = [
  "bytes",
- "prost",
+ "prost 0.11.0",
 ]
 
 [[package]]
@@ -3440,7 +3452,7 @@ name = "test-server"
 version = "0.3.2"
 dependencies = [
  "auto-traffic-control",
- "prost",
+ "prost 0.10.4",
  "semver 1.0.12",
  "tokio",
  "tonic",
@@ -3600,8 +3612,8 @@ dependencies = [
  "hyper-timeout",
  "percent-encoding",
  "pin-project",
- "prost",
- "prost-derive",
+ "prost 0.10.4",
+ "prost-derive 0.10.0",
  "tokio",
  "tokio-stream",
  "tokio-util 0.7.0",
@@ -3614,9 +3626,9 @@ dependencies = [
 
 [[package]]
 name = "tonic-build"
-version = "0.7.2"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9263bf4c9bfaae7317c1c2faf7f18491d2fe476f70c414b73bf5d445b00ffa1"
+checksum = "2fbcd2800e34e743b9ae795867d5f77b535d3a3be69fd731e39145719752df8c"
 dependencies = [
  "prettyplease",
  "proc-macro2",
