@@ -24,6 +24,14 @@ jobs:
           libasound2-dev \
           libudev-dev
 
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print version of protoc
+        run: protoc --version
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -77,6 +85,14 @@ jobs:
           libx11-dev \
           libasound2-dev \
           libudev-dev
+
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print version of protoc
+        run: protoc --version
 
       - name: Checkout code
         uses: actions/checkout@v3
