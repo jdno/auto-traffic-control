@@ -28,30 +28,28 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
         })
         .with_children(|parent| {
             parent.spawn_bundle(TextBundle {
-                text: Text::with_section(
+                text: Text::from_section(
                     "Game Over",
                     TextStyle {
                         font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                         font_size: 48.0,
                         color: FONT_COLOR,
                     },
-                    Default::default(),
                 ),
                 ..Default::default()
             });
             parent.spawn_bundle(TextBundle {
                 style: Style {
-                    margin: Rect::all(Val::Px(24.0)),
+                    margin: UiRect::all(Val::Px(24.0)),
                     ..Default::default()
                 },
-                text: Text::with_section(
+                text: Text::from_section(
                     "Two planes got too close to each other. The simulation was aborted.",
                     TextStyle {
                         font: asset_server.load("font/JetBrainsMono-Regular.ttf"),
                         font_size: 24.0,
                         color: FONT_COLOR,
                     },
-                    Default::default(),
                 ),
                 ..Default::default()
             });
