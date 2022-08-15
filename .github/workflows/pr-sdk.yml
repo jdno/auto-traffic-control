@@ -69,6 +69,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print version of protoc
+        run: protoc --version
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -145,6 +153,14 @@ jobs:
     needs: test-server
 
     steps:
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print version of protoc
+        run: protoc --version
+
       - name: Checkout code
         uses: actions/checkout@v3
 
