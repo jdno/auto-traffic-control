@@ -1,0 +1,11 @@
+
+/.gradle/
+/.idea/
+/bin/
+/bin_of_tests/
+/build/
+/gradle/
+/target/
+.classpath
+.project
+.settings
