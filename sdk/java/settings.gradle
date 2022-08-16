@@ -1,0 +1,4 @@
+
+/* The authors of auto-traffic-control release this file under either Apache v2.0 or MIT license terms. */
+
+rootProject.name = 'auto-traffic-control-sdk-java'
