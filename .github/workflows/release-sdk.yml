@@ -82,3 +82,31 @@ jobs:
       - name: Publish to crates.io
         working-directory: sdk/rust
         run: cargo publish --token ${{ secrets.CRATES_TOKEN }} -v --all-features
+
+  dotnet:
+    name: Publish dotnet SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1.9.0
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Pack nuget
+        working-directory: ./sdk/dotnet
+        run: |
+          dotnet pack src/AutoTrafficControl/AutoTrafficControl.csproj \
+            -c Release \
+            -o . \
+            -p:Version=${{ github.event.release.name }}
+
+      - name: Push package
+        run: |
+          dotnet nuget push AutoTrafficControl.${{ github.event.release.name }}.nupkg \
+            -k ${{ secrets.NUGET_TOKEN }} \
+            -s https://api.nuget.org/v3/index.json \
+            --skip-duplicate

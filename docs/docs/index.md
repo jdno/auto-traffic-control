@@ -60,10 +60,11 @@ package as a dependency to your project.
 
 <!-- markdownlint-disable line-length -->
 
-| Language | Package                                                                                                             |
-| -------- | ------------------------------------------------------------------------------------------------------------------- |
-| Node     | [![npm](https://img.shields.io/npm/v/auto-traffic-control)](https://www.npmjs.com/package/auto-traffic-control)     |
-| Rust     | [![Crates.io](https://img.shields.io/crates/v/auto-traffic-control)](https://crates.io/crates/auto-traffic-control) |
+| Language | Package                                                                                                              |
+| -------- | -------------------------------------------------------------------------------------------------------------------- |
+| Node     | [![npm](https://img.shields.io/npm/v/auto-traffic-control)](https://www.npmjs.com/package/auto-traffic-control)      |
+| Rust     | [![Crates.io](https://img.shields.io/crates/v/auto-traffic-control)](https://crates.io/crates/auto-traffic-control)  |
+| .Net     | [![Crates.io](https://img.shields.io/nuget/v/AutoTrafficControl)](https://www.nuget.org/packages/AutoTrafficControl) |
 
 <!-- markdownlint-enable line-length -->
 
