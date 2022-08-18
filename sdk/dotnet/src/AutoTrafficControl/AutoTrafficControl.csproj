@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="../../../../api/atc/v1/*.proto" ProtoRoot="../../../../api" GrpcServices="Client" />
+		<Protobuf Include="../../../../api/atc/**/*.proto" ProtoRoot="../../../../api" GrpcServices="Client" />
 	</ItemGroup>
 
 </Project>
