@@ -82,3 +82,33 @@ jobs:
       - name: Publish to crates.io
         working-directory: sdk/rust
         run: cargo publish --token ${{ secrets.CRATES_TOKEN }} -v --all-features
+
+  gradle:
+    name: java sdk
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Ensure java exists
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: start gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.5
+
+      - name: build sdk
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.5
+          arguments: clean build
+          build-root-directory: sdk/java
+
+
+
+
