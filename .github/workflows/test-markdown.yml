@@ -5,6 +5,9 @@ name: Markdown
   push:
     paths:
       - "**.md"
+  pull_request:
+    paths:
+      - "**.md"
 
 jobs:
   lint:

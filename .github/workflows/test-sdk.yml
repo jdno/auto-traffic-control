@@ -4,7 +4,7 @@ name: SDK
 "on":
   pull_request:
     paths:
-      - ".github/workflows/pr-sdk.yml"
+      - ".github/workflows/test-sdk.yml"
       - "api/**"
       - "examples/**"
       - "sdk/**"
@@ -306,7 +306,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1.9.0
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: "6.0.x"
 
       - name: Install dependencies
         working-directory: ./examples/dotnet

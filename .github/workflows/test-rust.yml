@@ -6,6 +6,10 @@ name: Rust
     paths:
       - "**.rs"
       - "**.toml"
+  pull_request:
+    paths:
+      - "**.rs"
+      - "**.toml"
 
 env:
   CARGO_INCREMENTAL: 0
