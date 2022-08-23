@@ -1,11 +1,15 @@
 ---
-name: Shell
+name: YAML
 
 "on":
   push:
     paths:
-      - "**.sh"
-      - "bin/**"
+      - "**.yaml"
+      - "**.yml"
+  pull_request:
+    paths:
+      - "**.yaml"
+      - "**.yml"
 
 jobs:
   lint:
@@ -16,8 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Lint code with Shellcheck
-        uses: ludeeus/action-shellcheck@1.1.0
+      - name: Run yamllint
+        uses: actionshub/yamllint@1.0.2
 
   style:
     name: Check style
@@ -27,7 +31,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run shfmt
-        uses: luizm/action-sh-checker@v0.5.0
+      - name: prettier
+        uses: creyD/prettier_action@v4.2
         with:
-          sh_checker_shellcheck_disable: true
+          dry: true
+          prettier_options: "--check **/*.{yml,yaml}"

@@ -5,6 +5,9 @@ name: Protobuf
   push:
     paths:
       - "api/**.proto"
+  pull_request:
+    paths:
+      - "api/**.proto"
 
 jobs:
   lint:
