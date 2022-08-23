@@ -11,12 +11,24 @@
 - name: C-feature-request
   color: e74c3c
   description: "Request a new feature"
+- name: L-dotnet
+  color: 34495e
+  description: "Tag the .NET ecosystem"
 - name: L-github
   color: 34495e
   description: "Tag the GitHub ecosystem"
+- name: L-java
+  color: 34495e
+  description: "Tag the Java ecosystem"
 - name: L-node
   color: 34495e
   description: "Tag the Node ecosystem"
+- name: L-python
+  color: 34495e
+  description: "Tag the Python ecosystem"
+- name: L-ruby
+  color: 34495e
+  description: "Tag the Ruby ecosystem"
 - name: L-rust
   color: 34495e
   description: "Tag the Rust ecosystem"
