@@ -1,37 +1,33 @@
-
-/* The authors of auto-traffic-control release this file under either Apache v2.0 or MIT license terms. */
-
 import com.github.jk1.license.render.*
 
 plugins {
-	id 'com.github.jk1.dependency-license-report' version '2.0'
-	id 'java'
-	id 'maven-publish'
-	id 'application' // ¶ for run task
+    id 'com.github.jk1.dependency-license-report' version '2.0'
+    id 'java'
+    id 'maven-publish'
+    id 'application' // for run task
 }
 
 repositories {
-	mavenLocal()
-	mavenCentral()
+    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
-	if ( JavaVersion.current().isJava9Compatible() ) {
-		compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
-	}
-	else {
-		compileOnly 'javax.annotation:javax.annotation-api:1.3.1'
-	}
+    if (JavaVersion.current().isJava9Compatible()) {
+        compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+    } else {
+        compileOnly 'javax.annotation:javax.annotation-api:1.3.1'
+    }
 
-	runtimeOnly 'io.grpc:grpc-netty-shaded:1.48.1'
+    runtimeOnly 'io.grpc:grpc-netty-shaded:1.48.1'
 
-	implementation 'com.google.guava:guava:31.1-android'
-	implementation 'io.grpc:grpc-protobuf:1.48.1'
-	implementation 'io.grpc:grpc-stub:1.48.1'
-	implementation 'dev.jdno.atc:auto-traffic-control-sdk-java:0.3.2'
+    implementation 'com.google.guava:guava:31.1-android'
+    implementation 'io.grpc:grpc-protobuf:1.48.1'
+    implementation 'io.grpc:grpc-stub:1.48.1'
+    implementation 'com.auto-traffic-control:auto-traffic-control:0.3.2'
 
-	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
 }
 
 group = 'ws.nzen.game.sim.hao'
@@ -39,66 +35,26 @@ version = '0.3.2'
 description = 'Communicates with jndo Auto-Traffic-Control'
 
 licenseReport {
-	renderers = [ new JsonReportRenderer('dependency-libraries.json', false ) ]
+    renderers = [new JsonReportRenderer('dependency-libraries.json', false)]
 }
 
 jar {
-	manifest {
-		attributes(
-			'Main-Class' : 'com.example.AtcExample',
-			'Automatic-Module-Name' : 'com.example.atc',
-			'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join( ' ' )
-		)
-	}
+    manifest {
+        attributes(
+                'Main-Class': 'com.example.AtcExample',
+                'Automatic-Module-Name': 'com.example.atc',
+                'Class-Path': configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+        )
+    }
 }
 
 run {
-	mainClassName = 'com.example.AtcExample'
+    mainClassName = 'com.example.AtcExample'
 }
 
-task run_( type: JavaExec ) {
-	group = 'application'
-	classpath = sourceSets.main.runtimeClasspath
-	main = 'com.example.AtcExample'
-	standardInput = System.in
+task run_(type: JavaExec) {
+    group = 'application'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.example.AtcExample'
+    standardInput = System.in
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -9,7 +9,7 @@ name: SDK
 
 jobs:
   node:
-    name: Node
+    name: Publish Node SDK
     runs-on: ubuntu-latest
 
     env:
@@ -84,25 +84,20 @@ jobs:
         run: cargo publish --token ${{ secrets.CRATES_TOKEN }} -v --all-features
 
   gradle:
-    name: java sdk
+    name: Publish Java SDK
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Ensure java exists
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 11
 
-      - name: start gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 7.5
-
-      - name: build sdk
+      - name: Run Gradle build
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 7.5
