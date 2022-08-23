@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Description>Client to use with Auto Traffic Control game</Description>
+		<PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<RepositoryUrl>https://github.com/jdno/auto-traffic-control</RepositoryUrl>
+		<PackageProjectUrl>https://auto-traffic-control.com</PackageProjectUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.21.5" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.47.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.47.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.48.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="../../../../api/atc/**/*.proto" ProtoRoot="../../../../api" GrpcServices="Client" />
+	</ItemGroup>
+
+</Project>
