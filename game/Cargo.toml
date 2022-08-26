@@ -33,7 +33,7 @@ category = "public.app-category.games"
 [dependencies]
 auto-traffic-control = { path = "../sdk/rust", version = "0.3.2", features = ["server"] }
 
-bevy = "0.8.0"
+bevy = "0.8.1"
 dashmap = "5.2.0"
 geo = "0.22.1"
 parking_lot = "0.12.1"
