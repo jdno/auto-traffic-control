@@ -17,3 +17,8 @@ plugins:
   - name: ts
     out: ../sdk/node/src
     opt: grpc_js
+
+  - remote: buf.build/protocolbuffers/plugins/ruby
+    out: ../sdk/ruby/lib
+  - remote: buf.build/grpc/plugins/ruby
+    out: ../sdk/ruby/lib

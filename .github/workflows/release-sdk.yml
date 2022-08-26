@@ -8,6 +8,55 @@ name: SDK
       - released
 
 jobs:
+  dotnet:
+    name: Publish .NET SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2.1.0
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Pack nuget
+        working-directory: ./sdk/dotnet
+        run: |
+          dotnet pack src/AutoTrafficControl/AutoTrafficControl.csproj \
+            -c Release \
+            -o . \
+            -p:Version=${{ github.event.release.name }}
+
+      - name: Push package
+        run: |
+          dotnet nuget push AutoTrafficControl.${{ github.event.release.name }}.nupkg \
+            -k ${{ secrets.NUGET_TOKEN }} \
+            -s https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+
+  java:
+    name: Publish Java SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Run Gradle build
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.5
+          arguments: clean build
+          build-root-directory: sdk/java
+
   node:
     name: Publish Node SDK
     runs-on: ubuntu-latest
@@ -62,6 +111,65 @@ jobs:
         working-directory: ./sdk/node
         run: npm publish
 
+  ruby:
+    name: Publish Ruby SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print version of protoc
+        run: protoc --version
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Buf
+        uses: bufbuild/buf-setup-action@v1.7.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Buf dependencies
+        run: npm install -g grpc_tools_node_protoc_ts grpc-tools
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+
+      - name: Generate Ruby bindings
+        working-directory: ./api
+        run: buf generate
+
+      - name: Install SDK dependencies
+        working-directory: ./sdk/ruby
+        run: bundle install
+
+      - name: Build gem
+        working-directory: ./sdk/ruby
+        run: bundle exec rake build
+
+      - name: Set up authentication for rubygems.org
+        uses: fac/ruby-gem-setup-credentials-action@v2
+        with:
+          user: ""
+          key: rubygems
+          token: ${{ secrets.RUBYGEMS_TOKEN }}
+
+      - name: Push gem to rubygems.org
+        uses: fac/ruby-gem-push-action@v2
+        with:
+          key: rubygems
+
   rust:
     name: Publish Rust SDK
     runs-on: ubuntu-latest
@@ -82,52 +190,3 @@ jobs:
       - name: Publish to crates.io
         working-directory: sdk/rust
         run: cargo publish --token ${{ secrets.CRATES_TOKEN }} -v --all-features
-
-  gradle:
-    name: Publish Java SDK
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 11
-
-      - name: Run Gradle build
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 7.5
-          arguments: clean build
-          build-root-directory: sdk/java
-
-  dotnet:
-    name: Publish dotnet SDK
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v2.1.0
-        with:
-          dotnet-version: "6.0.x"
-
-      - name: Pack nuget
-        working-directory: ./sdk/dotnet
-        run: |
-          dotnet pack src/AutoTrafficControl/AutoTrafficControl.csproj \
-            -c Release \
-            -o . \
-            -p:Version=${{ github.event.release.name }}
-
-      - name: Push package
-        run: |
-          dotnet nuget push AutoTrafficControl.${{ github.event.release.name }}.nupkg \
-            -k ${{ secrets.NUGET_TOKEN }} \
-            -s https://api.nuget.org/v3/index.json \
-            --skip-duplicate
