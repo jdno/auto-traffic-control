@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "bundler/gem_tasks"
+require "rubocop/rake_task"
+
+RuboCop::RakeTask.new
+
+desc "Run the example"
+task :run do
+  ruby "exe/example.rb"
+end
+
+task default: :rubocop
