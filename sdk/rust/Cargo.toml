@@ -35,4 +35,4 @@ glob = "0.3.0"
 tonic-build = "0.8.0"
 
 [dev-dependencies]
-tokio = { version = "1.20.1", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.21.0", features = ["macros", "rt-multi-thread"] }
