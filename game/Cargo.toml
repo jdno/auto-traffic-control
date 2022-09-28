@@ -42,7 +42,7 @@ rand = "0.8.5"
 semver = "1.0.14"
 tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread", "sync"] }
 tokio-stream = { version = "0.1.10", features = ["sync"] }
-tonic = "0.8.1"
+tonic = "0.8.2"
 
 [target.'cfg(macos)'.dependencies]
 core-foundation = "0.9.3"
