@@ -21,4 +21,4 @@ publish = false
 auto-traffic-control = { path = "../../sdk/rust", version = "0.3.2", features = ["server"] }
 
 tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
-tokio-stream = { version = "0.1.10" }
+tokio-stream = { version = "0.1.11" }
