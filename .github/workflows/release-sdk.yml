@@ -185,7 +185,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.0.0
+        uses: swatinem/rust-cache@v2.0.1
 
       - name: Publish to crates.io
         working-directory: sdk/rust
