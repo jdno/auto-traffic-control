@@ -33,7 +33,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.0.0
+        uses: swatinem/rust-cache@v2.0.1
 
       - name: Build release artifact
         uses: actions-rs/cargo@v1
@@ -85,7 +85,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.0.0
+        uses: swatinem/rust-cache@v2.0.1
 
       - name: Install cargo-bundle
         run: cargo install cargo-bundle
@@ -133,7 +133,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.0.0
+        uses: swatinem/rust-cache@v2.0.1
 
       - name: Build release artifact
         uses: actions-rs/cargo@v1
