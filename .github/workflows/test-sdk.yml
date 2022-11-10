@@ -87,7 +87,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.0.1
+        uses: swatinem/rust-cache@v2.1.0
 
       - name: Compile test-server
         uses: actions-rs/cargo@v1
@@ -329,7 +329,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.0.1
+        uses: swatinem/rust-cache@v2.1.0
 
       - name: Compile Rust example
         uses: actions-rs/cargo@v1
