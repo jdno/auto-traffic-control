@@ -48,7 +48,7 @@ jobs:
           components: clippy
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.1.0
+        uses: swatinem/rust-cache@v2.2.0
 
       - name: Run Clippy
         uses: actions-rs/cargo@v1
@@ -108,7 +108,7 @@ jobs:
           override: true
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.1.0
+        uses: swatinem/rust-cache@v2.2.0
 
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@master
