@@ -1,0 +1,43 @@
+[build-system]
+requires = [
+    "setuptools>=60.2.0",
+    "grpcio-tools~=1.44.0",
+    "mypy-protobuf~=3.2.0",
+    "pip>=20.1.1",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-traffic-control"
+version = "0.3.2"
+authors = [
+  { name="Jan David" },
+]
+description = "A video game for programmers about air traffic control"
+readme = "README.md"
+license = { text="MIT OR Apache-2.0" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "grpcio~=1.44.0",
+    "protobuf~=4.21.5",
+    "types-protobuf~=3.19.22",
+    "grpc-stubs~=1.24.9",
+]
+
+[project.optional-dependencies]
+build = ["grpcio-tools~=1.47.0", "mypy-protobuf~=3.2.0"]
+
+[project.urls]
+"Homepage" = "https://auto-traffic-control.com"
+"Bug Tracker" = "https://github.com/jdno/auto-traffic-control/issues"
+"Documentation" = "https://auto-traffic-control.com/docs"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["atc*"]
