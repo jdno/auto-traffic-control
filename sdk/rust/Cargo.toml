@@ -32,7 +32,7 @@ tonic = "0.8.2"
 
 [build-dependencies]
 glob = "0.3.0"
-tonic-build = "0.8.2"
+tonic-build = "0.8.3"
 
 [dev-dependencies]
 tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
