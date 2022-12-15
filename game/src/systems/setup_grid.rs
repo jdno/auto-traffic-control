@@ -13,11 +13,7 @@ pub fn setup_grid(map: Res<Map>, mut commands: Commands) {
 
         commands.spawn_bundle(SpriteBundle {
             transform: Transform {
-                translation: Vec3::new(
-                    point.x() as f32,
-                    point.y() as f32,
-                    RenderLayer::RoutingGrid.z(),
-                ),
+                translation: Vec3::new(point.x(), point.y(), RenderLayer::RoutingGrid.z()),
                 scale: Vec3::new(2.0, 2.0, 0.0),
                 ..Default::default()
             },
