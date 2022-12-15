@@ -41,7 +41,7 @@ impl auto_traffic_control::v1::game_service_server::GameService for GameService 
         &self,
         _request: Request<StartGameRequest>,
     ) -> Result<Response<StartGameResponse>, Status> {
-        if self.command_bus.send(Command::StartGame).is_err() {
+        if self.command_bus.get().send(Command::StartGame).is_err() {
             return Err(Status::internal("failed to queue command"));
         }
 
@@ -60,13 +60,16 @@ mod tests {
     use auto_traffic_control::v1::get_game_state_response::GameState;
     use auto_traffic_control::v1::{GetGameStateRequest, StartGameRequest};
 
-    use crate::command::{Command, CommandReceiver};
+    use crate::command::{Command, CommandReceiver, CommandSender};
     use crate::Store;
 
     use super::GameService;
 
     fn setup() -> (CommandReceiver, GameService) {
         let (command_sender, command_receiver) = channel::<Command>(1024);
+        let command_sender = CommandSender::new(command_sender);
+        let command_receiver = CommandReceiver::new(command_receiver);
+
         let store = Arc::new(Store::new());
 
         let service = GameService::new(command_sender, store);
@@ -102,7 +105,7 @@ mod tests {
         let request = Request::new(StartGameRequest {});
         assert!(service.start_game(request).await.is_ok());
 
-        let command = command_bus.try_recv().unwrap();
+        let command = command_bus.get_mut().try_recv().unwrap();
         assert_eq!(Command::StartGame, command);
     }
 }

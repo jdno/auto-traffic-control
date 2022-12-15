@@ -31,6 +31,7 @@ pub fn despawn_airplane(
 
                 event_bus
                     .sender()
+                    .get()
                     .send(Event::AirplaneLanded(airplane_id.clone()))
                     .expect("failed to send event"); // TODO: Handle error
             } else {
@@ -42,11 +43,13 @@ pub fn despawn_airplane(
 
                 event_bus
                     .sender()
+                    .get()
                     .send(Event::LandingAborted(airplane_id.clone()))
                     .expect("failed to send event"); // TODO: Handle error
 
                 event_bus
                     .sender()
+                    .get()
                     .send(Event::FlightPlanUpdated(
                         airplane_id.clone(),
                         flight_plan.clone(),

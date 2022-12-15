@@ -30,14 +30,15 @@ impl auto_traffic_control::v1::event_service_server::EventService for EventServi
         &self,
         _request: Request<StreamRequest>,
     ) -> Result<Response<Self::StreamStream>, Status> {
-        let stream = BroadcastStream::new(self.event_sender.subscribe()).filter_map(|event| {
-            let event = match event {
-                Ok(event) => Some(event.as_api()),
-                Err(_) => None,
-            };
+        let stream =
+            BroadcastStream::new(self.event_sender.subscribe().into()).filter_map(|event| {
+                let event = match event {
+                    Ok(event) => Some(event.as_api()),
+                    Err(_) => None,
+                };
 
-            event.map(|event| Ok(StreamResponse { event: Some(event) }))
-        });
+                event.map(|event| Ok(StreamResponse { event: Some(event) }))
+            });
 
         Ok(Response::new(Box::pin(stream) as Self::StreamStream))
     }

@@ -1,10 +1,6 @@
 use bevy::prelude::*;
-use tokio::sync::broadcast::{Receiver, Sender};
 
-use crate::event::Event;
-
-pub type EventReceiver = Receiver<Event>;
-pub type EventSender = Sender<Event>;
+use crate::event::EventSender;
 
 #[derive(Clone, Debug)]
 pub struct EventBus {

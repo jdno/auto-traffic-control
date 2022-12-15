@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use tokio::sync::broadcast::{channel, Receiver};
+use tokio::sync::broadcast::channel;
 
 use crate::api::Api;
-use crate::command::Command;
-use crate::event::Event;
+use crate::command::{Command, CommandReceiver, CommandSender};
+use crate::event::{Event, EventReceiver, EventSender};
 use crate::scene::{GameOverPlugin, GamePlugin, MainMenuPlugin};
 use crate::store::{Store, StoreWatcher};
 use crate::systems::*;
@@ -43,7 +43,12 @@ pub enum AppState {
 #[tokio::main]
 async fn main() {
     let (command_sender, command_receiver) = channel::<Command>(1024);
+    let command_sender = CommandSender::new(command_sender);
+    let command_receiver = CommandReceiver::new(command_receiver);
+
     let (event_sender, event_receiver) = channel::<Event>(1024);
+    let event_sender = EventSender::new(event_sender);
+    let event_receiver = EventReceiver::new(event_receiver);
 
     let store = Arc::new(Store::new());
     let mut store_watcher = StoreWatcher::new(event_receiver, store.clone());
@@ -58,15 +63,17 @@ async fn main() {
 
     App::new()
         // Must be added before the DefaultPlugins
-        .insert_resource(WindowDescriptor {
-            title: "Auto Traffic Control".to_string(),
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT,
-            resizable: false,
-            ..Default::default()
-        })
         .insert_resource(ClearColor(Color::BLACK))
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            window: WindowDescriptor {
+                title: "Auto Traffic Control".to_string(),
+                width: SCREEN_WIDTH,
+                height: SCREEN_HEIGHT,
+                resizable: false,
+                ..Default::default()
+            },
+            ..Default::default()
+        }))
         .insert_resource(command_sender)
         .insert_resource(event_sender)
         .add_state(AppState::MainMenu)
@@ -78,9 +85,6 @@ async fn main() {
         .run();
 }
 
-async fn drain_queue<T>(mut receiver: Receiver<T>)
-where
-    T: Clone,
-{
-    while (receiver.recv().await).is_ok() {}
+async fn drain_queue(mut receiver: CommandReceiver) {
+    while (receiver.get_mut().recv().await).is_ok() {}
 }

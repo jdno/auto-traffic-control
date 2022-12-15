@@ -11,6 +11,7 @@ use crate::rendering::RenderLayer;
 // Planes are spawned this many nodes outside the map area
 const SPAWN_OFFSET: i32 = 3;
 
+#[derive(Clone, Debug, Default, Resource)]
 pub struct SpawnTimer(Timer);
 
 impl SpawnTimer {
@@ -31,7 +32,8 @@ pub fn spawn_airplane(
     let mut rng = thread_rng();
 
     let texture_handle = asset_server.load("sprites/airplanes.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(128.0, 128.0), 2, 1);
+    let texture_atlas =
+        TextureAtlas::from_grid(texture_handle, Vec2::new(128.0, 128.0), 2, 1, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     if timer.0.tick(time.delta()).just_finished() {
@@ -56,7 +58,7 @@ pub fn spawn_airplane(
         };
 
         commands
-            .spawn_bundle(SpriteSheetBundle {
+            .spawn(SpriteSheetBundle {
                 texture_atlas: texture_atlas_handle,
                 transform: Transform {
                     translation: Vec3::new(
@@ -84,6 +86,7 @@ pub fn spawn_airplane(
 
         event_bus
             .sender()
+            .get()
             .send(Event::AirplaneDetected(
                 airplane_id,
                 Location::from(&spawn),

@@ -11,35 +11,39 @@ use crate::systems::{
 };
 use crate::AppState;
 
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Resource)]
 pub struct ScoreOverlay(Entity);
 
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(SpawnTimer::new(Timer::from_seconds(2.0, true)))
-            .insert_resource(Map::new())
-            .add_system_set(
-                SystemSet::on_enter(AppState::Game)
-                    .with_system(start_game)
-                    .with_system(setup_airport)
-                    .with_system(setup_grid)
-                    .with_system(setup_landscape)
-                    .with_system(setup_score),
-            )
-            .add_system_set(
-                SystemSet::on_update(AppState::Game)
-                    .with_system(follow_flight_plan.label("move"))
-                    .with_system(despawn_airplane)
-                    .with_system(detect_collision)
-                    .with_system(generate_flight_plan)
-                    .with_system(land_airplane)
-                    .with_system(rotate_airplane)
-                    .with_system(spawn_airplane)
-                    .with_system(update_flight_plan)
-                    .with_system(update_score),
-            )
-            .add_system_set(SystemSet::on_exit(AppState::Game).with_system(end_game));
+        app.insert_resource(SpawnTimer::new(Timer::from_seconds(
+            2.0,
+            TimerMode::Repeating,
+        )))
+        .insert_resource(Map::new())
+        .add_system_set(
+            SystemSet::on_enter(AppState::Game)
+                .with_system(start_game)
+                .with_system(setup_airport)
+                .with_system(setup_grid)
+                .with_system(setup_landscape)
+                .with_system(setup_score),
+        )
+        .add_system_set(
+            SystemSet::on_update(AppState::Game)
+                .with_system(follow_flight_plan.label("move"))
+                .with_system(despawn_airplane)
+                .with_system(detect_collision)
+                .with_system(generate_flight_plan)
+                .with_system(land_airplane)
+                .with_system(rotate_airplane)
+                .with_system(spawn_airplane)
+                .with_system(update_flight_plan)
+                .with_system(update_score),
+        )
+        .add_system_set(SystemSet::on_exit(AppState::Game).with_system(end_game));
     }
 }
 
@@ -50,6 +54,7 @@ fn start_game(mut commands: Commands, map: Res<Map>, event_bus: Local<EventBus>)
 
     event_bus
         .sender()
+        .get()
         .send(Event::GameStarted(map))
         .expect("failed to send event"); // TODO: Handle error
 }
@@ -57,13 +62,14 @@ fn start_game(mut commands: Commands, map: Res<Map>, event_bus: Local<EventBus>)
 fn end_game(score: Res<Score>, event_bus: Local<EventBus>) {
     event_bus
         .sender()
+        .get()
         .send(Event::GameStopped(*score))
         .expect("failed to send event"); // TODO: Handle error
 }
 
 fn setup_score(mut commands: Commands, asset_server: Res<AssetServer>) {
     let overlay_id = commands
-        .spawn_bundle(TextBundle {
+        .spawn(TextBundle {
             text: Text {
                 sections: vec![
                     TextSection {

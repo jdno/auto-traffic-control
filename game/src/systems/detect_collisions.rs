@@ -39,6 +39,7 @@ pub fn detect_collision(
             {
                 event_bus
                     .sender()
+                    .get()
                     .send(Event::AirplaneCollided(
                         airplane_id1.clone(),
                         airplane_id2.clone(),

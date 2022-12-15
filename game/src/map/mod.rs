@@ -1,5 +1,7 @@
 use std::ops::RangeInclusive;
 
+use bevy::prelude::Resource;
+
 use auto_traffic_control::v1::Map as ApiMap;
 
 use crate::api::AsApi;
@@ -31,7 +33,7 @@ pub const MAP_WIDTH: usize =
 
 pub const MAP_WIDTH_RANGE: RangeInclusive<i32> = -(MAP_WIDTH as i32 / 2)..=(MAP_WIDTH as i32 / 2);
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Resource)]
 pub struct Map {
     airports: Vec<Airport>,
     routing_grid: Vec<Node>,

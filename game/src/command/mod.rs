@@ -1,8 +1,12 @@
 use crate::components::{AirplaneId, FlightPlan};
 
-pub use self::bus::{CommandBus, CommandReceiver, CommandSender};
+pub use self::bus::CommandBus;
+pub use self::receiver::CommandReceiver;
+pub use self::sender::CommandSender;
 
 mod bus;
+mod receiver;
+mod sender;
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Command {

@@ -12,7 +12,8 @@ pub fn setup_airport(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let texture_handle = asset_server.load("sprites/airports.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(128.0, 128.0), 8, 2);
+    let texture_atlas =
+        TextureAtlas::from_grid(texture_handle, Vec2::new(128.0, 128.0), 8, 2, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     for airport in map.airports() {
@@ -33,7 +34,7 @@ pub fn setup_airport(
         };
         let runway_offset = airport_offset + 1;
 
-        commands.spawn_bundle(SpriteSheetBundle {
+        commands.spawn(SpriteSheetBundle {
             texture_atlas: texture_atlas_handle.clone(),
             transform: Transform {
                 translation: airport_vec3,
@@ -47,7 +48,7 @@ pub fn setup_airport(
             ..Default::default()
         });
 
-        commands.spawn_bundle(SpriteSheetBundle {
+        commands.spawn(SpriteSheetBundle {
             texture_atlas: texture_atlas_handle.clone(),
             transform: Transform {
                 translation: runway_vec3,

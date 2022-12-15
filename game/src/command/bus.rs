@@ -1,10 +1,6 @@
 use bevy::prelude::*;
-use tokio::sync::broadcast::{Receiver, Sender};
 
-use crate::command::Command;
-
-pub type CommandReceiver = Receiver<Command>;
-pub type CommandSender = Sender<Command>;
+use crate::command::{CommandReceiver, CommandSender};
 
 #[derive(Debug)]
 pub struct CommandBus {

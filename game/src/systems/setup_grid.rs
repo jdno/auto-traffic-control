@@ -11,7 +11,7 @@ pub fn setup_grid(map: Res<Map>, mut commands: Commands) {
     {
         let point = node.as_point();
 
-        commands.spawn_bundle(SpriteBundle {
+        commands.spawn(SpriteBundle {
             transform: Transform {
                 translation: Vec3::new(point.x(), point.y(), RenderLayer::RoutingGrid.z()),
                 scale: Vec3::new(2.0, 2.0, 0.0),

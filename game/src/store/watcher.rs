@@ -21,7 +21,7 @@ impl StoreWatcher {
     }
 
     pub async fn connect(&mut self) {
-        while let Ok(event) = self.event_bus.recv().await {
+        while let Ok(event) = self.event_bus.get_mut().recv().await {
             match event {
                 Event::AirplaneDetected(id, location, flight_plan, tag) => {
                     self.insert_airplane(id, location, flight_plan, tag)

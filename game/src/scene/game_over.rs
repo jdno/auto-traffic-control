@@ -15,7 +15,7 @@ impl Plugin for GameOverPlugin {
 
 fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
-        .spawn_bundle(NodeBundle {
+        .spawn(NodeBundle {
             style: Style {
                 size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
                 align_items: AlignItems::Center,
@@ -23,11 +23,10 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
                 flex_direction: FlexDirection::ColumnReverse,
                 ..Default::default()
             },
-            color: Color::NONE.into(),
             ..Default::default()
         })
         .with_children(|parent| {
-            parent.spawn_bundle(TextBundle {
+            parent.spawn(TextBundle {
                 text: Text::from_section(
                     "Game Over",
                     TextStyle {
@@ -38,7 +37,7 @@ fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ),
                 ..Default::default()
             });
-            parent.spawn_bundle(TextBundle {
+            parent.spawn(TextBundle {
                 style: Style {
                     margin: UiRect::all(Val::Px(24.0)),
                     ..Default::default()

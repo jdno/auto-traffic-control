@@ -18,12 +18,12 @@ impl Plugin for MainMenuPlugin {
 }
 
 fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn_bundle(SpriteBundle {
+    commands.spawn(SpriteBundle {
         transform: Transform::from_xyz(0.0, 0.0, RenderLayer::Ui.z()),
         texture: asset_server.load("sprites/logo.png"),
         ..Default::default()
     });
-    commands.spawn_bundle(SpriteBundle {
+    commands.spawn(SpriteBundle {
         transform: Transform::from_xyz(0.0, -128.0, RenderLayer::Ui.z()),
         texture: asset_server.load("sprites/instructions.png"),
         ..Default::default()
