@@ -20,8 +20,8 @@ pub fn setup_landscape(
         TextureAtlas::from_grid(decorations_handle, Vec2::new(128.0, 128.0), 4, 2);
     let decorations_atlas_handle = texture_atlases.add(decorations_atlas);
 
-    let horizontal_tiles = (SCREEN_WIDTH as i32 / TILE_SIZE + 1) as i32;
-    let vertical_tiles = (SCREEN_HEIGHT as i32 / TILE_SIZE + 1) as i32;
+    let horizontal_tiles = SCREEN_WIDTH as i32 / TILE_SIZE + 1;
+    let vertical_tiles = SCREEN_HEIGHT as i32 / TILE_SIZE + 1;
 
     for y in -vertical_tiles..=vertical_tiles {
         for x in -horizontal_tiles..=horizontal_tiles {

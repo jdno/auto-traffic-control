@@ -44,7 +44,7 @@ impl auto_traffic_control::v1::airplane_service_server::AirplaneService for Airp
                 airplane: Some(airplane.clone()),
             }))
         } else {
-            Err(Status::not_found(&format!(
+            Err(Status::not_found(format!(
                 "No airplane with id {id} was found"
             )))
         }
@@ -60,7 +60,7 @@ impl auto_traffic_control::v1::airplane_service_server::AirplaneService for Airp
         let airplane = match self.store.airplanes().get(&id) {
             Some(airplane) => airplane,
             None => {
-                return Err(Status::not_found(&format!(
+                return Err(Status::not_found(format!(
                     "No airplane with id {id} was found"
                 )));
             }
