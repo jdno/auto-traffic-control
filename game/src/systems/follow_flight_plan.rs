@@ -31,6 +31,7 @@ pub fn follow_flight_plan(
 
         event_bus
             .sender()
+            .get()
             .send(Event::AirplaneMoved(
                 airplane_id.clone(),
                 Location::from(&transform),
@@ -40,6 +41,7 @@ pub fn follow_flight_plan(
         if did_update_flight_plan && !flight_plan.get().is_empty() {
             event_bus
                 .sender()
+                .get()
                 .send(Event::FlightPlanUpdated(
                     airplane_id.clone(),
                     flight_plan.clone(),

@@ -1,4 +1,6 @@
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+use bevy::prelude::*;
+
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Resource)]
 pub struct Score(u32);
 
 impl Score {

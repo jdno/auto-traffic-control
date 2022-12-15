@@ -11,7 +11,7 @@ pub fn update_flight_plan(
     mut command_bus: Local<CommandBus>,
     event_bus: Local<EventBus>,
 ) {
-    while let Ok(command) = command_bus.receiver().try_recv() {
+    while let Ok(command) = command_bus.receiver().get_mut().try_recv() {
         let (airplane_id, new_flight_plan) = match command {
             Command::UpdateFlightPlan(airplane_id, flight_plan) => (airplane_id, flight_plan),
             _ => continue,
@@ -27,6 +27,7 @@ pub fn update_flight_plan(
 
                     event_bus
                         .sender()
+                        .get()
                         .send(Event::FlightPlanUpdated(
                             airplane_id.clone(),
                             new_flight_plan,

@@ -81,6 +81,7 @@ impl auto_traffic_control::v1::airplane_service_server::AirplaneService for Airp
 
         if self
             .command_bus
+            .get()
             .send(Command::UpdateFlightPlan(
                 AirplaneId::new(id),
                 new_flight_plan,
@@ -110,13 +111,16 @@ mod tests {
 
     use crate::api::airplane::AirplaneService;
     use crate::api::AsApi;
-    use crate::command::CommandReceiver;
+    use crate::command::{CommandReceiver, CommandSender};
     use crate::components::{AirplaneId, FlightPlan, Location, Tag};
     use crate::map::{Node, MAP_HEIGHT_RANGE, MAP_WIDTH_RANGE};
     use crate::{Command, Store};
 
     fn setup() -> (CommandReceiver, Arc<Store>, AirplaneService) {
         let (command_sender, command_receiver) = channel::<Command>(1024);
+        let command_sender = CommandSender::new(command_sender);
+        let command_receiver = CommandReceiver::new(command_receiver);
+
         let store = Arc::new(Store::new());
         let service = AirplaneService::new(command_sender, store.clone());
 
@@ -211,7 +215,7 @@ mod tests {
         ];
 
         assert_eq!(expected_errors, actual_errors);
-        assert!(command_bus.try_recv().is_err());
+        assert!(command_bus.get_mut().try_recv().is_err());
     }
 
     #[tokio::test]
@@ -271,7 +275,7 @@ mod tests {
             panic!("unexpected payload");
         }
 
-        let command = command_bus.try_recv().unwrap();
+        let command = command_bus.get_mut().try_recv().unwrap();
         match command {
             Command::UpdateFlightPlan(airplane_id, flight_plan) => {
                 assert_eq!("AT-4321", airplane_id.get());

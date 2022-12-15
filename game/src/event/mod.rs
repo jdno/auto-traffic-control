@@ -9,9 +9,13 @@ use crate::components::{AirplaneId, FlightPlan, Location, Tag};
 use crate::map::Map;
 use crate::resources::Score;
 
-pub use self::bus::{EventBus, EventReceiver, EventSender};
+pub use self::bus::EventBus;
+pub use self::receiver::EventReceiver;
+pub use self::sender::EventSender;
 
 mod bus;
+mod receiver;
+mod sender;
 
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub enum Event {

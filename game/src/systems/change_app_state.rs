@@ -9,7 +9,7 @@ pub fn change_app_state(
 ) {
     let mut queued_transition = false;
 
-    while let Ok(command) = command_bus.receiver().try_recv() {
+    while let Ok(command) = command_bus.receiver().get_mut().try_recv() {
         match command {
             Command::StartGame => {
                 app_state.set(AppState::Game).unwrap();
@@ -22,6 +22,6 @@ pub fn change_app_state(
 
     if queued_transition {
         // Drain remaining commands to prevent lagging
-        while command_bus.receiver().try_recv().is_ok() {}
+        while command_bus.receiver().get_mut().try_recv().is_ok() {}
     }
 }

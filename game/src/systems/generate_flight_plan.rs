@@ -22,6 +22,7 @@ pub fn generate_flight_plan(
 
         event_bus
             .sender()
+            .get()
             .send(Event::FlightPlanUpdated(
                 airplane_id.clone(),
                 new_flight_plan,

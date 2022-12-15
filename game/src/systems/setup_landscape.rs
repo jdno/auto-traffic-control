@@ -12,12 +12,19 @@ pub fn setup_landscape(
     let mut rng = thread_rng();
 
     let landscape_handle = asset_server.load("sprites/landscape.png");
-    let landscape_atlas = TextureAtlas::from_grid(landscape_handle, Vec2::new(32.0, 32.0), 1, 1);
+    let landscape_atlas =
+        TextureAtlas::from_grid(landscape_handle, Vec2::new(32.0, 32.0), 1, 1, None, None);
     let landscape_atlas_handle = texture_atlases.add(landscape_atlas);
 
     let decorations_handle = asset_server.load("sprites/decorations.png");
-    let decorations_atlas =
-        TextureAtlas::from_grid(decorations_handle, Vec2::new(128.0, 128.0), 4, 2);
+    let decorations_atlas = TextureAtlas::from_grid(
+        decorations_handle,
+        Vec2::new(128.0, 128.0),
+        4,
+        2,
+        None,
+        None,
+    );
     let decorations_atlas_handle = texture_atlases.add(decorations_atlas);
 
     let horizontal_tiles = SCREEN_WIDTH as i32 / TILE_SIZE + 1;
@@ -28,7 +35,7 @@ pub fn setup_landscape(
             let x = (x * TILE_SIZE) as f32;
             let y = (y * TILE_SIZE) as f32;
 
-            commands.spawn_bundle(SpriteSheetBundle {
+            commands.spawn(SpriteSheetBundle {
                 texture_atlas: landscape_atlas_handle.clone(),
                 transform: Transform {
                     translation: Vec3::new(x, y, RenderLayer::Landscape.z()),
@@ -44,7 +51,7 @@ pub fn setup_landscape(
                 continue;
             }
 
-            commands.spawn_bundle(SpriteSheetBundle {
+            commands.spawn(SpriteSheetBundle {
                 texture_atlas: decorations_atlas_handle.clone(),
                 transform: Transform {
                     translation: Vec3::new(x - 16.0, y - 16.0, RenderLayer::Decoration.z()),
