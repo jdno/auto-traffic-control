@@ -87,7 +87,7 @@ jobs:
         run: npm install -g grpc_tools_node_protoc_ts grpc-tools
 
       - name: Set up Buf
-        uses: bufbuild/buf-setup-action@v1.10.0
+        uses: bufbuild/buf-setup-action@v1.11.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -128,7 +128,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Buf
-        uses: bufbuild/buf-setup-action@v1.10.0
+        uses: bufbuild/buf-setup-action@v1.11.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
