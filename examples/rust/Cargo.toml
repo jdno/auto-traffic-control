@@ -19,4 +19,4 @@ publish = false
 [dependencies]
 auto-traffic-control = { path = "../../sdk/rust", version = "0.3.2" }
 
-tokio = { version = "1.23.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.23.1", features = ["macros", "rt-multi-thread"] }
