@@ -1,48 +1,21 @@
 [package]
 name = "auto-traffic-control-game"
-license = "MIT OR Apache-2.0"
-version = "0.3.2"
-edition = "2021"
-
-rust-version = "1.60"
-
 description = "A video game for programmers about air traffic control"
-repository = "https://github.com/jdno/atc"
+
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+
+homepage.workspace = true
+repository.workspace = true
+
 categories = [
     "games"
 ]
-
-default-run = "auto-traffic-control-game"
 
 publish = false
 
 # See more keys and their definitions at
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
-# cargo-bundle is used to create a macOS .app bundle for distribution on itch.io
-# https://github.com/burtonageo/cargo-bundle
-[package.metadata.bundle]
-name = "Auto Traffic Control"
-identifier = "dev.jdno.auto-traffic-control"
-resources = [
-    "assets"
-]
-copyright = "Copyright (c) 2022 Jan David Nose"
-category = "public.app-category.games"
-
 [dependencies]
-auto-traffic-control = { path = "../sdk/rust", version = "0.3.2", features = ["server"] }
-
-bevy = "0.9.1"
-dashmap = "5.4.0"
-geo = "0.23.1"
-parking_lot = "0.12.1"
-prost = "0.11.5"
-rand = "0.8.5"
-semver = "1.0.16"
-tokio = { version = "1.24.1", features = ["macros", "rt-multi-thread", "sync"] }
-tokio-stream = { version = "0.1.11", features = ["sync"] }
-tonic = "0.8.3"
-
-[target.'cfg(macos)'.dependencies]
-core-foundation = "0.9.3"

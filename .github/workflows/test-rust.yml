@@ -21,13 +21,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y \
-          libx11-dev \
-          libasound2-dev \
-          libudev-dev
-
       - name: Set up Protoc
         uses: arduino/setup-protoc@v1
         with:
@@ -71,13 +64,6 @@ jobs:
       options: --security-opt seccomp=unconfined
 
     steps:
-      - name: Install system dependencies
-        run: |
-          apt-get update && apt-get install -y \
-          libx11-dev \
-          libasound2-dev \
-          libudev-dev
-
       - name: Set up Protoc
         uses: arduino/setup-protoc@v1
         with:

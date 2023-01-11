@@ -1,13 +1,13 @@
 [package]
 name = "test-server"
-license = "MIT OR Apache-2.0"
-version = "0.3.2"
-edition = "2021"
-
-rust-version = "1.56"
-
 description = "Run a mock server for integration tests"
-repository = "https://github.com/jdno/auto-traffic-control"
+
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+
+homepage.workspace = true
+repository.workspace = true
 
 publish = false
 
@@ -15,7 +15,7 @@ publish = false
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-auto-traffic-control = { path = "../../sdk/rust", version = "0.3.2", features = ["server"] }
+auto-traffic-control = { path = "../../sdk/rust", version = "0.4.0-dev", features = ["server"] }
 
 prost = "0.11.5"
 semver = "1.0.16"
