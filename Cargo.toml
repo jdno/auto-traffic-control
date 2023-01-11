@@ -1,7 +1,4 @@
 [workspace]
-# The 2nd-gen resolver is required to compile wgpu.
-resolver = "2"
-
 members = [
     "examples/rust",
     "game",
@@ -9,3 +6,11 @@ members = [
     "utilities/debug-client",
     "utilities/test-server",
 ]
+
+[workspace.package]
+license = "MIT OR Apache-2.0"
+version = "0.4.0-dev"
+edition = "2021"
+
+homepage = "https://auto-traffic-control.com"
+repository = "https://github.com/jdno/auto-traffic-control"
