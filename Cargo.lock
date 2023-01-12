@@ -671,6 +671,9 @@ checksum = "53e8e5d5b70924f74ff5c6d64d9a5acd91422117c60f48c4e07855238a254553"
 [[package]]
 name = "simulation"
 version = "0.4.0-dev"
+dependencies = [
+ "tokio",
+]
 
 [[package]]
 name = "slab"

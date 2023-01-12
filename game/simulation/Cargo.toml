@@ -12,3 +12,4 @@ repository.workspace = true
 publish = false
 
 [dependencies]
+tokio = { version = "1", features = ["macros", "sync", "rt-multi-thread"] }
