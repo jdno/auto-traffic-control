@@ -14,3 +14,6 @@
 //! which are passed to the simulation as arguments.
 
 pub mod bus;
+pub mod entity;
+
+const TILE_SIZE: u32 = 64;
