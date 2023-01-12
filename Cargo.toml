@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "examples/rust",
-    "game",
+    "game/simulation",
     "sdk/rust",
     "utilities/debug-client",
     "utilities/test-server",
