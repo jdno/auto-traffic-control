@@ -12,3 +12,5 @@
 //! The simulation is not responsible for the API of the game, and can in fact be run without an API
 //! altogether (e.g. for testing). It communicates with the API through command and event busses,
 //! which are passed to the simulation as arguments.
+
+pub mod bus;
