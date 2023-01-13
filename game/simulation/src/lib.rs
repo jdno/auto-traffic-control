@@ -17,27 +17,27 @@ use std::fmt::Display;
 
 use crate::behavior::Observable;
 use crate::bus::{Event, Sender};
-use crate::state::{Ready, Running};
+use crate::game::{Game, Ready};
 
 pub mod bus;
 pub mod component;
 
 mod behavior;
-mod state;
+mod game;
 
 const TILE_SIZE: u32 = 64;
 
 #[derive(Clone, Debug)]
 pub struct Simulation<S> {
     event_bus: Sender<Event>,
-    state: S,
+    game: Game<S>,
 }
 
 impl Simulation<Ready> {
     pub fn new(event_bus: Sender<Event>) -> Self {
         Self {
-            event_bus,
-            state: Ready::new(),
+            event_bus: event_bus.clone(),
+            game: Game::new(event_bus),
         }
     }
 }
@@ -47,33 +47,7 @@ where
     S: Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.state)
-    }
-}
-
-impl From<Simulation<Ready>> for Simulation<Running> {
-    fn from(simulation: Simulation<Ready>) -> Self {
-        simulation
-            .notify(Event::GameStarted)
-            .expect("failed to send game started event");
-
-        Self {
-            event_bus: simulation.event_bus,
-            state: Running::new(),
-        }
-    }
-}
-
-impl From<Simulation<Running>> for Simulation<Ready> {
-    fn from(simulation: Simulation<Running>) -> Self {
-        simulation
-            .notify(Event::GameStopped)
-            .expect("failed to send game stopped event");
-
-        Self {
-            event_bus: simulation.event_bus,
-            state: Ready::new(),
-        }
+        write!(f, "{}", self.game)
     }
 }
 
@@ -86,6 +60,14 @@ impl<S> Observable for Simulation<S> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn trait_display() {
+        let (sender, _) = crate::bus::channel(256);
+        let simulation = Simulation::new(sender);
+
+        assert_eq!("game ready", simulation.to_string());
+    }
 
     #[test]
     fn trait_send() {
