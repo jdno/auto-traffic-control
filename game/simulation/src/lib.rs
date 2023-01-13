@@ -15,22 +15,28 @@
 
 use std::fmt::Display;
 
+use crate::behavior::Observable;
+use crate::bus::{Event, Sender};
 use crate::state::{Ready, Running};
 
 pub mod bus;
 pub mod component;
+
+mod behavior;
 mod state;
 
 const TILE_SIZE: u32 = 64;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Simulation<S> {
+    event_bus: Sender<Event>,
     state: S,
 }
 
 impl Simulation<Ready> {
-    pub fn new() -> Self {
+    pub fn new(event_bus: Sender<Event>) -> Self {
         Self {
+            event_bus,
             state: Ready::new(),
         }
     }
@@ -46,18 +52,34 @@ where
 }
 
 impl From<Simulation<Ready>> for Simulation<Running> {
-    fn from(_simulation: Simulation<Ready>) -> Self {
+    fn from(simulation: Simulation<Ready>) -> Self {
+        simulation
+            .notify(Event::GameStarted)
+            .expect("failed to send game started event");
+
         Self {
+            event_bus: simulation.event_bus,
             state: Running::new(),
         }
     }
 }
 
 impl From<Simulation<Running>> for Simulation<Ready> {
-    fn from(_simulation: Simulation<Running>) -> Self {
+    fn from(simulation: Simulation<Running>) -> Self {
+        simulation
+            .notify(Event::GameStopped)
+            .expect("failed to send game stopped event");
+
         Self {
+            event_bus: simulation.event_bus,
             state: Ready::new(),
         }
+    }
+}
+
+impl<S> Observable for Simulation<S> {
+    fn event_bus(&self) -> &Sender<Event> {
+        &self.event_bus
     }
 }
 
