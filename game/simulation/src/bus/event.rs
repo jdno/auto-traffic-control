@@ -1,7 +1,10 @@
 use std::fmt::{Display, Formatter};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub enum Event {}
+pub enum Event {
+    GameStarted,
+    GameStopped,
+}
 
 impl Display for Event {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
