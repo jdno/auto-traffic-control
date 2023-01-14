@@ -43,7 +43,11 @@ mod tests {
 
     #[test]
     fn trait_from_node_zero() {
-        let node = Node::unrestricted(0, 0);
+        let node = Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
 
         let location = Location::from(&node);
 
@@ -52,7 +56,11 @@ mod tests {
 
     #[test]
     fn trait_from_node_nonzero() {
-        let node = Node::unrestricted(1, 2);
+        let node = Node {
+            longitude: 1,
+            latitude: 2,
+            restricted: false,
+        };
 
         let location = Location::from(&node);
 

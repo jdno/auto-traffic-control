@@ -1,4 +1,6 @@
+use crate::entity::Airport;
 use std::fmt::{Display, Formatter};
+use std::sync::Arc;
 
 use crate::map::{Map, Node};
 
@@ -18,6 +20,7 @@ impl MapLoader {
     }
 
     fn parse(name: String, map: &str) -> Map {
+        let mut airports = Vec::new();
         let mut nodes = Vec::new();
 
         let mut width = 0;
@@ -34,9 +37,23 @@ impl MapLoader {
 
             for (y, tile) in line.chars().enumerate() {
                 let node = match tile {
-                    '#' => Node::restricted(x as u32, y as u32),
-                    _ => Node::unrestricted(x as u32, y as u32),
+                    '#' => Node {
+                        longitude: x as u32,
+                        latitude: y as u32,
+                        restricted: true,
+                    },
+                    _ => Node {
+                        longitude: x as u32,
+                        latitude: y as u32,
+                        restricted: false,
+                    },
                 };
+                let node = Arc::new(node);
+
+                if tile == 'A' {
+                    let airport = Airport::new(node.clone());
+                    airports.push(airport);
+                }
 
                 nodes.push(node);
             }
@@ -48,8 +65,11 @@ impl MapLoader {
 
         Map {
             name,
+
             width: width as u32,
             height: height as u32,
+
+            airports,
             grid: nodes,
         }
     }

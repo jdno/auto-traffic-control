@@ -2,28 +2,12 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Node {
-    longitude: u32,
-    latitude: u32,
-    restricted: bool,
+    pub(super) longitude: u32,
+    pub(super) latitude: u32,
+    pub(super) restricted: bool,
 }
 
 impl Node {
-    pub fn restricted(longitude: u32, latitude: u32) -> Self {
-        Self {
-            longitude,
-            latitude,
-            restricted: true,
-        }
-    }
-
-    pub fn unrestricted(longitude: u32, latitude: u32) -> Self {
-        Self {
-            longitude,
-            latitude,
-            restricted: false,
-        }
-    }
-
     pub fn longitude(&self) -> u32 {
         self.longitude
     }
