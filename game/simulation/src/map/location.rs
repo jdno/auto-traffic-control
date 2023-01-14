@@ -1,4 +1,6 @@
 use std::fmt::{Display, Formatter};
+use std::ops::Deref;
+use std::sync::Arc;
 
 use geo::Point;
 
@@ -34,6 +36,12 @@ impl From<&Node> for Location {
         let y = node.latitude() * TILE_SIZE;
 
         Self::new(x as f64, y as f64)
+    }
+}
+
+impl From<&Arc<Node>> for Location {
+    fn from(node: &Arc<Node>) -> Self {
+        node.deref().into()
     }
 }
 
