@@ -1,7 +1,10 @@
+use crate::entity::Airport;
+use std::fmt::{Display, Formatter};
+use std::sync::Arc;
+
 pub use self::loader::*;
 pub use self::location::*;
 pub use self::node::*;
-use std::fmt::{Display, Formatter};
 
 mod loader;
 mod location;
@@ -14,7 +17,8 @@ pub struct Map {
     width: u32,
     height: u32,
 
-    grid: Vec<Node>,
+    airports: Vec<Airport>,
+    grid: Vec<Arc<Node>>,
 }
 
 impl Map {

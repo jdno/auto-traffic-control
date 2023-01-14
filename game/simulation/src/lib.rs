@@ -22,6 +22,7 @@ use crate::state::State;
 pub mod behavior;
 pub mod bus;
 
+mod entity;
 mod map;
 mod state;
 
