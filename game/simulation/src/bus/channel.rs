@@ -1,8 +1,20 @@
 use tokio::sync::broadcast;
 pub use tokio::sync::broadcast::error::{RecvError, SendError, TryRecvError};
 
-use crate::bus::receiver::Receiver;
-use crate::bus::sender::Sender;
+use lazy_static::lazy_static;
+
+use crate::bus::{Command, Event, Receiver, Sender};
+
+lazy_static! {
+    pub static ref COMMAND_BUS: (Sender<Command>, Receiver<Command>) = {
+        let (sender, receiver) = broadcast::channel(256);
+        (Sender { sender }, Receiver { receiver })
+    };
+    pub static ref EVENT_BUS: (Sender<Event>, Receiver<Event>) = {
+        let (sender, receiver) = broadcast::channel(256);
+        (Sender { sender }, Receiver { receiver })
+    };
+}
 
 pub fn channel<T>(buffer: usize) -> (Sender<T>, Receiver<T>)
 where

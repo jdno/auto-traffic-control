@@ -1,7 +1,6 @@
-use crate::behavior::Updateable;
 use std::fmt::{Display, Formatter};
 
-use crate::bus::{Event, Sender};
+use crate::behavior::Updateable;
 
 pub use self::ready::*;
 pub use self::running::*;
@@ -16,8 +15,8 @@ pub enum State {
 }
 
 impl State {
-    pub fn new(event_bus: Sender<Event>) -> Self {
-        Self::Ready(Ready::new(event_bus))
+    pub fn new() -> Self {
+        Self::Ready(Ready::new())
     }
 }
 
@@ -47,8 +46,7 @@ mod tests {
 
     #[test]
     fn trait_display() {
-        let (sender, _) = crate::bus::channel(256);
-        let game = State::new(sender);
+        let game = State::new();
 
         assert_eq!("game ready", game.to_string());
     }

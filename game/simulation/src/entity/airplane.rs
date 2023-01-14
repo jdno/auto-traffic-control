@@ -1,14 +1,15 @@
-use crate::behavior::{Observable, Updateable};
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
-use crate::bus::{Event, Sender};
+use crate::behavior::{Observable, Updateable};
+use crate::bus::{Command, Event, Receiver, Sender};
 use crate::component::{AirplaneId, FlightPlan, Tag};
 use crate::map::{Location, Node};
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 #[allow(dead_code)] // TODO: Remove when path finding is implemented
 pub struct Airplane {
+    command_bus: Receiver<Command>,
     event_bus: Sender<Event>,
 
     id: AirplaneId,
@@ -20,6 +21,7 @@ pub struct Airplane {
 
 impl Airplane {
     pub fn new(
+        command_bus: Receiver<Command>,
         event_bus: Sender<Event>,
         id: AirplaneId,
         tag: Tag,
@@ -27,7 +29,9 @@ impl Airplane {
         first_node: Arc<Node>,
     ) -> Self {
         let airplane = Self {
+            command_bus,
             event_bus,
+
             id,
             location: (&start_node).into(),
             flight_plan: FlightPlan::new(vec![first_node]),
@@ -68,15 +72,18 @@ impl Updateable for Airplane {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::bus::channel;
+
+    use super::*;
 
     #[test]
     fn trait_display() {
-        let (sender, _receiver) = channel(1);
+        let (_command_sender, command_receiver) = channel(1);
+        let (event_sender, _event_receiver) = channel(1);
 
         let airplane = Airplane::new(
-            sender,
+            command_receiver,
+            event_sender,
             AirplaneId::default(),
             Tag::Blue,
             Arc::new(Node::default()),

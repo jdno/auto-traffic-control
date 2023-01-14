@@ -5,7 +5,7 @@ use rand::prelude::*;
 use time::{Duration, Instant};
 
 use crate::behavior::Updateable;
-use crate::bus::{Event, Sender};
+use crate::bus::{Command, Event, Receiver, Sender, COMMAND_BUS, EVENT_BUS};
 use crate::component::Tag;
 use crate::entity::Airplane;
 use crate::map::{Map, Node, MAP_BORDER_WIDTH};
@@ -38,7 +38,9 @@ struct Spawn {
 
 #[derive(Debug)]
 pub struct Spawner {
+    command_bus: Receiver<Command>,
     event_bus: Sender<Event>,
+
     rng: ThreadRng,
 
     airplane_id_generator: AirplaneIdGenerator,
@@ -51,12 +53,14 @@ pub struct Spawner {
 }
 
 impl Spawner {
-    pub fn new(event_bus: Sender<Event>, map: Arc<Mutex<Map>>, interval: Duration) -> Self {
+    pub fn new(map: Arc<Mutex<Map>>, interval: Duration) -> Self {
         let width = map.lock().width();
         let height = map.lock().height();
 
         Self {
-            event_bus,
+            command_bus: COMMAND_BUS.1.resubscribe(),
+            event_bus: EVENT_BUS.0.clone(),
+
             rng: thread_rng(),
 
             airplane_id_generator: AirplaneIdGenerator::default(),
@@ -149,6 +153,7 @@ impl Updateable for Spawner {
             let spawn = self.random_spawn();
 
             let airplane = Airplane::new(
+                self.command_bus.resubscribe(),
                 self.event_bus.clone(),
                 self.airplane_id_generator.generate(),
                 self.random_tag(),

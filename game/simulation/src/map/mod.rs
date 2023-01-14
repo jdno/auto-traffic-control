@@ -15,7 +15,7 @@ mod node;
 
 pub const MAP_BORDER_WIDTH: u32 = 3;
 
-#[derive(Clone, Debug, Default)]
+#[derive(Debug, Default)]
 pub struct Map {
     name: String,
 
@@ -36,11 +36,12 @@ impl Map {
         self.height
     }
 
-    pub fn airports(&self) -> &[Airport] {
+    pub fn airports(&self) -> &Vec<Airport> {
         &self.airports
     }
 
-    pub fn airplanes(&self) -> &[Airplane] {
+    #[allow(dead_code)] // TODO: Remove when collision detection is implemented
+    pub fn airplanes(&self) -> &Vec<Airplane> {
         &self.airplanes
     }
 

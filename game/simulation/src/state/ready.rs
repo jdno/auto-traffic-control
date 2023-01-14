@@ -1,17 +1,27 @@
-use crate::behavior::{Observable, Updateable};
 use std::fmt::Display;
 
-use crate::bus::{Event, Sender};
+use crate::behavior::{Commandable, Observable, Updateable};
+use crate::bus::{Command, Event, Receiver, Sender, COMMAND_BUS, EVENT_BUS};
 use crate::state::Running;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Ready {
+    command_bus: Receiver<Command>,
     event_bus: Sender<Event>,
 }
 
 impl Ready {
-    pub fn new(event_bus: Sender<Event>) -> Self {
-        Self { event_bus }
+    pub fn new() -> Self {
+        Self {
+            command_bus: COMMAND_BUS.1.resubscribe(),
+            event_bus: EVENT_BUS.0.clone(),
+        }
+    }
+}
+
+impl Commandable for Ready {
+    fn command_bus(&self) -> &Receiver<Command> {
+        &self.command_bus
     }
 }
 
@@ -28,8 +38,8 @@ impl Observable for Ready {
 }
 
 impl From<&Running> for Ready {
-    fn from(state: &Running) -> Self {
-        Ready::new(state.event_bus().clone())
+    fn from(_state: &Running) -> Self {
+        Ready::new()
     }
 }
 
@@ -39,14 +49,11 @@ impl Updateable for Ready {
 
 #[cfg(test)]
 mod tests {
-    use crate::bus::channel;
-
     use super::*;
 
     #[test]
     fn trait_display() {
-        let (sender, _) = channel(256);
-        let ready = Ready::new(sender);
+        let ready = Ready::new();
 
         assert_eq!("ready", ready.to_string());
     }

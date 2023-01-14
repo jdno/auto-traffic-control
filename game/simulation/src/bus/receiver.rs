@@ -18,6 +18,12 @@ where
     pub async fn recv(&mut self) -> Result<T, RecvError> {
         self.receiver.recv().await
     }
+
+    pub fn resubscribe(&self) -> Self {
+        Self {
+            receiver: self.receiver.resubscribe(),
+        }
+    }
 }
 
 impl<T> Display for Receiver<T> {

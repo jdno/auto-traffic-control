@@ -1,13 +1,13 @@
 use simulation::behavior::Updateable;
-use simulation::bus::{channel, Command, Event};
+use simulation::bus::{Command, Event};
 use simulation::Simulation;
 
 #[tokio::test]
 async fn start_game() {
-    let (command_sender, command_receiver) = channel(1);
-    let (event_sender, mut event_receiver) = channel(1);
+    let mut simulation = Simulation::new();
 
-    let mut simulation = Simulation::new(command_receiver, event_sender);
+    let command_sender = simulation.command_bus();
+    let mut event_receiver = simulation.event_bus();
 
     command_sender.send(Command::StartGame).unwrap();
 
@@ -18,5 +18,5 @@ async fn start_game() {
         .await
         .expect("failed to receive event");
 
-    assert!(matches!(event, Event::GameStarted(_)));
+    assert!(matches!(event, Event::GameStarted(_, _, _, _)));
 }

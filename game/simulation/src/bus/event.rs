@@ -1,12 +1,14 @@
 use std::fmt::{Display, Formatter};
+use std::sync::Arc;
 
 use crate::component::{AirplaneId, FlightPlan, Tag};
-use crate::map::{Location, Map};
+use crate::entity::Airport;
+use crate::map::{Grid, Location, Node};
 
 #[derive(Clone, Debug)]
 pub enum Event {
     AirplaneDetected(AirplaneId, Location, FlightPlan, Tag),
-    GameStarted(Map),
+    GameStarted(Vec<Airport>, Grid<Arc<Node>>, u32, u32),
     GameStopped,
 }
 
