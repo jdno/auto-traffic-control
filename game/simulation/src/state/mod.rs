@@ -1,3 +1,4 @@
+use crate::behavior::Updateable;
 use std::fmt::{Display, Formatter};
 
 use crate::bus::{Event, Sender};
@@ -28,6 +29,15 @@ impl Display for State {
         };
 
         write!(f, "game {}", payload)
+    }
+}
+
+impl Updateable for State {
+    fn update(&mut self, delta: f32) {
+        match self {
+            Self::Ready(state) => state.update(delta),
+            Self::Running(state) => state.update(delta),
+        }
     }
 }
 

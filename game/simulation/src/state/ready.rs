@@ -1,4 +1,4 @@
-use crate::behavior::Observable;
+use crate::behavior::{Observable, Updateable};
 use std::fmt::Display;
 
 use crate::bus::{Event, Sender};
@@ -31,6 +31,10 @@ impl From<&Running> for Ready {
     fn from(state: &Running) -> Self {
         Ready::new(state.event_bus().clone())
     }
+}
+
+impl Updateable for Ready {
+    fn update(&mut self, _delta: f32) {}
 }
 
 #[cfg(test)]

@@ -1,4 +1,4 @@
-use crate::behavior::Observable;
+use crate::behavior::{Observable, Updateable};
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
@@ -57,6 +57,12 @@ impl Display for Airplane {
 impl Observable for Airplane {
     fn event_bus(&self) -> &Sender<Event> {
         &self.event_bus
+    }
+}
+
+impl Updateable for Airplane {
+    fn update(&mut self, _delta: f32) {
+        todo!()
     }
 }
 

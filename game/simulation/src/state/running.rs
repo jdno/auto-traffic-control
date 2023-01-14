@@ -3,7 +3,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 use time::Duration;
 
-use crate::behavior::Observable;
+use crate::behavior::{Observable, Updateable};
 use crate::bus::{Event, Sender};
 use crate::entity::{Airplane, Spawner};
 use crate::map::{Map, MapLoader, Maps};
@@ -55,6 +55,15 @@ impl From<&Ready> for Running {
 impl Observable for Running {
     fn event_bus(&self) -> &Sender<Event> {
         &self.event_bus
+    }
+}
+
+impl Updateable for Running {
+    fn update(&mut self, delta: f32) {
+        self.spawner.update(delta);
+        self.airplanes
+            .iter_mut()
+            .for_each(|airplane| airplane.update(delta));
     }
 }
 
