@@ -1,16 +1,18 @@
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
+use crate::component::Tag;
 use crate::map::Node;
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Airport {
     node: Arc<Node>,
+    tag: Tag,
 }
 
 impl Airport {
-    pub fn new(node: Arc<Node>) -> Self {
-        Self { node }
+    pub fn new(node: Arc<Node>, tag: Tag) -> Self {
+        Self { node, tag }
     }
 }
 

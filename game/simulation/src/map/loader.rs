@@ -1,3 +1,4 @@
+use crate::component::Tag;
 use crate::entity::Airport;
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
@@ -50,8 +51,12 @@ impl MapLoader {
                 };
                 let node = Arc::new(node);
 
-                if tile == 'A' {
-                    let airport = Airport::new(node.clone());
+                if tile == 'B' {
+                    let airport = Airport::new(node.clone(), Tag::Blue);
+                    airports.push(airport);
+                }
+                if tile == 'R' {
+                    let airport = Airport::new(node.clone(), Tag::Red);
                     airports.push(airport);
                 }
 
@@ -61,6 +66,10 @@ impl MapLoader {
 
         if width == 0 && height == 0 {
             panic!("map is empty");
+        }
+
+        if airports.is_empty() {
+            panic!("map has no airports");
         }
 
         Map {
