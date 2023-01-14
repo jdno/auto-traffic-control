@@ -18,5 +18,5 @@ async fn start_game() {
         .await
         .expect("failed to receive event");
 
-    assert_eq!(Event::GameStarted, event);
+    assert!(matches!(event, Event::GameStarted(_)));
 }

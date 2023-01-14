@@ -1,8 +1,10 @@
 use std::fmt::{Display, Formatter};
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+use crate::map::Map;
+
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Event {
-    GameStarted,
+    GameStarted(Map),
     GameStopped,
 }
 

@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 
 use geo::Point;
 
-use crate::component::Node;
+use crate::map::Node;
 use crate::TILE_SIZE;
 
 #[derive(Copy, Clone, PartialEq, Debug, Default)]

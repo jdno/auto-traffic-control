@@ -21,8 +21,8 @@ use crate::state::State;
 
 pub mod behavior;
 pub mod bus;
-pub mod component;
 
+mod map;
 mod state;
 
 const TILE_SIZE: u32 = 64;

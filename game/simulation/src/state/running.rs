@@ -2,20 +2,28 @@ use std::fmt::Display;
 
 use crate::behavior::Observable;
 use crate::bus::{Event, Sender};
+use crate::map::{Map, MapLoader, Maps};
 use crate::state::Ready;
 
 #[derive(Clone, Debug)]
+#[allow(dead_code)] // TODO: Remove when map is used
 pub struct Running {
     event_bus: Sender<Event>,
+    map: Map,
 }
 
 impl Running {
     pub fn new(event_bus: Sender<Event>) -> Self {
-        let running = Self { event_bus };
+        let map = MapLoader::load(Maps::Sandbox);
+
+        let running = Self {
+            event_bus,
+            map: map.clone(),
+        };
 
         // TODO: Handle error gracefully
         running
-            .notify(Event::GameStarted)
+            .notify(Event::GameStarted(map))
             .expect("failed to send GameStarted event");
 
         running
