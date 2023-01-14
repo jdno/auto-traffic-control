@@ -66,12 +66,14 @@ impl Observable for Simulation {
 }
 
 impl Updateable for Simulation {
-    fn update(&mut self, _delta: f32) {
+    fn update(&mut self, delta: f32) {
         while let Ok(command) = self.command_bus.try_recv() {
             match command {
                 Command::StartGame => self.start_game(),
             }
         }
+
+        self.game.update(delta);
     }
 }
 
