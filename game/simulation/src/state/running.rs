@@ -1,11 +1,17 @@
 use std::fmt::Display;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct Running {}
+use crate::behavior::Observable;
+use crate::bus::{Event, Sender};
+
+#[derive(Clone, Debug)]
+pub struct Running {
+    event_bus: Sender<Event>,
+}
 
 impl Running {
-    pub fn new() -> Self {
-        Self {}
+    #[allow(dead_code)] // TODO: Remove when changing states is implemented
+    pub fn new(event_bus: Sender<Event>) -> Self {
+        Self { event_bus }
     }
 }
 
@@ -15,13 +21,23 @@ impl Display for Running {
     }
 }
 
+impl Observable for Running {
+    fn event_bus(&self) -> &Sender<Event> {
+        &self.event_bus
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::bus::channel;
+
     use super::*;
 
     #[test]
     fn trait_display() {
-        let running = Running::new();
+        let (sender, _) = channel(256);
+        let running = Running::new(sender);
+
         assert_eq!("running", running.to_string());
     }
 

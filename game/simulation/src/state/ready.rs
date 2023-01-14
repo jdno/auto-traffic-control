@@ -1,11 +1,16 @@
+use crate::behavior::Observable;
 use std::fmt::Display;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct Ready {}
+use crate::bus::{Event, Sender};
+
+#[derive(Clone, Debug)]
+pub struct Ready {
+    event_bus: Sender<Event>,
+}
 
 impl Ready {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(event_bus: Sender<Event>) -> Self {
+        Self { event_bus }
     }
 }
 
@@ -15,13 +20,23 @@ impl Display for Ready {
     }
 }
 
+impl Observable for Ready {
+    fn event_bus(&self) -> &Sender<Event> {
+        &self.event_bus
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::bus::channel;
+
     use super::*;
 
     #[test]
     fn trait_display() {
-        let ready = Ready::new();
+        let (sender, _) = channel(256);
+        let ready = Ready::new(sender);
+
         assert_eq!("ready", ready.to_string());
     }
 
