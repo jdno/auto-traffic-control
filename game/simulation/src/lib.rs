@@ -17,41 +17,38 @@ use std::fmt::Display;
 
 use crate::behavior::Observable;
 use crate::bus::{Event, Sender};
-use crate::game::{Game, Ready};
+use crate::state::State;
 
 pub mod bus;
 pub mod component;
 
 mod behavior;
-mod game;
+mod state;
 
 const TILE_SIZE: u32 = 64;
 
 #[derive(Clone, Debug)]
-pub struct Simulation<S> {
+pub struct Simulation {
     event_bus: Sender<Event>,
-    game: Game<S>,
+    game: State,
 }
 
-impl Simulation<Ready> {
+impl Simulation {
     pub fn new(event_bus: Sender<Event>) -> Self {
         Self {
             event_bus: event_bus.clone(),
-            game: Game::new(event_bus),
+            game: State::new(event_bus),
         }
     }
 }
 
-impl<S> Display for Simulation<S>
-where
-    S: Display,
-{
+impl Display for Simulation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.game)
     }
 }
 
-impl<S> Observable for Simulation<S> {
+impl Observable for Simulation {
     fn event_bus(&self) -> &Sender<Event> {
         &self.event_bus
     }
@@ -72,18 +69,18 @@ mod tests {
     #[test]
     fn trait_send() {
         fn assert_send<T: Send>() {}
-        assert_send::<Simulation<Ready>>();
+        assert_send::<Simulation>();
     }
 
     #[test]
     fn trait_sync() {
         fn assert_sync<T: Sync>() {}
-        assert_sync::<Simulation<Ready>>();
+        assert_sync::<Simulation>();
     }
 
     #[test]
     fn trait_unpin() {
         fn assert_unpin<T: Unpin>() {}
-        assert_unpin::<Simulation<Ready>>();
+        assert_unpin::<Simulation>();
     }
 }
