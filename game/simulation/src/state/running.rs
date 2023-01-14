@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::behavior::Observable;
 use crate::bus::{Event, Sender};
+use crate::state::Ready;
 
 #[derive(Clone, Debug)]
 pub struct Running {
@@ -9,15 +10,27 @@ pub struct Running {
 }
 
 impl Running {
-    #[allow(dead_code)] // TODO: Remove when changing states is implemented
     pub fn new(event_bus: Sender<Event>) -> Self {
-        Self { event_bus }
+        let running = Self { event_bus };
+
+        // TODO: Handle error gracefully
+        running
+            .notify(Event::GameStarted)
+            .expect("failed to send GameStarted event");
+
+        running
     }
 }
 
 impl Display for Running {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "running")
+    }
+}
+
+impl From<&Ready> for Running {
+    fn from(state: &Ready) -> Self {
+        Self::new(state.event_bus().clone())
     }
 }
 
@@ -35,7 +48,7 @@ mod tests {
 
     #[test]
     fn trait_display() {
-        let (sender, _) = channel(256);
+        let (sender, _receiver) = channel(256);
         let running = Running::new(sender);
 
         assert_eq!("running", running.to_string());
