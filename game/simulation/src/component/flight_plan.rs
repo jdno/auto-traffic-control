@@ -1,12 +1,13 @@
 use std::fmt::{Display, Formatter};
+use std::sync::Arc;
 
 use crate::map::Node;
 
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct FlightPlan(Vec<Node>);
+pub struct FlightPlan(Vec<Arc<Node>>);
 
 impl FlightPlan {
-    pub fn new(flight_plan: Vec<Node>) -> Self {
+    pub fn new(flight_plan: Vec<Arc<Node>>) -> Self {
         Self(flight_plan)
     }
 }

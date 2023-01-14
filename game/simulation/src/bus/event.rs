@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 use crate::component::{AirplaneId, FlightPlan, Tag};
 use crate::map::{Location, Map};
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, Debug)]
 pub enum Event {
     AirplaneDetected(AirplaneId, Location, FlightPlan, Tag),
     GameStarted(Map),

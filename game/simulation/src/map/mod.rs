@@ -1,16 +1,21 @@
-use crate::entity::Airport;
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
+use crate::entity::{Airplane, Airport};
+
+pub use self::grid::*;
 pub use self::loader::*;
 pub use self::location::*;
 pub use self::node::*;
 
+mod grid;
 mod loader;
 mod location;
 mod node;
 
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub const MAP_BORDER_WIDTH: u32 = 3;
+
+#[derive(Clone, Debug, Default)]
 pub struct Map {
     name: String,
 
@@ -18,7 +23,8 @@ pub struct Map {
     height: u32,
 
     airports: Vec<Airport>,
-    grid: Vec<Arc<Node>>,
+    airplanes: Vec<Airplane>,
+    grid: Grid<Arc<Node>>,
 }
 
 impl Map {
@@ -28,6 +34,22 @@ impl Map {
 
     pub fn height(&self) -> u32 {
         self.height
+    }
+
+    pub fn airports(&self) -> &[Airport] {
+        &self.airports
+    }
+
+    pub fn airplanes(&self) -> &[Airplane] {
+        &self.airplanes
+    }
+
+    pub fn airplanes_mut(&mut self) -> &mut Vec<Airplane> {
+        &mut self.airplanes
+    }
+
+    pub fn grid(&self) -> &Grid<Arc<Node>> {
+        &self.grid
     }
 }
 

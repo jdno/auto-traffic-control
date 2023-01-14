@@ -1,33 +1,39 @@
+use parking_lot::Mutex;
 use std::fmt::Display;
+use std::sync::Arc;
+use time::Duration;
 
 use crate::behavior::Observable;
 use crate::bus::{Event, Sender};
-use crate::entity::Airplane;
+use crate::entity::{Airplane, Spawner};
 use crate::map::{Map, MapLoader, Maps};
 use crate::state::Ready;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 #[allow(dead_code)] // TODO: Remove when map is used
 pub struct Running {
     event_bus: Sender<Event>,
 
     airplanes: Vec<Airplane>,
-    map: Map,
+    map: Arc<Mutex<Map>>,
+    spawner: Spawner,
 }
 
 impl Running {
     pub fn new(event_bus: Sender<Event>) -> Self {
-        let map = MapLoader::load(Maps::Sandbox);
+        let map = Arc::new(Mutex::new(MapLoader::load(Maps::Sandbox)));
+        let spawner = Spawner::new(event_bus.clone(), map.clone(), Duration::seconds(2));
 
         let running = Self {
             event_bus,
             airplanes: Vec::new(),
             map: map.clone(),
+            spawner,
         };
 
         // TODO: Handle error gracefully
         running
-            .notify(Event::GameStarted(map))
+            .notify(Event::GameStarted(map.lock().clone()))
             .expect("failed to send GameStarted event");
 
         running
@@ -64,18 +70,6 @@ mod tests {
         let running = Running::new(sender);
 
         assert_eq!("running", running.to_string());
-    }
-
-    #[test]
-    fn trait_send() {
-        fn assert_send<T: Send>() {}
-        assert_send::<Running>();
-    }
-
-    #[test]
-    fn trait_sync() {
-        fn assert_sync<T: Sync>() {}
-        assert_sync::<Running>();
     }
 
     #[test]

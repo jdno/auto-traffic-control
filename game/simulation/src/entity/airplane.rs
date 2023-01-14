@@ -19,14 +19,19 @@ pub struct Airplane {
 }
 
 impl Airplane {
-    #[allow(dead_code)] // TODO: Remove when airplanes get spawned
-    pub fn new(event_bus: Sender<Event>, id: AirplaneId, tag: Tag, start: Arc<Node>) -> Self {
+    pub fn new(
+        event_bus: Sender<Event>,
+        id: AirplaneId,
+        tag: Tag,
+        start_node: Arc<Node>,
+        first_node: Arc<Node>,
+    ) -> Self {
         let airplane = Self {
             event_bus,
             id,
-            location: (&start).into(),
-            flight_plan: FlightPlan::default(),
-            travelled_route: vec![start],
+            location: (&start_node).into(),
+            flight_plan: FlightPlan::new(vec![first_node]),
+            travelled_route: vec![start_node],
             tag,
         };
 
@@ -68,6 +73,7 @@ mod tests {
             sender,
             AirplaneId::default(),
             Tag::Blue,
+            Arc::new(Node::default()),
             Arc::new(Node::default()),
         );
 

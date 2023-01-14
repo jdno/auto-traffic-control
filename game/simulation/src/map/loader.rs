@@ -1,9 +1,9 @@
-use crate::component::Tag;
-use crate::entity::Airport;
 use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
-use crate::map::{Map, Node};
+use crate::component::Tag;
+use crate::entity::Airport;
+use crate::map::{Grid, Map, Node};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Maps {
@@ -79,7 +79,8 @@ impl MapLoader {
             height: height as u32,
 
             airports,
-            grid: nodes,
+            airplanes: Vec::new(),
+            grid: Grid::new(width as u32, height as u32, nodes),
         }
     }
 }
