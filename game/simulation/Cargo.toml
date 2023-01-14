@@ -13,4 +13,7 @@ publish = false
 
 [dependencies]
 geo = "0.23"
+parking_lot = "0.12"
+rand = "0.8"
+time = "0.3"
 tokio = { version = "1", features = ["macros", "sync", "rt-multi-thread"] }

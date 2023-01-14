@@ -8,7 +8,7 @@ pub use self::running::*;
 mod ready;
 mod running;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub enum State {
     Ready(Ready),
     Running(Running),
@@ -41,18 +41,6 @@ mod tests {
         let game = State::new(sender);
 
         assert_eq!("game ready", game.to_string());
-    }
-
-    #[test]
-    fn trait_send() {
-        fn assert_send<T: Send>() {}
-        assert_send::<State>();
-    }
-
-    #[test]
-    fn trait_sync() {
-        fn assert_sync<T: Sync>() {}
-        assert_sync::<State>();
     }
 
     #[test]

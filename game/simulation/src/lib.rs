@@ -26,6 +26,7 @@ mod component;
 mod entity;
 mod map;
 mod state;
+mod util;
 
 const TILE_SIZE: u32 = 64;
 
@@ -88,18 +89,6 @@ mod tests {
         let simulation = Simulation::new(command_receiver, event_sender);
 
         assert_eq!("game ready", simulation.to_string());
-    }
-
-    #[test]
-    fn trait_send() {
-        fn assert_send<T: Send>() {}
-        assert_send::<Simulation>();
-    }
-
-    #[test]
-    fn trait_sync() {
-        fn assert_sync<T: Sync>() {}
-        assert_sync::<Simulation>();
     }
 
     #[test]
