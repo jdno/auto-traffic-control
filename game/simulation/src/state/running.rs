@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::behavior::Observable;
 use crate::bus::{Event, Sender};
+use crate::entity::Airplane;
 use crate::map::{Map, MapLoader, Maps};
 use crate::state::Ready;
 
@@ -9,6 +10,8 @@ use crate::state::Ready;
 #[allow(dead_code)] // TODO: Remove when map is used
 pub struct Running {
     event_bus: Sender<Event>,
+
+    airplanes: Vec<Airplane>,
     map: Map,
 }
 
@@ -18,6 +21,7 @@ impl Running {
 
         let running = Self {
             event_bus,
+            airplanes: Vec::new(),
             map: map.clone(),
         };
 
