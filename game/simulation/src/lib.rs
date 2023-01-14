@@ -15,29 +15,37 @@
 
 use std::fmt::Display;
 
-use crate::behavior::Observable;
-use crate::bus::{Event, Sender};
+use crate::behavior::{Observable, Updateable};
+use crate::bus::{Command, Event, Receiver, Sender};
 use crate::state::State;
 
+pub mod behavior;
 pub mod bus;
 pub mod component;
 
-mod behavior;
 mod state;
 
 const TILE_SIZE: u32 = 64;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Simulation {
+    command_bus: Receiver<Command>,
     event_bus: Sender<Event>,
     game: State,
 }
 
 impl Simulation {
-    pub fn new(event_bus: Sender<Event>) -> Self {
+    pub fn new(command_bus: Receiver<Command>, event_bus: Sender<Event>) -> Self {
         Self {
+            command_bus,
             event_bus: event_bus.clone(),
             game: State::new(event_bus),
+        }
+    }
+
+    fn start_game(&mut self) {
+        if let State::Ready(ready) = &self.game {
+            self.game = State::Running(ready.into());
         }
     }
 }
@@ -54,14 +62,28 @@ impl Observable for Simulation {
     }
 }
 
+impl Updateable for Simulation {
+    fn update(&mut self, _delta: f32) {
+        while let Ok(command) = self.command_bus.try_recv() {
+            match command {
+                Command::StartGame => self.start_game(),
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::bus::channel;
+
     use super::*;
 
     #[test]
     fn trait_display() {
-        let (sender, _) = crate::bus::channel(256);
-        let simulation = Simulation::new(sender);
+        let (_, command_receiver) = channel(1);
+        let (event_sender, _) = channel(1);
+
+        let simulation = Simulation::new(command_receiver, event_sender);
 
         assert_eq!("game ready", simulation.to_string());
     }

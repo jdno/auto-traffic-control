@@ -9,7 +9,6 @@ mod ready;
 mod running;
 
 #[derive(Clone, Debug)]
-#[allow(dead_code)] // TODO: Remove when changing states is implemented
 pub enum State {
     Ready(Ready),
     Running(Running),

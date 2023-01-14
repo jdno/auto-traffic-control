@@ -2,6 +2,7 @@ use crate::behavior::Observable;
 use std::fmt::Display;
 
 use crate::bus::{Event, Sender};
+use crate::state::Running;
 
 #[derive(Clone, Debug)]
 pub struct Ready {
@@ -23,6 +24,12 @@ impl Display for Ready {
 impl Observable for Ready {
     fn event_bus(&self) -> &Sender<Event> {
         &self.event_bus
+    }
+}
+
+impl From<&Running> for Ready {
+    fn from(state: &Running) -> Self {
+        Ready::new(state.event_bus().clone())
     }
 }
 

@@ -1,7 +1,9 @@
 use std::fmt::{Display, Formatter};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub enum Command {}
+pub enum Command {
+    StartGame,
+}
 
 impl Display for Command {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
