@@ -32,6 +32,7 @@ impl Node {
         self.latitude
     }
 
+    #[allow(dead_code)] // TODO: Remove when path finding is implemented
     pub fn is_restricted(&self) -> bool {
         self.restricted
     }
