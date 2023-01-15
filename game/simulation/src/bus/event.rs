@@ -8,10 +8,11 @@ use crate::map::{Airport, Grid, Location, Node};
 pub enum Event {
     AirplaneDetected(AirplaneId, Location, FlightPlan, Tag),
     AirplaneLanded(AirplaneId),
+    AirplaneMoved(AirplaneId, Location),
     FlightPlanUpdated(AirplaneId, FlightPlan),
-    LandingAborted(AirplaneId),
     GameStarted(Vec<Airport>, Grid<Arc<Node>>, u32, u32),
     GameStopped,
+    LandingAborted(AirplaneId),
 }
 
 impl Display for Event {
