@@ -1,0 +1,26 @@
+[package]
+name = "api"
+description = "gRPC server for Auto Traffic Control"
+
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+
+homepage.workspace = true
+repository.workspace = true
+
+publish = false
+
+[dependencies]
+auto-traffic-control = { path = "../../sdk/rust", version = "0.4.0-dev", features = ["server"] }
+simulation = { path = "../simulation", version = "0.4.0-dev" }
+
+dashmap = "5"
+parking_lot = "0.12"
+prost = "0.11"
+semver = "1"
+tokio-stream = { version = "0.1", features = ["sync"] }
+tonic = "0.8"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync"] }

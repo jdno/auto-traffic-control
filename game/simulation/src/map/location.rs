@@ -47,6 +47,15 @@ impl Display for Location {
     }
 }
 
+impl From<&auto_traffic_control::v1::Node> for Location {
+    fn from(node: &auto_traffic_control::v1::Node) -> Self {
+        let x = node.longitude as u32 * TILE_SIZE;
+        let y = node.latitude as u32 * TILE_SIZE;
+
+        Self::new(x as f64, y as f64)
+    }
+}
+
 impl From<&Node> for Location {
     fn from(node: &Node) -> Self {
         let x = node.longitude() * TILE_SIZE;
@@ -65,6 +74,15 @@ impl From<&Arc<Node>> for Location {
 impl From<Point> for Location {
     fn from(point: Point) -> Self {
         Location(point)
+    }
+}
+
+impl From<Location> for auto_traffic_control::v1::Point {
+    fn from(location: Location) -> Self {
+        Self {
+            x: location.x() as i32,
+            y: location.y() as i32,
+        }
     }
 }
 

@@ -41,6 +41,17 @@ impl Display for Airport {
     }
 }
 
+impl From<Airport> for auto_traffic_control::v1::Airport {
+    fn from(airport: Airport) -> Self {
+        let tag: auto_traffic_control::v1::Tag = airport.tag.into();
+
+        Self {
+            node: Some((*airport.node).into()),
+            tag: tag.into(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter};
+use std::ops::Deref;
 use std::sync::Arc;
 
 use crate::map::{Grid, Node};
@@ -114,6 +115,39 @@ impl FlightPlan {
 impl Display for FlightPlan {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "FlightPlan")
+    }
+}
+
+impl From<FlightPlan> for Vec<auto_traffic_control::v1::Node> {
+    fn from(flight_plan: FlightPlan) -> Self {
+        flight_plan
+            .get()
+            .iter()
+            .map(|node| (*node.deref()).into())
+            .collect()
+    }
+}
+
+impl From<FlightPlanError> for auto_traffic_control::v1::update_flight_plan_error::ValidationError {
+    fn from(error: FlightPlanError) -> Self {
+        match error {
+            FlightPlanError::NodeOutsideMap => Self::NodeOutsideMap,
+            FlightPlanError::InvalidStep => Self::InvalidStep,
+            FlightPlanError::SharpTurn => Self::SharpTurn,
+            FlightPlanError::InvalidStart => Self::InvalidStart,
+            FlightPlanError::RestrictedNode => Self::RestrictedNode,
+        }
+    }
+}
+
+impl From<Vec<auto_traffic_control::v1::Node>> for FlightPlan {
+    fn from(flight_plan: Vec<auto_traffic_control::v1::Node>) -> Self {
+        Self::new(
+            flight_plan
+                .iter()
+                .map(|node| Arc::new(node.into()))
+                .collect(),
+        )
     }
 }
 

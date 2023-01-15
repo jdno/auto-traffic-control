@@ -22,6 +22,10 @@ impl<T> Grid<T> {
         self.elements.get((y * self.width + x) as usize)
     }
 
+    pub fn elements(&self) -> &Vec<T> {
+        &self.elements
+    }
+
     pub fn width(&self) -> u32 {
         self.width
     }
