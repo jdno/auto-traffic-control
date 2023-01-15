@@ -13,11 +13,16 @@ use crate::system::System;
 pub struct DespawnAirplaneSystem {
     event_bus: Sender<Event>,
     map: Arc<Mutex<Map>>,
+    score: Arc<Mutex<u32>>,
 }
 
 impl DespawnAirplaneSystem {
-    pub fn new(event_bus: Sender<Event>, map: Arc<Mutex<Map>>) -> Self {
-        Self { event_bus, map }
+    pub fn new(event_bus: Sender<Event>, map: Arc<Mutex<Map>>, score: Arc<Mutex<u32>>) -> Self {
+        Self {
+            event_bus,
+            map,
+            score,
+        }
     }
 }
 
@@ -36,6 +41,7 @@ impl System for DespawnAirplaneSystem {
 
                 if airport.tag() == *tag {
                     landed_airplanes.push(entity);
+                    *self.score.lock() += 1;
 
                     self.event_bus
                         .send(Event::AirplaneLanded(airplane_id.clone()))

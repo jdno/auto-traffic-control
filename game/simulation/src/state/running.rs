@@ -18,6 +18,7 @@ pub struct Running {
     command_bus: Receiver<Command>,
     event_bus: Sender<Event>,
 
+    score: Arc<Mutex<u32>>,
     systems: Vec<Box<dyn System>>,
     world: World,
 }
@@ -31,9 +32,14 @@ impl Running {
         let height = map.height();
 
         let map = Arc::new(Mutex::new(map));
+        let score = Arc::new(Mutex::new(0));
 
         let systems: Vec<Box<dyn System>> = vec![
-            Box::new(DespawnAirplaneSystem::new(EVENT_BUS.0.clone(), map.clone())),
+            Box::new(DespawnAirplaneSystem::new(
+                EVENT_BUS.0.clone(),
+                map.clone(),
+                score.clone(),
+            )),
             Box::new(UpdateFlightPlanSystem::new(
                 COMMAND_BUS.1.resubscribe(),
                 EVENT_BUS.0.clone(),
@@ -55,6 +61,7 @@ impl Running {
         let running = Self {
             command_bus: COMMAND_BUS.1.resubscribe(),
             event_bus: EVENT_BUS.0.clone(),
+            score,
             systems,
             world: World::new(),
         };
@@ -83,7 +90,7 @@ impl Display for Running {
 impl Drop for Running {
     fn drop(&mut self) {
         self.event_bus
-            .send(Event::GameStopped)
+            .send(Event::GameStopped(*self.score.lock()))
             .expect("failed to send GameStopped event");
     }
 }
