@@ -18,9 +18,15 @@ impl Node {
         self.latitude
     }
 
-    #[allow(dead_code)] // TODO: Remove when path finding is implemented
     pub fn is_restricted(&self) -> bool {
         self.restricted
+    }
+
+    pub fn is_neighbor(&self, potential_neighbor: &Node) -> bool {
+        let delta_x = potential_neighbor.longitude() as i32 - self.longitude() as i32;
+        let delta_y = potential_neighbor.latitude() as i32 - self.latitude() as i32;
+
+        delta_x.abs() <= 1 && delta_y.abs() <= 1
     }
 }
 

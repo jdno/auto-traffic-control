@@ -1,20 +1,29 @@
 use hecs::World;
+use parking_lot::Mutex;
+use std::sync::Arc;
 
 use crate::bus::{Command, Event, Receiver, Sender};
 use crate::component::{AirplaneId, FlightPlan};
+use crate::map::Map;
 use crate::system::System;
 
 #[derive(Debug)]
 pub struct UpdateFlightPlanSystem {
     command_bus: Receiver<Command>,
     event_bus: Sender<Event>,
+    map: Arc<Mutex<Map>>,
 }
 
 impl UpdateFlightPlanSystem {
-    pub fn new(command_bus: Receiver<Command>, event_bus: Sender<Event>) -> Self {
+    pub fn new(
+        command_bus: Receiver<Command>,
+        event_bus: Sender<Event>,
+        map: Arc<Mutex<Map>>,
+    ) -> Self {
         Self {
             command_bus,
             event_bus,
+            map,
         }
     }
 }
@@ -30,6 +39,17 @@ impl System for UpdateFlightPlanSystem {
             for (_entity, (id, flight_plan)) in world.query_mut::<(&AirplaneId, &mut FlightPlan)>()
             {
                 if *id != airplane_id {
+                    continue;
+                }
+
+                if new_flight_plan
+                    .validate(flight_plan, self.map.lock().grid())
+                    .is_err()
+                {
+                    // The flight plan has already been validated by the API and there is only a
+                    // very small chance that it becomes invalid between the validation and the
+                    // update.
+                    // TODO: Log the error
                     continue;
                 }
 

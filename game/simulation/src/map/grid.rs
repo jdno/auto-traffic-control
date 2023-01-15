@@ -21,6 +21,14 @@ impl<T> Grid<T> {
     pub fn get(&self, x: u32, y: u32) -> Option<&T> {
         self.elements.get((y * self.width + x) as usize)
     }
+
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn height(&self) -> u32 {
+        self.height
+    }
 }
 
 impl<T> Grid<T>
