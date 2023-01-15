@@ -1,4 +1,6 @@
+use crate::map::Direction;
 use std::fmt::{Display, Formatter};
+use std::ops;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Node {
@@ -36,9 +38,179 @@ impl Display for Node {
     }
 }
 
+impl ops::Sub for &Node {
+    type Output = Direction;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let x = self.longitude() as i32 - rhs.longitude() as i32;
+        let y = self.latitude() as i32 - rhs.latitude() as i32;
+
+        if x == 0 {
+            if y <= 0 {
+                return Direction::South;
+            }
+            if y > 0 {
+                return Direction::North;
+            }
+        }
+        if x < 0 {
+            if y == 0 {
+                return Direction::East;
+            }
+            if y < 0 {
+                return Direction::SouthEast;
+            }
+            if y > 0 {
+                return Direction::NorthEast;
+            }
+        }
+        if x > 0 {
+            if y == 0 {
+                return Direction::West;
+            }
+            if y < 0 {
+                return Direction::SouthWest;
+            }
+            if y > 0 {
+                return Direction::NorthWest;
+            }
+        }
+
+        panic!("failed to determine direction");
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn sub_north() {
+        let node1 = Node {
+            longitude: 0,
+            latitude: 1,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::North, &node1 - &node2);
+    }
+
+    #[test]
+    fn sub_north_east() {
+        let node1 = Node {
+            longitude: 0,
+            latitude: 1,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 1,
+            latitude: 0,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::NorthEast, &node1 - &node2);
+    }
+
+    #[test]
+    fn sub_east() {
+        let node1 = Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 1,
+            latitude: 0,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::East, &node1 - &node2);
+    }
+
+    #[test]
+    fn sub_south_east() {
+        let node1 = Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 1,
+            latitude: 1,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::SouthEast, &node1 - &node2);
+    }
+
+    #[test]
+    fn sub_south() {
+        let node1 = Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 0,
+            latitude: 1,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::South, &node1 - &node2);
+    }
+
+    #[test]
+    fn sub_south_west() {
+        let node1 = Node {
+            longitude: 1,
+            latitude: 0,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 0,
+            latitude: 1,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::SouthWest, &node1 - &node2);
+    }
+
+    #[test]
+    fn sub_west() {
+        let node1 = Node {
+            longitude: 1,
+            latitude: 0,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::West, &node1 - &node2);
+    }
+
+    #[test]
+    fn sub_north_west() {
+        let node1 = Node {
+            longitude: 1,
+            latitude: 1,
+            restricted: false,
+        };
+        let node2 = Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+
+        assert_eq!(Direction::NorthWest, &node1 - &node2);
+    }
 
     #[test]
     fn trait_display() {
