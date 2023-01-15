@@ -28,6 +28,12 @@ mod state;
 mod system;
 mod util;
 
+pub mod prelude {
+    pub use crate::bus::{channel, Command, Event, Receiver, Sender};
+    pub use crate::component::{AirplaneId, FlightPlan, FlightPlanError, Tag};
+    pub use crate::map::{Airport, Grid, Location, Node};
+}
+
 const TILE_SIZE: u32 = 64;
 
 pub struct Simulation {

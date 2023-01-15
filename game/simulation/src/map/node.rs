@@ -44,6 +44,26 @@ impl Display for Node {
     }
 }
 
+impl From<Node> for auto_traffic_control::v1::Node {
+    fn from(node: Node) -> Self {
+        Self {
+            longitude: node.longitude() as i32,
+            latitude: node.latitude() as i32,
+            restricted: node.is_restricted(),
+        }
+    }
+}
+
+impl From<&auto_traffic_control::v1::Node> for Node {
+    fn from(node: &auto_traffic_control::v1::Node) -> Self {
+        Self {
+            longitude: node.longitude as u32,
+            latitude: node.latitude as u32,
+            restricted: node.restricted,
+        }
+    }
+}
+
 impl ops::Sub for &Node {
     type Output = Direction;
 

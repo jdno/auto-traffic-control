@@ -15,6 +15,15 @@ impl Display for Tag {
     }
 }
 
+impl From<Tag> for auto_traffic_control::v1::Tag {
+    fn from(tag: Tag) -> Self {
+        match tag {
+            Tag::Blue => Self::Blue,
+            Tag::Red => Self::Red,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

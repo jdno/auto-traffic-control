@@ -25,6 +25,18 @@ impl Display for AirplaneId {
     }
 }
 
+impl From<&str> for AirplaneId {
+    fn from(id: &str) -> Self {
+        Self(id.to_string())
+    }
+}
+
+impl From<AirplaneId> for String {
+    fn from(id: AirplaneId) -> Self {
+        id.0
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

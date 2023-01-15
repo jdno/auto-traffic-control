@@ -12,6 +12,8 @@ repository.workspace = true
 publish = false
 
 [dependencies]
+auto-traffic-control = { path = "../../sdk/rust", version = "0.4.0-dev", features = ["server"] }
+
 geo = "0.23"
 hecs = "0.9"
 lazy_static = "1"

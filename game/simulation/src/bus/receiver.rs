@@ -32,6 +32,12 @@ impl<T> Display for Receiver<T> {
     }
 }
 
+impl<T> From<Receiver<T>> for tokio::sync::broadcast::Receiver<T> {
+    fn from(receiver: Receiver<T>) -> Self {
+        receiver.receiver
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
