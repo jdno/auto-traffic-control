@@ -37,6 +37,7 @@ impl Running {
             Box::new(UpdateFlightPlanSystem::new(
                 COMMAND_BUS.1.resubscribe(),
                 EVENT_BUS.0.clone(),
+                map.clone(),
             )),
             Box::new(GenerateFlightPlanSystem::new(
                 EVENT_BUS.0.clone(),
