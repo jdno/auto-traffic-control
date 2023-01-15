@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::ops::Deref;
 use std::sync::Arc;
 
-use geo::Point;
+use geo::{EuclideanDistance, LineInterpolatePoint, LineString, Point};
 
 use crate::map::Node;
 use crate::TILE_SIZE;
@@ -21,6 +21,23 @@ impl Location {
 
     pub fn y(&self) -> f64 {
         self.0.y()
+    }
+
+    pub fn euclidean_distance(&self, other: &Self) -> f64 {
+        self.0.euclidean_distance(&other.0)
+    }
+
+    pub fn move_towards(&self, other: &Self, distance: f64) -> Option<Self> {
+        let distance_to_other = self.euclidean_distance(other);
+
+        if distance_to_other > distance {
+            return None;
+        }
+
+        let line: LineString = vec![self.0, other.0].into();
+        let fraction = distance / distance_to_other;
+
+        Some(line.line_interpolate_point(fraction)?.into())
     }
 }
 
@@ -42,6 +59,12 @@ impl From<&Node> for Location {
 impl From<&Arc<Node>> for Location {
     fn from(node: &Arc<Node>) -> Self {
         node.deref().into()
+    }
+}
+
+impl From<Point> for Location {
+    fn from(point: Point) -> Self {
+        Location(point)
     }
 }
 

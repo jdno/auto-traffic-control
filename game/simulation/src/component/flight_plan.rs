@@ -10,6 +10,14 @@ impl FlightPlan {
     pub fn new(flight_plan: Vec<Arc<Node>>) -> Self {
         Self(flight_plan)
     }
+
+    pub fn get(&self) -> &Vec<Arc<Node>> {
+        &self.0
+    }
+
+    pub fn get_mut(&mut self) -> &mut Vec<Arc<Node>> {
+        &mut self.0
+    }
 }
 
 impl Display for FlightPlan {

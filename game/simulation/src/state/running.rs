@@ -9,7 +9,7 @@ use crate::behavior::{Commandable, Observable, Updateable};
 use crate::bus::{Command, Event, Receiver, Sender, COMMAND_BUS, EVENT_BUS};
 use crate::map::{MapLoader, Maps};
 use crate::state::Ready;
-use crate::system::{DespawnAirplaneSystem, SpawnAirplaneSystem, System};
+use crate::system::{DespawnAirplaneSystem, MoveAirplaneSystem, SpawnAirplaneSystem, System};
 
 pub struct Running {
     command_bus: Receiver<Command>,
@@ -31,6 +31,7 @@ impl Running {
 
         let systems: Vec<Box<dyn System>> = vec![
             Box::new(DespawnAirplaneSystem::new(EVENT_BUS.0.clone(), map.clone())),
+            Box::new(MoveAirplaneSystem::new(EVENT_BUS.0.clone())),
             Box::new(SpawnAirplaneSystem::new(
                 EVENT_BUS.0.clone(),
                 map,
