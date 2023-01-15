@@ -2,8 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
 use crate::component::Tag;
-use crate::entity::Airport;
-use crate::map::{Grid, Map, Node};
+use crate::map::{Airport, Grid, Map, Node};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Maps {
@@ -79,7 +78,6 @@ impl MapLoader {
             height: height as u32,
 
             airports,
-            airplanes: Vec::new(),
             grid: Grid::new(width as u32, height as u32, nodes),
         }
     }

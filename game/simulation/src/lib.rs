@@ -23,14 +23,13 @@ pub mod behavior;
 pub mod bus;
 
 mod component;
-mod entity;
 mod map;
 mod state;
+mod system;
 mod util;
 
 const TILE_SIZE: u32 = 64;
 
-#[derive(Debug)]
 pub struct Simulation {
     command_bus: Receiver<Command>,
     event_bus: Sender<Event>,

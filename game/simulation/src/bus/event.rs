@@ -2,8 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
 use crate::component::{AirplaneId, FlightPlan, Tag};
-use crate::entity::Airport;
-use crate::map::{Grid, Location, Node};
+use crate::map::{Airport, Grid, Location, Node};
 
 #[derive(Clone, Debug)]
 pub enum Event {
