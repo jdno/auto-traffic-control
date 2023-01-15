@@ -8,7 +8,7 @@ use rand::prelude::*;
 use time::{Duration, Instant};
 
 use crate::bus::{Event, Sender};
-use crate::component::{FlightPlan, Tag};
+use crate::component::{FlightPlan, Tag, TravelledRoute};
 use crate::map::{Location, Map, Node, MAP_BORDER_WIDTH};
 use crate::system::System;
 use crate::util::AirplaneIdGenerator;
@@ -154,7 +154,7 @@ impl System for SpawnAirplaneSystem {
         let id = self.airplane_id_generator.generate();
         let location: Location = spawn.start_node.deref().into();
         let flight_plan = FlightPlan::new(vec![spawn.first_node]);
-        let travelled_route = vec![spawn.start_node];
+        let travelled_route = TravelledRoute::new(vec![spawn.start_node]);
         let tag = self.random_tag();
 
         world.spawn((
@@ -173,8 +173,9 @@ impl System for SpawnAirplaneSystem {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::bus::channel;
+
+    use super::*;
 
     #[test]
     fn trait_display() {

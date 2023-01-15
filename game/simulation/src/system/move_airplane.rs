@@ -1,10 +1,8 @@
-use std::sync::Arc;
-
 use hecs::World;
 
 use crate::bus::{Event, Sender};
-use crate::component::{AirplaneId, FlightPlan};
-use crate::map::{Location, Node};
+use crate::component::{AirplaneId, FlightPlan, TravelledRoute};
+use crate::map::Location;
 use crate::system::System;
 use crate::TILE_SIZE;
 
@@ -27,7 +25,7 @@ impl System for MoveAirplaneSystem {
             &AirplaneId,
             &mut Location,
             &mut FlightPlan,
-            &mut Vec<Arc<Node>>,
+            &mut TravelledRoute,
         )>() {
             let mut distance = AIRPLANE_SPEED * delta;
 
@@ -45,7 +43,7 @@ impl System for MoveAirplaneSystem {
                     *location = next_location;
 
                     let node = flight_plan.get_mut().pop().unwrap();
-                    travelled_route.push(node);
+                    travelled_route.get_mut().push(node);
 
                     distance -= distance_to_next_location;
 
