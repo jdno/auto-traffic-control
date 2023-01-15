@@ -12,7 +12,7 @@ pub enum Event {
     AirplaneMoved(AirplaneId, Location),
     FlightPlanUpdated(AirplaneId, FlightPlan),
     GameStarted(Vec<Airport>, Grid<Arc<Node>>, u32, u32),
-    GameStopped,
+    GameStopped(u32),
     LandingAborted(AirplaneId),
 }
 
