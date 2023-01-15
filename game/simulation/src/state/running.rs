@@ -70,6 +70,14 @@ impl Display for Running {
     }
 }
 
+impl Drop for Running {
+    fn drop(&mut self) {
+        self.event_bus
+            .send(Event::GameStopped)
+            .expect("failed to send GameStopped event");
+    }
+}
+
 impl From<&Ready> for Running {
     fn from(_state: &Ready) -> Self {
         Self::new()

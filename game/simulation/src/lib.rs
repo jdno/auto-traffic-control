@@ -15,9 +15,9 @@
 
 use std::fmt::Display;
 
-use crate::behavior::{Commandable, Observable, Updateable};
+use crate::behavior::{Commandable, Updateable};
 use crate::bus::{Command, Event, Receiver, Sender, COMMAND_BUS, EVENT_BUS};
-use crate::state::State;
+use crate::state::{Ready, State};
 
 pub mod behavior;
 pub mod bus;
@@ -32,7 +32,7 @@ const TILE_SIZE: u32 = 64;
 
 pub struct Simulation {
     command_bus: Receiver<Command>,
-    event_bus: Sender<Event>,
+    event_bus: Receiver<Event>,
     game: State,
 }
 
@@ -66,7 +66,7 @@ impl Default for Simulation {
     fn default() -> Self {
         Self {
             command_bus: COMMAND_BUS.1.resubscribe(),
-            event_bus: EVENT_BUS.0.clone(),
+            event_bus: EVENT_BUS.1.resubscribe(),
             game: State::new(),
         }
     }
@@ -75,12 +75,6 @@ impl Default for Simulation {
 impl Display for Simulation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.game)
-    }
-}
-
-impl Observable for Simulation {
-    fn event_bus(&self) -> &Sender<Event> {
-        &self.event_bus
     }
 }
 
@@ -93,6 +87,12 @@ impl Updateable for Simulation {
         }
 
         self.game.update(delta);
+
+        while let Ok(event) = self.event_bus.try_recv() {
+            if let Event::AirplaneCollided(_, _) = event {
+                self.game = State::Ready(Ready::new());
+            }
+        }
     }
 }
 
