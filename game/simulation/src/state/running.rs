@@ -1,49 +1,50 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
+use hecs::World;
 use parking_lot::Mutex;
 use time::Duration;
 
 use crate::behavior::{Commandable, Observable, Updateable};
 use crate::bus::{Command, Event, Receiver, Sender, COMMAND_BUS, EVENT_BUS};
-use crate::entity::{Airplane, Spawner};
-use crate::map::{Map, MapLoader, Maps};
+use crate::map::{MapLoader, Maps};
 use crate::state::Ready;
+use crate::system::{SpawnAirplaneSystem, System};
 
-#[derive(Debug)]
-#[allow(dead_code)] // TODO: Remove when map is used
 pub struct Running {
     command_bus: Receiver<Command>,
     event_bus: Sender<Event>,
 
-    airplanes: Vec<Airplane>,
-    map: Arc<Mutex<Map>>,
-    spawner: Spawner,
+    systems: Vec<Box<dyn System>>,
+    world: World,
 }
 
 impl Running {
     pub fn new() -> Self {
-        let map = Arc::new(Mutex::new(MapLoader::load(Maps::Sandbox)));
-        let spawner = Spawner::new(map.clone(), Duration::seconds(2));
+        let map = MapLoader::load(Maps::Sandbox);
+        let airports = map.airports().clone();
+        let grid = map.grid().clone();
+        let width = map.width();
+        let height = map.height();
+
+        let map = Arc::new(Mutex::new(map));
+
+        let systems: Vec<Box<dyn System>> = vec![Box::new(SpawnAirplaneSystem::new(
+            EVENT_BUS.0.clone(),
+            map,
+            Duration::seconds(2),
+        ))];
 
         let running = Self {
             command_bus: COMMAND_BUS.1.resubscribe(),
             event_bus: EVENT_BUS.0.clone(),
-            airplanes: Vec::new(),
-            map: map.clone(),
-            spawner,
+            systems,
+            world: World::new(),
         };
-
-        let map = map.lock();
 
         // TODO: Handle error gracefully
         running
-            .notify(Event::GameStarted(
-                map.airports().clone(),
-                map.grid().clone(),
-                map.width(),
-                map.height(),
-            ))
+            .notify(Event::GameStarted(airports, grid, width, height))
             .expect("failed to send GameStarted event");
 
         running
@@ -76,10 +77,9 @@ impl Observable for Running {
 
 impl Updateable for Running {
     fn update(&mut self, delta: f32) {
-        self.spawner.update(delta);
-        self.airplanes
-            .iter_mut()
-            .for_each(|airplane| airplane.update(delta));
+        for system in &mut self.systems {
+            system.update(&mut self.world, delta);
+        }
     }
 }
 

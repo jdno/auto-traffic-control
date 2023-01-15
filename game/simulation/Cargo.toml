@@ -13,6 +13,7 @@ publish = false
 
 [dependencies]
 geo = "0.23"
+hecs = "0.9"
 lazy_static = "1"
 parking_lot = "0.12"
 rand = "0.8"

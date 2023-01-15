@@ -8,7 +8,6 @@ pub use self::running::*;
 mod ready;
 mod running;
 
-#[derive(Debug)]
 pub enum State {
     Ready(Ready),
     Running(Running),
