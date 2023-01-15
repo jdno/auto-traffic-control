@@ -7,6 +7,9 @@ use crate::map::{Airport, Grid, Location, Node};
 #[derive(Clone, Debug)]
 pub enum Event {
     AirplaneDetected(AirplaneId, Location, FlightPlan, Tag),
+    AirplaneLanded(AirplaneId),
+    FlightPlanUpdated(AirplaneId, FlightPlan),
+    LandingAborted(AirplaneId),
     GameStarted(Vec<Airport>, Grid<Arc<Node>>, u32, u32),
     GameStopped,
 }

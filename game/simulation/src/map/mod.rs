@@ -2,12 +2,14 @@ use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 
 pub use self::airport::*;
+pub use self::direction::*;
 pub use self::grid::*;
 pub use self::loader::*;
 pub use self::location::*;
 pub use self::node::*;
 
 mod airport;
+mod direction;
 mod grid;
 mod loader;
 mod location;
