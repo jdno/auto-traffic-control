@@ -83,6 +83,7 @@ impl Updateable for Simulation {
         while let Ok(command) = self.command_bus.try_recv() {
             match command {
                 Command::StartGame => self.start_game(),
+                _ => continue,
             }
         }
 

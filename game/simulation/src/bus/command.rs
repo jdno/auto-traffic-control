@@ -1,8 +1,11 @@
 use std::fmt::{Display, Formatter};
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+use crate::component::{AirplaneId, FlightPlan};
+
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Command {
     StartGame,
+    UpdateFlightPlan(AirplaneId, FlightPlan),
 }
 
 impl Display for Command {
