@@ -11,6 +11,10 @@ impl TravelledRoute {
         Self(travelled_route)
     }
 
+    pub fn get(&self) -> &Vec<Arc<Node>> {
+        &self.0
+    }
+
     pub fn get_mut(&mut self) -> &mut Vec<Arc<Node>> {
         &mut self.0
     }
