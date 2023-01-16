@@ -40,7 +40,15 @@ impl<T> From<Receiver<T>> for tokio::sync::broadcast::Receiver<T> {
 
 #[cfg(test)]
 mod tests {
+    use crate::bus::channel;
+
     use super::*;
+
+    #[test]
+    fn trait_display() {
+        let (_, receiver) = channel::<usize>(1);
+        assert_eq!("Receiver", receiver.to_string());
+    }
 
     #[test]
     fn trait_send() {

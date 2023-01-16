@@ -1,7 +1,7 @@
-use hecs::World;
 use std::ops::Deref;
 use std::sync::Arc;
 
+use hecs::World;
 use parking_lot::Mutex;
 
 use crate::bus::{Event, Sender};
@@ -88,7 +88,84 @@ fn go_around_procedure(airport: &Airport, grid: &Grid<Arc<Node>>) -> Arc<Node> {
 
 #[cfg(test)]
 mod tests {
+    use crate::bus::channel;
+
     use super::*;
+
+    #[test]
+    fn no_landings() {
+        let (sender, mut receiver) = channel(1);
+
+        let map = Map::test();
+        let score = Arc::new(Mutex::new(0));
+
+        let mut system = DespawnAirplaneSystem::new(sender, map, score.clone());
+
+        let mut world = World::new();
+        world.spawn((
+            AirplaneId::default(),
+            Location::new(0.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]),
+            Tag::Blue,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        assert!(receiver.try_recv().is_err());
+        assert_eq!(0, *score.lock());
+    }
+
+    #[test]
+    fn land_airplane() {
+        let (sender, mut receiver) = channel(1);
+
+        let map = Map::test();
+        let score = Arc::new(Mutex::new(0));
+        let airplane_id = AirplaneId::default();
+
+        let mut system = DespawnAirplaneSystem::new(sender, map, score.clone());
+
+        let mut world = World::new();
+        world.spawn((
+            airplane_id.clone(),
+            Location::new(128.0, 128.0),
+            FlightPlan::new(Vec::new()),
+            Tag::Blue,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        let event = receiver.try_recv().unwrap();
+
+        assert_eq!(Event::AirplaneLanded(airplane_id), event);
+        assert_eq!(1, *score.lock());
+    }
+
+    #[test]
+    fn go_around() {
+        let (sender, mut receiver) = channel(2);
+
+        let map = Map::test();
+        let score = Arc::new(Mutex::new(0));
+        let airplane_id = AirplaneId::default();
+
+        let mut system = DespawnAirplaneSystem::new(sender, map, score.clone());
+
+        let mut world = World::new();
+        world.spawn((
+            airplane_id.clone(),
+            Location::new(128.0, 128.0),
+            FlightPlan::new(Vec::new()),
+            Tag::Red,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        let event = receiver.try_recv().unwrap();
+
+        assert_eq!(Event::LandingAborted(airplane_id), event);
+        assert_eq!(0, *score.lock());
+    }
 
     #[test]
     fn trait_send() {

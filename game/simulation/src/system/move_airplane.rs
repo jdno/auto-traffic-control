@@ -71,7 +71,46 @@ impl System for MoveAirplaneSystem {
 
 #[cfg(test)]
 mod tests {
+    use std::sync::Arc;
+
+    use crate::bus::channel;
+    use crate::map::Node;
+
     use super::*;
+
+    #[test]
+    fn move_airplane() {
+        let (sender, mut receiver) = channel(2);
+        let mut system = MoveAirplaneSystem::new(sender);
+
+        let mut world = World::new();
+        world.spawn((
+            AirplaneId::default(),
+            Location::new(32.0, 0.0),
+            FlightPlan::new(vec![
+                Arc::new(Node::new(2, 0, false)),
+                Arc::new(Node::new(1, 0, false)),
+            ]),
+            TravelledRoute::new(vec![]),
+        ));
+
+        system.update(&mut world, 1.0);
+
+        let event = receiver.try_recv().unwrap();
+        assert_eq!(
+            Event::FlightPlanUpdated(
+                AirplaneId::default(),
+                FlightPlan::new(vec![Arc::new(Node::new(2, 0, false))])
+            ),
+            event
+        );
+
+        let event = receiver.try_recv().unwrap();
+        assert_eq!(
+            Event::AirplaneMoved(AirplaneId::default(), Location::new(96.0, 0.0)),
+            event
+        );
+    }
 
     #[test]
     fn trait_send() {

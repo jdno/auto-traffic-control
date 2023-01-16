@@ -57,6 +57,29 @@ mod tests {
     use super::*;
 
     #[test]
+    fn trait_display() {
+        let airport = Airport::new(Arc::new(Node::new(0, 0, false)), Tag::Blue);
+        assert_eq!("Airport", airport.to_string());
+    }
+
+    #[test]
+    fn trait_from_airport() {
+        let airport = Airport::new(Arc::new(Node::new(0, 0, false)), Tag::Blue);
+
+        assert_eq!(
+            auto_traffic_control::v1::Airport {
+                node: Some(auto_traffic_control::v1::Node {
+                    longitude: 0,
+                    latitude: 0,
+                    restricted: false,
+                }),
+                tag: auto_traffic_control::v1::Tag::Blue.into(),
+            },
+            airport.into()
+        );
+    }
+
+    #[test]
     fn trait_send() {
         fn assert_send<T: Send>() {}
         assert_send::<Airport>();

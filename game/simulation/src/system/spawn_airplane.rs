@@ -178,6 +178,30 @@ mod tests {
     use super::*;
 
     #[test]
+    fn no_spawn() {
+        let (sender, mut receiver) = channel(1);
+        let mut world = World::new();
+
+        let mut system = SpawnAirplaneSystem {
+            event_bus: sender,
+            rng: thread_rng(),
+            interval: Duration::seconds(2),
+            last_spawn: Instant::now() - Duration::seconds(1),
+            airplane_id_generator: AirplaneIdGenerator::default(),
+            map: Map::test(),
+        };
+
+        system.update(&mut world, 0.0);
+
+        assert!(receiver.try_recv().is_err());
+    }
+
+    #[test]
+    fn spawn_airplane() {
+        // TODO: Introduce spawn zones to make the test map work with this system
+    }
+
+    #[test]
     fn trait_display() {
         let (sender, _) = channel(1);
 

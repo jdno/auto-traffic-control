@@ -30,41 +30,45 @@ impl GenerateFlightPlanSystem {
 }
 
 impl GenerateFlightPlanSystem {
-    fn generate_random_plan(&mut self, travelled_route: &TravelledRoute) -> FlightPlan {
-        let mut flight_plan = Vec::new();
-
-        let mut reversed_route = travelled_route.get().iter().rev();
-
-        let mut current_node = reversed_route
-            .next()
-            .expect("travelled route must include the starting location")
+    fn generate_random_plan(
+        &mut self,
+        current_flight_plan: &mut FlightPlan,
+        travelled_route: &TravelledRoute,
+    ) -> FlightPlan {
+        let mut previous_node = travelled_route
+            .get()
+            .last()
+            .expect("travelled route must not be empty")
             .clone();
-        let mut previous_node = reversed_route.next().cloned();
+
+        let mut current_node = current_flight_plan
+            .get()
+            .last()
+            .expect("flight plan must not be empty")
+            .clone();
+
+        let mut flight_plan = vec![current_node.clone()];
         let mut next_node;
 
-        for _ in 0..FLIGHT_PLAN_LENGTH {
+        for _ in 0..FLIGHT_PLAN_LENGTH - 1 {
             next_node = self.pick_next_tile(&current_node, &previous_node);
             flight_plan.push(next_node.clone());
 
-            previous_node = Some(current_node);
+            previous_node = current_node;
             current_node = next_node;
         }
 
         FlightPlan::new(flight_plan.iter().rev().cloned().collect())
     }
 
-    fn pick_next_tile(
-        &mut self,
-        current_tile: &Arc<Node>,
-        previous_tile: &Option<Arc<Node>>,
-    ) -> Arc<Node> {
+    fn pick_next_tile(&mut self, current_tile: &Arc<Node>, previous_tile: &Arc<Node>) -> Arc<Node> {
         let map = self.map.lock();
 
         let potential_tiles: Vec<Arc<Node>> = map
             .grid()
             .neighbors(current_tile.longitude(), current_tile.latitude())
             .into_iter()
-            .filter(|node| Some(node) != previous_tile.as_ref())
+            .filter(|node| node != previous_tile)
             .filter(|node| !node.is_restricted())
             .collect();
 
@@ -84,7 +88,7 @@ impl System for GenerateFlightPlanSystem {
                 continue;
             }
 
-            let new_flight_plan = self.generate_random_plan(travelled_route);
+            let new_flight_plan = self.generate_random_plan(flight_plan, travelled_route);
             *flight_plan = new_flight_plan.clone();
 
             self.event_bus
@@ -99,7 +103,59 @@ impl System for GenerateFlightPlanSystem {
 
 #[cfg(test)]
 mod tests {
+    use hecs::World;
+
+    use crate::bus::channel;
+    use crate::component::Tag;
+
     use super::*;
+
+    #[test]
+    fn no_flight_plan() {
+        let (sender, mut receiver) = channel(1);
+
+        let map = Map::test();
+        let mut world = World::new();
+
+        let mut system = GenerateFlightPlanSystem::new(sender, map);
+
+        world.spawn((
+            AirplaneId::default(),
+            FlightPlan::new(vec![
+                Arc::new(Node::new(2, 0, false)),
+                Arc::new(Node::new(1, 0, false)),
+            ]),
+            TravelledRoute::new(vec![Arc::new(Node::new(0, 0, false))]),
+            Tag::Blue,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        assert!(receiver.try_recv().is_err());
+    }
+
+    #[test]
+    fn generate_flight_plan() {
+        let (sender, mut receiver) = channel(1);
+
+        let map = Map::test();
+        let mut world = World::new();
+
+        let mut system = GenerateFlightPlanSystem::new(sender, map);
+
+        world.spawn((
+            AirplaneId::default(),
+            FlightPlan::new(vec![Arc::new(Node::new(2, 0, false))]),
+            TravelledRoute::new(vec![Arc::new(Node::new(1, 0, false))]),
+            Tag::Blue,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        let event = receiver.try_recv().unwrap();
+
+        assert!(matches!(event, Event::FlightPlanUpdated(_, _)));
+    }
 
     #[test]
     fn trait_unpin() {

@@ -27,7 +27,15 @@ impl<T> Display for Sender<T> {
 
 #[cfg(test)]
 mod tests {
+    use crate::bus::channel;
+
     use super::*;
+
+    #[test]
+    fn trait_display() {
+        let (sender, _) = channel::<usize>(1);
+        assert_eq!("Sender", sender.to_string());
+    }
 
     #[test]
     fn trait_send() {

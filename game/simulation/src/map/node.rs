@@ -110,8 +110,59 @@ impl ops::Sub for &Node {
 mod tests {
     use super::*;
 
+    impl Node {
+        pub fn new(longitude: u32, latitude: u32, restricted: bool) -> Self {
+            Self {
+                longitude,
+                latitude,
+                restricted,
+            }
+        }
+    }
+
     #[test]
-    fn sub_north() {
+    fn is_neighbor_true() {
+        let node = Node::new(0, 0, false);
+        let neighbor = Node::new(1, 1, false);
+
+        assert!(node.is_neighbor(&neighbor));
+    }
+
+    #[test]
+    fn is_neighbor_false() {
+        let node = Node::new(0, 0, false);
+        let neighbor = Node::new(2, 0, false);
+
+        assert!(!node.is_neighbor(&neighbor));
+    }
+
+    #[test]
+    fn trait_from_api_node() {
+        let node = auto_traffic_control::v1::Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+
+        assert_eq!(Node::new(0, 0, false), (&node).into());
+    }
+
+    #[test]
+    fn trait_to_api_node() {
+        let node = Node::new(0, 0, false);
+
+        assert_eq!(
+            auto_traffic_control::v1::Node {
+                longitude: 0,
+                latitude: 0,
+                restricted: false,
+            },
+            node.into()
+        );
+    }
+
+    #[test]
+    fn trait_sub_north() {
         let node1 = Node {
             longitude: 0,
             latitude: 1,
@@ -127,7 +178,7 @@ mod tests {
     }
 
     #[test]
-    fn sub_north_east() {
+    fn trait_sub_north_east() {
         let node1 = Node {
             longitude: 0,
             latitude: 1,
@@ -143,7 +194,7 @@ mod tests {
     }
 
     #[test]
-    fn sub_east() {
+    fn trait_sub_east() {
         let node1 = Node {
             longitude: 0,
             latitude: 0,
@@ -159,7 +210,7 @@ mod tests {
     }
 
     #[test]
-    fn sub_south_east() {
+    fn trait_sub_south_east() {
         let node1 = Node {
             longitude: 0,
             latitude: 0,
@@ -175,7 +226,7 @@ mod tests {
     }
 
     #[test]
-    fn sub_south() {
+    fn trait_sub_south() {
         let node1 = Node {
             longitude: 0,
             latitude: 0,
@@ -191,7 +242,7 @@ mod tests {
     }
 
     #[test]
-    fn sub_south_west() {
+    fn trait_sub_south_west() {
         let node1 = Node {
             longitude: 1,
             latitude: 0,
@@ -207,7 +258,7 @@ mod tests {
     }
 
     #[test]
-    fn sub_west() {
+    fn trait_sub_west() {
         let node1 = Node {
             longitude: 1,
             latitude: 0,
@@ -223,7 +274,7 @@ mod tests {
     }
 
     #[test]
-    fn sub_north_west() {
+    fn trait_sub_north_west() {
         let node1 = Node {
             longitude: 1,
             latitude: 1,

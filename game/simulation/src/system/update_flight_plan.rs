@@ -1,6 +1,7 @@
+use std::sync::Arc;
+
 use hecs::World;
 use parking_lot::Mutex;
-use std::sync::Arc;
 
 use crate::bus::{Command, Event, Receiver, Sender};
 use crate::component::{AirplaneId, FlightPlan};
@@ -67,7 +68,52 @@ impl System for UpdateFlightPlanSystem {
 
 #[cfg(test)]
 mod tests {
+    use crate::bus::channel;
+    use crate::component::Tag;
+    use crate::map::{Location, Node};
+
     use super::*;
+
+    #[test]
+    fn update_ok() {
+        let (command_sender, command_receiver) = channel(1);
+        let (event_sender, mut event_receiver) = channel(1);
+        let map = Map::test();
+
+        let mut world = World::new();
+        world.spawn((
+            AirplaneId::default(),
+            Location::new(0.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(1, 0, false))]),
+            Tag::Blue,
+        ));
+
+        command_sender
+            .send(Command::UpdateFlightPlan(
+                AirplaneId::default(),
+                FlightPlan::new(vec![
+                    Arc::new(Node::new(2, 0, false)),
+                    Arc::new(Node::new(1, 0, false)),
+                ]),
+            ))
+            .unwrap();
+
+        let mut system = UpdateFlightPlanSystem::new(command_receiver, event_sender, map);
+        system.update(&mut world, 0.0);
+
+        let event = event_receiver.try_recv().unwrap();
+
+        assert_eq!(
+            Event::FlightPlanUpdated(
+                AirplaneId::default(),
+                FlightPlan::new(vec![
+                    Arc::new(Node::new(2, 0, false)),
+                    Arc::new(Node::new(1, 0, false)),
+                ]),
+            ),
+            event
+        );
+    }
 
     #[test]
     fn trait_send() {

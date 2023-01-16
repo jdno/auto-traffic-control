@@ -10,13 +10,24 @@ pub enum Command {
 
 impl Display for Command {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Command")
+        let string = match self {
+            Command::StartGame => "StartGame",
+            Command::UpdateFlightPlan(_, _) => "UpdateFlightPlan",
+        };
+
+        write!(f, "{}", string)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn trait_display() {
+        let command = Command::StartGame;
+        assert_eq!("StartGame", command.to_string());
+    }
 
     #[test]
     fn trait_send() {

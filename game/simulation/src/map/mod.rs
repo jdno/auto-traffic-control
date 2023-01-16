@@ -51,3 +51,45 @@ impl Display for Map {
         write!(f, "{}", self.name)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use parking_lot::Mutex;
+
+    use super::*;
+
+    impl Map {
+        pub fn test() -> Arc<Mutex<Map>> {
+            let map = MapLoader::load(Maps::Test);
+            Arc::new(Mutex::new(map))
+        }
+    }
+
+    #[test]
+    fn trait_display() {
+        let map = Map {
+            name: "test".to_string(),
+            ..Default::default()
+        };
+
+        assert_eq!("test", map.to_string());
+    }
+
+    #[test]
+    fn trait_send() {
+        fn assert_send<T: Send>() {}
+        assert_send::<Map>();
+    }
+
+    #[test]
+    fn trait_sync() {
+        fn assert_sync<T: Sync>() {}
+        assert_sync::<Map>();
+    }
+
+    #[test]
+    fn trait_unpin() {
+        fn assert_unpin<T: Unpin>() {}
+        assert_unpin::<Map>();
+    }
+}

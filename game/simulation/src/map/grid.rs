@@ -128,6 +128,12 @@ mod tests {
     }
 
     #[test]
+    fn trait_display() {
+        let grid = Grid::new(1, 1, vec![1]);
+        assert_eq!("Grid", grid.to_string());
+    }
+
+    #[test]
     fn trait_send() {
         fn assert_send<T: Send>() {}
         assert_send::<Grid<u32>>();
