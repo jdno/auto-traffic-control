@@ -48,9 +48,29 @@ mod tests {
     }
 
     #[test]
+    fn trait_default() {
+        let id = AirplaneId::default();
+        assert_eq!("AT-0000", id.get());
+    }
+
+    #[test]
     fn trait_display() {
         let id = AirplaneId::new("test".to_string());
-        assert_eq!(format!("{}", id), "test");
+        assert_eq!("test", id.to_string());
+    }
+
+    #[test]
+    fn trait_from_str() {
+        let id: AirplaneId = "test".into();
+        assert_eq!("test", id.get());
+    }
+
+    #[test]
+    fn trait_from_string() {
+        let id: AirplaneId = "test".into();
+        let string: String = id.into();
+
+        assert_eq!(String::from("test"), string);
     }
 
     #[test]

@@ -29,6 +29,18 @@ mod tests {
     use super::*;
 
     #[test]
+    fn trait_display() {
+        assert_eq!("blue", Tag::Blue.to_string());
+        assert_eq!("red", Tag::Red.to_string());
+    }
+
+    #[test]
+    fn trait_from_tag() {
+        assert_eq!(auto_traffic_control::v1::Tag::Blue, Tag::Blue.into());
+        assert_eq!(auto_traffic_control::v1::Tag::Red, Tag::Red.into());
+    }
+
+    #[test]
     fn trait_send() {
         fn assert_send<T: Send>() {}
         assert_send::<Tag>();

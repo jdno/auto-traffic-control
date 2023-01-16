@@ -1,8 +1,9 @@
+use hecs::World;
+
 use crate::bus::{Event, Sender};
 use crate::component::AirplaneId;
 use crate::map::Location;
 use crate::system::System;
-use hecs::World;
 
 const THRESHOLD: f32 = 24.0;
 
@@ -48,7 +49,73 @@ impl System for DetectCollisionSystem {
 
 #[cfg(test)]
 mod tests {
+    use std::sync::Arc;
+
+    use crate::bus::channel;
+    use crate::component::{FlightPlan, Tag};
+    use crate::map::Node;
+
     use super::*;
+
+    #[test]
+    fn no_collision() {
+        let (sender, mut receiver) = channel(1);
+        let mut world = World::new();
+
+        let mut system = DetectCollisionSystem::new(sender);
+
+        world.spawn((
+            AirplaneId::default(),
+            Location::new(0.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]),
+            Tag::Blue,
+        ));
+
+        world.spawn((
+            AirplaneId::default(),
+            Location::new(64.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]),
+            Tag::Blue,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        assert!(receiver.try_recv().is_err());
+    }
+
+    #[test]
+    fn collision() {
+        let (sender, mut receiver) = channel(1);
+        let mut world = World::new();
+
+        let mut system = DetectCollisionSystem::new(sender);
+
+        world.spawn((
+            AirplaneId::new("AT-0001".into()),
+            Location::new(0.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]),
+            Tag::Blue,
+        ));
+
+        world.spawn((
+            AirplaneId::new("AT-0002".into()),
+            Location::new(16.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]),
+            Tag::Blue,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        let event = receiver.try_recv().unwrap();
+
+        assert_eq!(
+            Event::AirplaneCollided(
+                AirplaneId::new("AT-0001".into()),
+                AirplaneId::new("AT-0002".into())
+            ),
+            event
+        );
+    }
 
     #[test]
     fn trait_send() {

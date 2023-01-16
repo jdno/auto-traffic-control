@@ -39,7 +39,7 @@ impl FlightPlan {
             self.is_in_logical_order(),
             self.has_invalid_first_node(previous_flight_plan),
             self.has_sharp_turns(),
-            self.has_restricted_nodes(),
+            self.has_restricted_nodes(grid),
         ]
         .iter()
         .filter_map(|result| result.err())
@@ -101,10 +101,12 @@ impl FlightPlan {
         Ok(())
     }
 
-    fn has_restricted_nodes(&self) -> Result<(), FlightPlanError> {
+    fn has_restricted_nodes(&self, grid: &Grid<Arc<Node>>) -> Result<(), FlightPlanError> {
         for node in self.0.iter() {
-            if node.is_restricted() {
-                return Err(FlightPlanError::RestrictedNode);
+            if let Some(node) = grid.get(node.longitude(), node.latitude()) {
+                if node.is_restricted() {
+                    return Err(FlightPlanError::RestrictedNode);
+                }
             }
         }
 
@@ -123,6 +125,7 @@ impl From<FlightPlan> for Vec<auto_traffic_control::v1::Node> {
         flight_plan
             .get()
             .iter()
+            .rev()
             .map(|node| (*node.deref()).into())
             .collect()
     }
@@ -145,6 +148,7 @@ impl From<Vec<auto_traffic_control::v1::Node>> for FlightPlan {
         Self::new(
             flight_plan
                 .iter()
+                .rev()
                 .map(|node| Arc::new(node.into()))
                 .collect(),
         )
@@ -159,6 +163,193 @@ mod tests {
     fn trait_display() {
         let flight_plan = FlightPlan::default();
         assert_eq!("FlightPlan", flight_plan.to_string());
+    }
+
+    #[test]
+    fn validate_ok() {
+        let grid = Grid::new(1, 1, vec![Arc::new(Node::new(0, 0, false))]);
+        let flight_plan = FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]);
+
+        assert!(flight_plan.validate(&flight_plan, &grid).is_ok());
+    }
+
+    #[test]
+    fn validate_error() {
+        let grid = Grid::new(
+            2,
+            2,
+            vec![
+                Arc::new(Node::new(0, 0, false)),
+                Arc::new(Node::new(1, 0, false)),
+                Arc::new(Node::new(0, 1, false)),
+                Arc::new(Node::new(1, 1, true)),
+            ],
+        );
+
+        let previous_flight_plan = FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]);
+        let flight_plan = FlightPlan::new(vec![
+            Arc::new(Node::new(1, 1, false)),
+            Arc::new(Node::new(3, 1, false)),
+            Arc::new(Node::new(1, 1, false)),
+        ]);
+
+        let errors = flight_plan
+            .validate(&previous_flight_plan, &grid)
+            .unwrap_err();
+
+        assert_eq!(
+            vec![
+                FlightPlanError::NodeOutsideMap,
+                FlightPlanError::InvalidStep,
+                FlightPlanError::InvalidStart,
+                FlightPlanError::SharpTurn,
+                FlightPlanError::RestrictedNode,
+            ],
+            errors
+        );
+    }
+
+    #[test]
+    fn is_within_map_bounds_ok() {
+        let grid = Grid::new(1, 1, vec![Arc::new(Node::new(0, 0, false))]);
+        let flight_plan = FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]);
+
+        assert!(flight_plan.is_within_map_bounds(&grid).is_ok());
+    }
+
+    #[test]
+    fn is_within_map_bounds_error() {
+        let grid = Grid::new(1, 1, vec![Arc::new(Node::new(0, 0, false))]);
+        let flight_plan = FlightPlan::new(vec![Arc::new(Node::new(1, 1, false))]);
+
+        let error = flight_plan.is_within_map_bounds(&grid).unwrap_err();
+
+        assert_eq!(FlightPlanError::NodeOutsideMap, error);
+    }
+
+    #[test]
+    fn is_in_logical_order_ok() {
+        let flight_plan = FlightPlan::new(vec![
+            Arc::new(Node::new(0, 0, false)),
+            Arc::new(Node::new(1, 0, false)),
+        ]);
+
+        assert!(flight_plan.is_in_logical_order().is_ok());
+    }
+
+    #[test]
+    fn is_in_logical_order_error() {
+        let flight_plan = FlightPlan::new(vec![
+            Arc::new(Node::new(0, 0, false)),
+            Arc::new(Node::new(2, 0, false)),
+        ]);
+
+        let error = flight_plan.is_in_logical_order().unwrap_err();
+
+        assert_eq!(FlightPlanError::InvalidStep, error);
+    }
+
+    #[test]
+    fn has_invalid_first_node_ok() {
+        let node = Arc::new(Node::new(0, 0, false));
+
+        let previous_flight_plan = FlightPlan::new(vec![node.clone()]);
+        let flight_plan = FlightPlan::new(vec![node]);
+
+        assert!(flight_plan
+            .has_invalid_first_node(&previous_flight_plan)
+            .is_ok());
+    }
+
+    #[test]
+    fn has_invalid_first_node_error() {
+        let previous_flight_plan = FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]);
+        let flight_plan = FlightPlan::new(vec![Arc::new(Node::new(1, 0, false))]);
+
+        let error = flight_plan
+            .has_invalid_first_node(&previous_flight_plan)
+            .unwrap_err();
+
+        assert_eq!(FlightPlanError::InvalidStart, error);
+    }
+
+    #[test]
+    fn has_sharp_turns_ok() {
+        let flight_plan = FlightPlan::new(vec![
+            Arc::new(Node::new(0, 0, false)),
+            Arc::new(Node::new(1, 0, false)),
+            Arc::new(Node::new(2, 0, false)),
+        ]);
+
+        assert!(flight_plan.has_sharp_turns().is_ok());
+    }
+
+    #[test]
+    fn has_sharp_turns_err() {
+        let flight_plan = FlightPlan::new(vec![
+            Arc::new(Node::new(0, 0, false)),
+            Arc::new(Node::new(1, 0, false)),
+            Arc::new(Node::new(0, 0, false)),
+        ]);
+
+        let error = flight_plan.has_sharp_turns().unwrap_err();
+
+        assert_eq!(FlightPlanError::SharpTurn, error);
+    }
+
+    #[test]
+    fn has_restricted_nodes_ok() {
+        let grid = Grid::new(1, 1, vec![Arc::new(Node::new(0, 0, false))]);
+        let flight_plan = FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]);
+
+        assert!(flight_plan.has_restricted_nodes(&grid).is_ok());
+    }
+
+    #[test]
+    fn has_restricted_nodes_error() {
+        let grid = Grid::new(1, 1, vec![Arc::new(Node::new(0, 0, true))]);
+        let flight_plan = FlightPlan::new(vec![Arc::new(Node::new(0, 0, true))]);
+
+        let error = flight_plan.has_restricted_nodes(&grid).unwrap_err();
+
+        assert_eq!(FlightPlanError::RestrictedNode, error);
+    }
+
+    #[test]
+    fn trait_from_error() {
+        let error = FlightPlanError::NodeOutsideMap;
+
+        let error: auto_traffic_control::v1::update_flight_plan_error::ValidationError =
+            error.into();
+
+        assert_eq!(
+            auto_traffic_control::v1::update_flight_plan_error::ValidationError::NodeOutsideMap,
+            error
+        );
+    }
+
+    #[test]
+    fn trait_from_node() {
+        let flight_plan = FlightPlan::from(vec![
+            auto_traffic_control::v1::Node {
+                longitude: 0,
+                latitude: 0,
+                restricted: false,
+            },
+            auto_traffic_control::v1::Node {
+                longitude: 1,
+                latitude: 0,
+                restricted: false,
+            },
+        ]);
+
+        assert_eq!(
+            FlightPlan::new(vec![
+                Arc::new(Node::new(1, 0, false)),
+                Arc::new(Node::new(0, 0, false)),
+            ]),
+            flight_plan
+        );
     }
 
     #[test]

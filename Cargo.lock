@@ -235,6 +235,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ce7134b9999ecaf8bcd65542e436736ef32ddca1b3e06094cb6ec5755203b80"
 
 [[package]]
+name = "float-cmp"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98de4bbd547a563b716d8dfa9aad1cb19bfab00f4fa09a6a4ed21dbcf44ce9c4"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "float_next_after"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -902,6 +911,7 @@ name = "simulation"
 version = "0.4.0-dev"
 dependencies = [
  "auto-traffic-control",
+ "float-cmp",
  "geo",
  "hecs",
  "lazy_static",

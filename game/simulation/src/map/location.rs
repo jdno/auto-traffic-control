@@ -30,7 +30,7 @@ impl Location {
     pub fn move_towards(&self, other: &Self, distance: f64) -> Option<Self> {
         let distance_to_other = self.euclidean_distance(other);
 
-        if distance_to_other > distance {
+        if distance_to_other < distance {
             return None;
         }
 
@@ -88,7 +88,94 @@ impl From<Location> for auto_traffic_control::v1::Point {
 
 #[cfg(test)]
 mod tests {
+    use float_cmp::ApproxEq;
+
     use super::*;
+
+    #[test]
+    fn euclidean_distance_horizontal() {
+        let location1 = Location::new(0.0, 0.0);
+        let location2 = Location::new(64.0, 0.0);
+
+        assert_eq!(64.0, location1.euclidean_distance(&location2));
+    }
+
+    #[test]
+    fn euclidean_distance_vertical() {
+        let location1 = Location::new(0.0, 64.0);
+        let location2 = Location::new(0.0, 0.0);
+
+        assert_eq!(64.0, location1.euclidean_distance(&location2));
+    }
+
+    #[test]
+    fn euclidean_distance_diagonal() {
+        let location1 = Location::new(0.0, 0.0);
+        let location2 = Location::new(64.0, 64.0);
+
+        let distance = location1.euclidean_distance(&location2);
+
+        assert!(distance.approx_eq(90.5, (0.1, 2)));
+    }
+
+    #[test]
+    fn move_towards_horizontal() {
+        let location1 = Location::new(0.0, 0.0);
+        let location2 = Location::new(64.0, 0.0);
+
+        let location3 = location1.move_towards(&location2, 32.0).unwrap();
+
+        assert_eq!(Location::new(32.0, 0.0), location3);
+    }
+
+    #[test]
+    fn move_towards_vertical() {
+        let location1 = Location::new(0.0, 0.0);
+        let location2 = Location::new(0.0, 64.0);
+
+        let location3 = location1.move_towards(&location2, 32.0).unwrap();
+
+        assert_eq!(Location::new(0.0, 32.0), location3);
+    }
+
+    #[test]
+    fn move_towards_diagonal() {
+        let location1 = Location::new(0.0, 0.0);
+        let location2 = Location::new(64.0, 64.0);
+
+        let location3 = location1.move_towards(&location2, 32.0).unwrap();
+
+        assert_eq!(
+            Location::new(22.62741699796952, 22.62741699796952),
+            location3
+        );
+    }
+
+    #[test]
+    fn trait_from_api_node_zero() {
+        let node = auto_traffic_control::v1::Node {
+            longitude: 0,
+            latitude: 0,
+            restricted: false,
+        };
+
+        let location = Location::from(&node);
+
+        assert_eq!(location, Location::new(0.0, 0.0));
+    }
+
+    #[test]
+    fn trait_from_api_node_nonzero() {
+        let node = auto_traffic_control::v1::Node {
+            longitude: 1,
+            latitude: 2,
+            restricted: false,
+        };
+
+        let location = Location::from(&node);
+
+        assert_eq!(location, Location::new(64.0, 128.0));
+    }
 
     #[test]
     fn trait_from_node_zero() {
@@ -114,6 +201,22 @@ mod tests {
         let location = Location::from(&node);
 
         assert_eq!(location, Location::new(64.0, 128.0));
+    }
+
+    #[test]
+    fn trait_from_api_point() {
+        let location = Location::new(64.0, 128.0);
+
+        assert_eq!(
+            auto_traffic_control::v1::Point { x: 64, y: 128 },
+            location.into()
+        );
+    }
+
+    #[test]
+    fn trait_from_point() {
+        let point = Point::new(64.0, 128.0);
+        assert_eq!(Location::new(64.0, 128.0), point.into());
     }
 
     #[test]

@@ -7,6 +7,8 @@ use crate::map::{Airport, Grid, Map, Node};
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Maps {
     Sandbox,
+    #[cfg(test)]
+    Test,
 }
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
@@ -16,6 +18,8 @@ impl MapLoader {
     pub fn load(map: Maps) -> Map {
         match map {
             Maps::Sandbox => Self::parse(map.to_string(), include_str!("../../maps/sandbox.txt")),
+            #[cfg(test)]
+            Maps::Test => Self::parse(map.to_string(), include_str!("../../maps/test.txt")),
         }
     }
 
@@ -26,7 +30,7 @@ impl MapLoader {
         let mut width = 0;
         let height = map.lines().count();
 
-        for (x, line) in map.lines().enumerate() {
+        for (y, line) in map.lines().enumerate() {
             let line_width = line.len();
 
             if width == 0 {
@@ -35,7 +39,7 @@ impl MapLoader {
                 panic!("map width is not consistent");
             }
 
-            for (y, tile) in line.chars().enumerate() {
+            for (x, tile) in line.chars().enumerate() {
                 let node = match tile {
                     '#' => Node {
                         longitude: x as u32,
@@ -93,6 +97,8 @@ impl Display for Maps {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let name = match self {
             Maps::Sandbox => "Sandbox",
+            #[cfg(test)]
+            Maps::Test => "Test",
         };
 
         write!(f, "{}", name)
