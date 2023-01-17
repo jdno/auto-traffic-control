@@ -1,4 +1,16 @@
 ---
+- name: A-api
+  color: f1c40f
+  description: "Tag the gRPC API"
+- name: A-cli
+  color: f1c40f
+  description: "Tag the command-line interface"
+- name: A-simulation
+  color: f1c40f
+  description: "Tag the simulation"
+- name: A-ui
+  color: f1c40f
+  description: "Tag the user interface"
 - name: C-bug
   color: 9b59b6
   description: "Report a new bug"
