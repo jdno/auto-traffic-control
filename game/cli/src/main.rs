@@ -1,10 +1,10 @@
 use std::sync::Arc;
-use std::thread::sleep;
-use std::time::Duration;
 
 use clap::Parser;
+use game_loop::game_loop;
 
 use api::{Api, Store};
+use simulation::behavior::Updateable;
 use simulation::Simulation;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default, Parser)]
@@ -24,7 +24,5 @@ async fn main() {
         store,
     ));
 
-    loop {
-        sleep(Duration::from_secs(1));
-    }
+    game_loop(simulation, 60, 0.1, |g| g.game.update(1.0 / 60.0), |_g| {});
 }
