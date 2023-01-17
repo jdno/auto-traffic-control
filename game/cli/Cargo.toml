@@ -1,0 +1,21 @@
+[package]
+name = "cli"
+description = "Command-line interface to launch Auto Traffic Control"
+
+rust-version.workspace = true
+
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+
+homepage.workspace = true
+repository.workspace = true
+
+publish = false
+
+[dependencies]
+api = { path = "../api", version = "0.4.0-dev" }
+simulation = { path = "../simulation", version = "0.4.0-dev" }
+
+clap = { version = "4.1.1", features = ["derive"] }
+tokio.workspace = true
