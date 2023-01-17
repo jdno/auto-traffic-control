@@ -39,9 +39,9 @@ impl System for DetectCollisionSystem {
                             other_airplane_id.clone(),
                         ))
                         .expect("failed to send AirplaneCollided event");
-                }
 
-                break 'outer;
+                    break 'outer;
+                }
             }
         }
     }
@@ -85,7 +85,7 @@ mod tests {
 
     #[test]
     fn collision() {
-        let (sender, mut receiver) = channel(1);
+        let (sender, mut receiver) = channel(10);
         let mut world = World::new();
 
         let mut system = DetectCollisionSystem::new(sender);
@@ -99,7 +99,22 @@ mod tests {
 
         world.spawn((
             AirplaneId::new("AT-0002".into()),
+            Location::new(64.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(1, 0, false))]),
+            Tag::Blue,
+        ));
+
+        world.spawn((
+            AirplaneId::new("AT-0003".into()),
             Location::new(16.0, 0.0),
+            FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]),
+            Tag::Blue,
+        ));
+
+        // Collision with this plane will never the checked, because the game has already ended.
+        world.spawn((
+            AirplaneId::new("AT-0004".into()),
+            Location::new(0.0, 16.0),
             FlightPlan::new(vec![Arc::new(Node::new(0, 0, false))]),
             Tag::Blue,
         ));
@@ -111,10 +126,12 @@ mod tests {
         assert_eq!(
             Event::AirplaneCollided(
                 AirplaneId::new("AT-0001".into()),
-                AirplaneId::new("AT-0002".into())
+                AirplaneId::new("AT-0003".into())
             ),
             event
         );
+
+        assert!(receiver.try_recv().is_err());
     }
 
     #[test]
