@@ -48,20 +48,26 @@ impl GenerateFlightPlanSystem {
             .clone();
 
         let mut flight_plan = vec![current_node.clone()];
-        let mut next_node;
 
         for _ in 0..FLIGHT_PLAN_LENGTH - 1 {
-            next_node = self.pick_next_tile(&current_node, &previous_node);
-            flight_plan.push(next_node.clone());
+            if let Some(next_node) = self.pick_next_tile(&current_node, &previous_node) {
+                flight_plan.push(next_node.clone());
 
-            previous_node = current_node;
-            current_node = next_node;
+                previous_node = current_node;
+                current_node = next_node;
+            } else {
+                break;
+            }
         }
 
         FlightPlan::new(flight_plan.iter().rev().cloned().collect())
     }
 
-    fn pick_next_tile(&mut self, current_tile: &Arc<Node>, previous_tile: &Arc<Node>) -> Arc<Node> {
+    fn pick_next_tile(
+        &mut self,
+        current_tile: &Arc<Node>,
+        previous_tile: &Arc<Node>,
+    ) -> Option<Arc<Node>> {
         let map = self.map.lock();
 
         let potential_tiles: Vec<Arc<Node>> = map
@@ -72,10 +78,7 @@ impl GenerateFlightPlanSystem {
             .filter(|node| !node.is_restricted())
             .collect();
 
-        potential_tiles
-            .choose(&mut self.rng)
-            .expect("failed to choose random tile")
-            .clone()
+        potential_tiles.choose(&mut self.rng).cloned()
     }
 }
 
@@ -147,6 +150,29 @@ mod tests {
             AirplaneId::default(),
             FlightPlan::new(vec![Arc::new(Node::new(2, 0, false))]),
             TravelledRoute::new(vec![Arc::new(Node::new(1, 0, false))]),
+            Tag::Blue,
+        ));
+
+        system.update(&mut world, 0.0);
+
+        let event = receiver.try_recv().unwrap();
+
+        assert!(matches!(event, Event::FlightPlanUpdated(_, _)));
+    }
+
+    #[test]
+    fn generate_flight_plan_on_runway() {
+        let (sender, mut receiver) = channel(1);
+
+        let map = Map::test();
+        let mut world = World::new();
+
+        let mut system = GenerateFlightPlanSystem::new(sender, map);
+
+        world.spawn((
+            AirplaneId::default(),
+            FlightPlan::new(vec![Arc::new(Node::new(3, 3, false))]),
+            TravelledRoute::new(vec![Arc::new(Node::new(2, 3, false))]),
             Tag::Blue,
         ));
 
