@@ -24,8 +24,9 @@ impl MapLoader {
     }
 
     fn parse(name: String, map: &str) -> Map {
-        let mut airports = Vec::new();
         let mut nodes = Vec::new();
+        let mut airports = Vec::new();
+        let mut spawns = Vec::new();
 
         let mut width = 0;
         let height = map.lines().count();
@@ -41,7 +42,7 @@ impl MapLoader {
 
             for (x, tile) in line.chars().enumerate() {
                 let node = match tile {
-                    '#' => Node {
+                    '#' | 'S' => Node {
                         longitude: x as u32,
                         latitude: y as u32,
                         restricted: true,
@@ -62,6 +63,9 @@ impl MapLoader {
                     let airport = Airport::new(node.clone(), Tag::Red);
                     airports.push(airport);
                 }
+                if tile == 'S' {
+                    spawns.push(node.clone());
+                }
 
                 nodes.push(node);
             }
@@ -75,6 +79,10 @@ impl MapLoader {
             panic!("map has no airports");
         }
 
+        if spawns.is_empty() {
+            panic!("map has no spawns");
+        }
+
         Map {
             name,
 
@@ -83,6 +91,7 @@ impl MapLoader {
 
             airports,
             grid: Grid::new(width as u32, height as u32, nodes),
+            spawns,
         }
     }
 }

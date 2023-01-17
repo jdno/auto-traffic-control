@@ -9,28 +9,9 @@ use time::{Duration, Instant};
 
 use crate::bus::{Event, Sender};
 use crate::component::{FlightPlan, Tag, TravelledRoute};
-use crate::map::{Location, Map, Node, MAP_BORDER_WIDTH};
+use crate::map::{Location, Map, Node};
 use crate::system::System;
 use crate::util::AirplaneIdGenerator;
-
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-enum Side {
-    North,
-    East,
-    South,
-    West,
-}
-
-impl Side {
-    fn random(rng: &mut ThreadRng) -> Self {
-        match rng.gen_range(0..=3) {
-            0 => Self::North,
-            1 => Self::East,
-            2 => Self::South,
-            _ => Self::West,
-        }
-    }
-}
 
 struct Spawn {
     start_node: Arc<Node>,
@@ -64,10 +45,8 @@ impl SpawnAirplaneSystem {
     }
 
     fn random_spawn(&mut self) -> Spawn {
-        let side = Side::random(&mut self.rng);
-
-        let start_node = self.start_node(side);
-        let first_node = self.first_node(side, &start_node);
+        let start_node = self.start_node();
+        let first_node = self.first_node(&start_node);
 
         Spawn {
             start_node,
@@ -75,55 +54,46 @@ impl SpawnAirplaneSystem {
         }
     }
 
-    fn start_node(&mut self, side: Side) -> Arc<Node> {
-        let map = self.map.lock();
-
-        let (x, y) = match side {
-            Side::North => (
-                self.rng
-                    .gen_range(MAP_BORDER_WIDTH..(map.width() - MAP_BORDER_WIDTH)),
-                0,
-            ),
-            Side::East => (
-                map.width() - 1,
-                self.rng
-                    .gen_range(MAP_BORDER_WIDTH..(map.height() - MAP_BORDER_WIDTH)),
-            ),
-            Side::South => (
-                self.rng
-                    .gen_range(MAP_BORDER_WIDTH..(map.width() - MAP_BORDER_WIDTH)),
-                map.height() - 1,
-            ),
-            Side::West => (
-                0,
-                self.rng
-                    .gen_range(MAP_BORDER_WIDTH..(map.height() - MAP_BORDER_WIDTH)),
-            ),
-        };
-
-        map.grid()
-            .get(x, y)
-            .expect("failed to get start node for airplane")
+    fn start_node(&mut self) -> Arc<Node> {
+        self.map
+            .lock()
+            .spawns()
+            .choose(&mut self.rng)
+            .expect("failed to get random spawn")
             .clone()
     }
 
-    fn first_node(&self, side: Side, start_node: &Arc<Node>) -> Arc<Node> {
-        let x = start_node.longitude();
-        let y = start_node.latitude();
+    fn first_node(&self, start_node: &Arc<Node>) -> Arc<Node> {
+        let mut x = start_node.longitude() as i32;
+        let mut y = start_node.latitude() as i32;
 
-        let (x, y) = match side {
-            Side::North => (x, y + MAP_BORDER_WIDTH),
-            Side::East => (x - MAP_BORDER_WIDTH, y),
-            Side::South => (x, y - MAP_BORDER_WIDTH),
-            Side::West => (x + MAP_BORDER_WIDTH, y),
+        let map = self.map.lock();
+        let width = (map.width() - 1) as i32;
+        let height = (map.height() - 1) as i32;
+
+        let (dx, dy) = match (x, y) {
+            (0, _) => (1, 0),
+            (_, 0) => (0, 1),
+            (_, _) if x == width => (-1, 0),
+            (_, _) if y == height => (0, -1),
+            _ => panic!("spawn node is not on the edge of the map"),
         };
 
-        self.map
-            .lock()
-            .grid()
-            .get(x, y)
-            .expect("failed to get first node for flight plan")
-            .clone()
+        while x <= width && y <= height {
+            let node = map
+                .grid()
+                .get(x as u32, y as u32)
+                .expect("failed to get node from grid");
+
+            if !node.is_restricted() {
+                return node.clone();
+            }
+
+            x += dx;
+            y += dy;
+        }
+
+        panic!("failed to find a valid first node")
     }
 
     fn random_tag(&mut self) -> Tag {
@@ -174,6 +144,7 @@ impl System for SpawnAirplaneSystem {
 #[cfg(test)]
 mod tests {
     use crate::bus::channel;
+    use crate::prelude::AirplaneId;
 
     use super::*;
 
@@ -198,7 +169,34 @@ mod tests {
 
     #[test]
     fn spawn_airplane() {
-        // TODO: Introduce spawn zones to make the test map work with this system
+        let (sender, mut receiver) = channel(1);
+        let mut world = World::new();
+
+        let mut system = SpawnAirplaneSystem {
+            event_bus: sender,
+            rng: thread_rng(),
+            interval: Duration::seconds(2),
+            last_spawn: Instant::now() - Duration::seconds(3),
+            airplane_id_generator: AirplaneIdGenerator::default(),
+            map: Map::test(),
+        };
+
+        system.update(&mut world, 0.0);
+
+        let event = receiver.try_recv().unwrap();
+        let (airplane_id, location, flight_plan) = match event {
+            Event::AirplaneDetected(airplane_id, location, flight_plan, _) => {
+                (airplane_id, location, flight_plan)
+            }
+            _ => panic!("unexpected event"),
+        };
+
+        assert_eq!(AirplaneId::new("AT-0001".into()), airplane_id);
+        assert_eq!(Location::new(192.0, 0.0), location);
+        assert_eq!(
+            FlightPlan::new(vec![Arc::new(Node::new(3, 1, false))]),
+            flight_plan
+        );
     }
 
     #[test]
