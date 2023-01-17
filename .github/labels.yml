@@ -1,15 +1,18 @@
 ---
 - name: C-bug
-  color: e74c3c
+  color: 9b59b6
   description: "Report a new bug"
 - name: C-dependency
-  color: e74c3c
+  color: 9b59b6
   description: "Update a dependency"
 - name: C-documentation
-  color: e74c3c
+  color: 9b59b6
   description: "Improve the documentation"
+- name: C-epic
+  color: 9b59b6
+  description: "Track a change that involves multiple issues"
 - name: C-feature-request
-  color: e74c3c
+  color: 9b59b6
   description: "Request a new feature"
 - name: L-dotnet
   color: 34495e
