@@ -120,6 +120,7 @@ mod tests {
         let (sender, mut receiver) = channel(1);
 
         let map = Map::test();
+        let airport = map.lock().airports().first().unwrap().clone();
         let score = Arc::new(Mutex::new(0));
         let airplane_id = AirplaneId::default();
 
@@ -128,9 +129,9 @@ mod tests {
         let mut world = World::new();
         world.spawn((
             airplane_id.clone(),
-            Location::new(128.0, 128.0),
+            Location::new(airport.location().x(), airport.location().y()),
             FlightPlan::new(Vec::new()),
-            Tag::Blue,
+            airport.tag(),
         ));
 
         system.update(&mut world, 0.0);
@@ -146,6 +147,7 @@ mod tests {
         let (sender, mut receiver) = channel(2);
 
         let map = Map::test();
+        let airport = map.lock().airports().first().unwrap().clone();
         let score = Arc::new(Mutex::new(0));
         let airplane_id = AirplaneId::default();
 
@@ -154,7 +156,7 @@ mod tests {
         let mut world = World::new();
         world.spawn((
             airplane_id.clone(),
-            Location::new(128.0, 128.0),
+            Location::new(airport.location().x(), airport.location().y()),
             FlightPlan::new(Vec::new()),
             Tag::Red,
         ));

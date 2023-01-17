@@ -15,8 +15,6 @@ mod loader;
 mod location;
 mod node;
 
-pub const MAP_BORDER_WIDTH: u32 = 3;
-
 #[derive(Debug, Default)]
 pub struct Map {
     name: String,
@@ -26,6 +24,7 @@ pub struct Map {
 
     airports: Vec<Airport>,
     grid: Grid<Arc<Node>>,
+    spawns: Vec<Arc<Node>>,
 }
 
 impl Map {
@@ -43,6 +42,10 @@ impl Map {
 
     pub fn grid(&self) -> &Grid<Arc<Node>> {
         &self.grid
+    }
+
+    pub fn spawns(&self) -> &Vec<Arc<Node>> {
+        &self.spawns
     }
 }
 

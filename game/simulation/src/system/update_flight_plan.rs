@@ -84,7 +84,7 @@ mod tests {
         world.spawn((
             AirplaneId::default(),
             Location::new(0.0, 0.0),
-            FlightPlan::new(vec![Arc::new(Node::new(1, 0, false))]),
+            FlightPlan::new(vec![Arc::new(Node::new(1, 1, false))]),
             Tag::Blue,
         ));
 
@@ -92,8 +92,8 @@ mod tests {
             .send(Command::UpdateFlightPlan(
                 AirplaneId::default(),
                 FlightPlan::new(vec![
-                    Arc::new(Node::new(2, 0, false)),
-                    Arc::new(Node::new(1, 0, false)),
+                    Arc::new(Node::new(2, 1, false)),
+                    Arc::new(Node::new(1, 1, false)),
                 ]),
             ))
             .unwrap();
@@ -107,8 +107,8 @@ mod tests {
             Event::FlightPlanUpdated(
                 AirplaneId::default(),
                 FlightPlan::new(vec![
-                    Arc::new(Node::new(2, 0, false)),
-                    Arc::new(Node::new(1, 0, false)),
+                    Arc::new(Node::new(2, 1, false)),
+                    Arc::new(Node::new(1, 1, false)),
                 ]),
             ),
             event
