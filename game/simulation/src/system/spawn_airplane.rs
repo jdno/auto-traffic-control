@@ -135,6 +135,8 @@ impl System for SpawnAirplaneSystem {
             tag,
         ));
 
+        self.last_spawn = Instant::now();
+
         self.event_bus
             .send(Event::AirplaneDetected(id, location, flight_plan, tag))
             .expect("failed to send AirplaneDetected event");
@@ -197,6 +199,7 @@ mod tests {
             FlightPlan::new(vec![Arc::new(Node::new(3, 1, false))]),
             flight_plan
         );
+        assert!(system.last_spawn > Instant::now() - Duration::seconds(2));
     }
 
     #[test]
