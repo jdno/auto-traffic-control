@@ -4,8 +4,9 @@ use crate::bus::{Event, Sender};
 use crate::component::AirplaneId;
 use crate::map::Location;
 use crate::system::System;
+use crate::TILE_SIZE;
 
-const THRESHOLD: f32 = 24.0;
+const THRESHOLD: f32 = TILE_SIZE as f32 * 0.75;
 
 #[derive(Clone, Debug)]
 pub struct DetectCollisionSystem {
