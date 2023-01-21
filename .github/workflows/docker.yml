@@ -4,7 +4,7 @@ name: Docker
 "on":
   push:
     branches:
-      - "master"
+      - "main"
     tags:
       - "v*"
   pull_request:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ github.repository }}
+            ghcr.io/${{ github.repository }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
