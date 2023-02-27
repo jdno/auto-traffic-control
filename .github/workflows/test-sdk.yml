@@ -84,7 +84,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.2.0
+        uses: swatinem/rust-cache@v2.2.1
 
       - name: Compile test-server
         run: cargo build -p test-server
@@ -350,7 +350,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.2.0
+        uses: swatinem/rust-cache@v2.2.1
 
       - name: Compile Rust example
         run: cargo build -p auto-traffic-control-example
