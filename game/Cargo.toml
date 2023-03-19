@@ -35,7 +35,7 @@ auto-traffic-control = { path = "../sdk/rust", version = "0.3.2", features = ["s
 
 bevy = "0.9.1"
 dashmap = "5.4.0"
-geo = "0.23.1"
+geo = "0.24.0"
 parking_lot = "0.12.1"
 prost = "0.11.8"
 rand = "0.8.5"
