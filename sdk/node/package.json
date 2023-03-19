@@ -27,6 +27,6 @@
     "@grpc/grpc-js": "^1.6.6"
   },
   "devDependencies": {
-    "typescript": "^4.6.3"
+    "typescript": "^5.0.2"
   }
 }
