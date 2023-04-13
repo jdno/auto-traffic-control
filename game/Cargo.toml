@@ -37,7 +37,7 @@ bevy = "0.9.1"
 dashmap = "5.4.0"
 geo = "0.24.1"
 parking_lot = "0.12.1"
-prost = "0.11.8"
+prost = "0.11.9"
 rand = "0.8.5"
 semver = "1.0.17"
 tokio = { version = "1.27.0", features = ["macros", "rt-multi-thread", "sync"] }
