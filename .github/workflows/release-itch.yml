@@ -30,7 +30,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.3.0
+        uses: swatinem/rust-cache@v2.4.0
 
       - name: Build release artifact
         run: cargo build --release
@@ -76,7 +76,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.3.0
+        uses: swatinem/rust-cache@v2.4.0
 
       - name: Install cargo-bundle
         run: cargo install cargo-bundle
@@ -121,7 +121,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.3.0
+        uses: swatinem/rust-cache@v2.4.0
 
       - name: Build release artifact
         run: cargo build --release
