@@ -43,7 +43,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.4.0
+        uses: swatinem/rust-cache@v2.5.0
 
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
@@ -93,7 +93,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache build artifacts
-        uses: swatinem/rust-cache@v2.4.0
+        uses: swatinem/rust-cache@v2.5.0
 
       - name: Generate code coverage
         run: |
