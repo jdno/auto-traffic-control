@@ -1,6 +1,6 @@
 # 🛬 Auto Traffic Control
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jdno/auto-traffic-control/main)](https://github.com/jdno/auto-traffic-control/actions)
+![Maintenance](https://img.shields.io/maintenance/no/2023)
 
 [Homepage](https://auto-traffic-control.com) |
 [Documentation](https://auto-traffic-control.com/docs) |
@@ -21,7 +21,12 @@ guide to start playing the game.
 
 ## Project Status
 
-**Auto Traffic Control** is currently in an early prototyping phase.
+The project is currently on hold, and I am not sure when or if I will be able to
+work on it again.
+
+If you are interested in building a similar game, feel free to get in touch to
+discuss the project. I would be happy to share my experience and help you get
+started with your own game. 🙂
 
 ## License
 
